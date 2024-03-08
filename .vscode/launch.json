@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-WebstoreApplication<webstore>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "es.laboticademar.webstore.WebstoreApplication",
+            "projectName": "webstore",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
