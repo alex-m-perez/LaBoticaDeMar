@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import es.laboticademar.webstore.entities.Usuario;
-import es.laboticademar.webstore.repositories.interfaces.UsuarioRepo;
-import es.laboticademar.webstore.services.interfaces.InicioService;
+import es.laboticademar.webstore.repositories.UsuarioRepo;
+import es.laboticademar.webstore.services.InicioService;
 
 @Service
 public class InicioServiceImpl implements InicioService {

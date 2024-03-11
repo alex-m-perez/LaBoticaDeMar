@@ -8,7 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import es.laboticademar.webstore.entities.Usuario;
-import es.laboticademar.webstore.services.interfaces.InicioService;
+import es.laboticademar.webstore.services.InicioService;
 import jakarta.servlet.http.HttpServletRequest;
 
 

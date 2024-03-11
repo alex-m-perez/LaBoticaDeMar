@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.stereotype.Repository;
 
 import es.laboticademar.webstore.entities.Usuario;
-import es.laboticademar.webstore.repositories.interfaces.UsuarioRepo;
+import es.laboticademar.webstore.repositories.UsuarioRepo;
 import jakarta.persistence.EntityManager;
 
 @Repository
