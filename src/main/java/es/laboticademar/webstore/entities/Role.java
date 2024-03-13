@@ -1,5 +1,10 @@
 package es.laboticademar.webstore.entities;
 
-public class Role {
+public enum Role {
+
+    SUPPORT,
+    ADMIN,
+    MOSTRADOR,
+    USUARIO
 
 }

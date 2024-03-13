@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="c9fe521f-330d-404e-85fd-e8241801c3ac" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.classpath" beforeDir="false" afterPath="$PROJECT_DIR$/.classpath" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.settings/org.eclipse.core.resources.prefs" beforeDir="false" afterPath="$PROJECT_DIR$/.settings/org.eclipse.core.resources.prefs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/laboticademar/webstore/controllers/InicioController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/es/laboticademar/webstore/controllers/InicioController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/laboticademar/webstore/entities/Categoria.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/es/laboticademar/webstore/entities/Categoria.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/laboticademar/webstore/entities/Devolucion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/es/laboticademar/webstore/entities/Devolucion.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/laboticademar/webstore/entities/Factura.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/es/laboticademar/webstore/entities/Factura.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/laboticademar/webstore/entities/Familia.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/es/laboticademar/webstore/entities/Familia.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/laboticademar/webstore/entities/Producto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/es/laboticademar/webstore/entities/Producto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/laboticademar/webstore/entities/Producto_Categoria.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/laboticademar/webstore/entities/Role.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/es/laboticademar/webstore/entities/Role.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/laboticademar/webstore/entities/Tipo_Factura.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/laboticademar/webstore/entities/Usuario.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/es/laboticademar/webstore/entities/Usuario.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/laboticademar/webstore/entities/Venta.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/es/laboticademar/webstore/entities/Venta.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/laboticademar/webstore/repositories/CategoriaRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/es/laboticademar/webstore/repositories/CategoriaRepo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/laboticademar/webstore/repositories/DevolucionRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/es/laboticademar/webstore/repositories/DevolucionRepo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/laboticademar/webstore/repositories/FacturaRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/es/laboticademar/webstore/repositories/FacturaRepo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/laboticademar/webstore/repositories/FamiliaRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/es/laboticademar/webstore/repositories/FamiliaRepo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/laboticademar/webstore/repositories/ProductoRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/es/laboticademar/webstore/repositories/ProductoRepo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/laboticademar/webstore/repositories/Producto_CategoriaRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/es/laboticademar/webstore/repositories/Producto_CategoriaRepo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/laboticademar/webstore/repositories/RoleRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/es/laboticademar/webstore/repositories/RoleRepo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/laboticademar/webstore/repositories/Tipo_FacturaRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/es/laboticademar/webstore/repositories/Tipo_FacturaRepo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/laboticademar/webstore/repositories/UsuarioRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/es/laboticademar/webstore/repositories/UsuarioRepo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/laboticademar/webstore/repositories/VentaRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/es/laboticademar/webstore/repositories/VentaRepo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/laboticademar/webstore/repositories/impl/UsuarioRepoImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/laboticademar/webstore/services/InicioService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/es/laboticademar/webstore/services/impl/InicioServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/inicio.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/views/inicio.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/META-INF/MANIFEST.MF" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/META-INF/maven/es.laboticademar/webstore/pom.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/META-INF/maven/es.laboticademar/webstore/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/es/laboticademar/webstore/WebstoreApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/es/laboticademar/webstore/WebstoreApplication.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/es/laboticademar/webstore/controllers/Inicio.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/es/laboticademar/webstore/controllers/Inicio.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/es/laboticademar/webstore/controllers/InicioController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/es/laboticademar/webstore/controllers/InicioController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/es/laboticademar/webstore/entities/Categoria.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/es/laboticademar/webstore/entities/Categoria.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/es/laboticademar/webstore/entities/Devolucion.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/es/laboticademar/webstore/entities/Devolucion.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/es/laboticademar/webstore/entities/Factura.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/es/laboticademar/webstore/entities/Factura.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/es/laboticademar/webstore/entities/Familia.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/es/laboticademar/webstore/entities/Familia.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/es/laboticademar/webstore/entities/Producto.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/es/laboticademar/webstore/entities/Producto.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/es/laboticademar/webstore/entities/Producto_Categoria.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/es/laboticademar/webstore/entities/Role.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/es/laboticademar/webstore/entities/Role.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/es/laboticademar/webstore/entities/Tipo_Factura.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/es/laboticademar/webstore/entities/Usuario.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/es/laboticademar/webstore/entities/Usuario.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/es/laboticademar/webstore/entities/Venta.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/es/laboticademar/webstore/entities/Venta.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/es/laboticademar/webstore/repositories/CategoriaRepo.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/es/laboticademar/webstore/repositories/CategoriaRepo.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/es/laboticademar/webstore/repositories/DevolucionRepo.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/es/laboticademar/webstore/repositories/DevolucionRepo.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/es/laboticademar/webstore/repositories/FacturaRepo.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/es/laboticademar/webstore/repositories/FacturaRepo.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/es/laboticademar/webstore/repositories/FamiliaRepo.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/es/laboticademar/webstore/repositories/FamiliaRepo.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/es/laboticademar/webstore/repositories/ProductoRepo.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/es/laboticademar/webstore/repositories/ProductoRepo.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/es/laboticademar/webstore/repositories/Producto_CategoriaRepo.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/es/laboticademar/webstore/repositories/Producto_CategoriaRepo.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/es/laboticademar/webstore/repositories/RoleRepo.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/es/laboticademar/webstore/repositories/RoleRepo.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/es/laboticademar/webstore/repositories/Tipo_FacturaRepo.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/es/laboticademar/webstore/repositories/Tipo_FacturaRepo.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/es/laboticademar/webstore/repositories/UsuarioRepo.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/es/laboticademar/webstore/repositories/UsuarioRepo.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/es/laboticademar/webstore/repositories/VentaRepo.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/es/laboticademar/webstore/repositories/VentaRepo.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/es/laboticademar/webstore/repositories/impl/UsuarioRepoImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/es/laboticademar/webstore/services/InicioService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/es/laboticademar/webstore/services/impl/InicioServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/webstore-0.0.1-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/webstore-0.0.1-SNAPSHOT.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/webstore-0.0.1-SNAPSHOT.jar.original" beforeDir="false" afterPath="$PROJECT_DIR$/target/webstore-0.0.1-SNAPSHOT.jar.original" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="useMavenConfig" value="true" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="2daPldu5op5rGzwfo413mCErIsY" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/alexm/OneDrive/Documentos/TFG/LaBoticaDeMar&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;spring.configuration.checksum&quot;: &quot;8d943379b9ef52397390a456a55cb39c&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RunManager">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="LaBoticaDeMar" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="LaBoticaDeMar" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="WebstoreApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="webstore" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="es.laboticademar.webstore.WebstoreApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="c9fe521f-330d-404e-85fd-e8241801c3ac" name="Changes" comment="" />
+      <created>1710243371856</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1710243371856</updated>
+      <workItem from="1710243373229" duration="601000" />
+      <workItem from="1710243985737" duration="42000" />
+      <workItem from="1710244036344" duration="937000" />
+      <workItem from="1710263544839" duration="1290000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

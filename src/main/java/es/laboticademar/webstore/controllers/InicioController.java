@@ -8,7 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import es.laboticademar.webstore.entities.Usuario;
-import es.laboticademar.webstore.services.InicioService;
+import es.laboticademar.webstore.services.UsuarioService;
 import jakarta.servlet.http.HttpServletRequest;
 
 
@@ -16,7 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 public class InicioController {
 	
 	@Autowired
-    private InicioService inicioService;
+    private UsuarioService usuarioService;
 	
 	/*
 	 * @GetMapping("/prueba") public String greeting(Model model) { List<Usuario>
@@ -29,7 +29,7 @@ public class InicioController {
 	@RequestMapping(value = {"/prueba"})
 	public String prueba(Map<String, Object> map, HttpServletRequest request) {
 		try {
-			List<Usuario> usuarios = inicioService.getAllUsers();
+			List<Usuario> usuarios = usuarioService.getAllUsers();
 			String prueba = "prueba";
 			for(Usuario usuario: usuarios) {
 				System.out.println(usuario.getNombre());

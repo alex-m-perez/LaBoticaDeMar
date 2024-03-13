@@ -4,7 +4,7 @@ import java.util.List;
 
 import es.laboticademar.webstore.entities.Usuario;
 
-public interface InicioService {
+public interface UsuarioService {
 
 	public List<Usuario> getAllUsers();
 }

@@ -1,5 +1,9 @@
 package es.laboticademar.webstore.repositories;
 
-public class DevolucionRepo {
+import org.springframework.data.jpa.repository.JpaRepository;
 
+import es.laboticademar.webstore.entities.Devolucion;
+
+public interface DevolucionRepo extends JpaRepository<Devolucion, Long> {
+    // No es necesario definir un método findAll() aquí
 }

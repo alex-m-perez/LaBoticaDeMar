@@ -1,5 +1,9 @@
 package es.laboticademar.webstore.repositories;
 
-public class FamiliaRepo {
+import org.springframework.data.jpa.repository.JpaRepository;
 
+import es.laboticademar.webstore.entities.Familia;
+
+public interface FamiliaRepo extends JpaRepository<Familia, Long> {
+    // No es necesario definir un método findAll() aquí
 }

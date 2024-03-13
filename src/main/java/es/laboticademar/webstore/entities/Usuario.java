@@ -1,123 +1,73 @@
 package es.laboticademar.webstore.entities;
 
+import java.util.Collection;
+import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
-public class Usuario {
+public class Usuario implements UserDetails {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	private String apodo;
-
 	private String nombre;
-
 	private String apellido1;
-
 	private String apellido2;
-
 	private Integer puntos;
-
 	private String correo;
-
 	private String direccionPostal;
+	private Integer telefono;
 
-	private String telefono;
+	@Enumerated(EnumType.STRING)
+	private Role role;
 
-	private String role;
+	private String contraseña;
 
-	private String password;
-
-	public Long getId() {
-		return id;
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return List.of(new SimpleGrantedAuthority(role.name()));
 	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getApodo() {
-		return apodo;
-	}
-
-	public void setApodo(String apodo) {
-		this.apodo = apodo;
-	}
-
-	public String getNombre() {
-		return nombre;
-	}
-
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
-
-	public String getApellido1() {
-		return apellido1;
-	}
-
-	public void setApellido1(String apellido1) {
-		this.apellido1 = apellido1;
-	}
-
-	public String getApellido2() {
-		return apellido2;
-	}
-
-	public void setApellido2(String apellido2) {
-		this.apellido2 = apellido2;
-	}
-
-	public Integer getPuntos() {
-		return puntos;
-	}
-
-	public void setPuntos(Integer puntos) {
-		this.puntos = puntos;
-	}
-
-	public String getCorreo() {
+	@Override
+	public String getUsername() {
 		return correo;
 	}
-
-	public void setCorreo(String correo) {
-		this.correo = correo;
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
 	}
-
-	public String getDireccionPostal() {
-		return direccionPostal;
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
 	}
-
-	public void setDireccionPostal(String direccionPostal) {
-		this.direccionPostal = direccionPostal;
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
 	}
-
-	public String getTelefono() {
-		return telefono;
+	@Override
+	public boolean isEnabled() {
+		return true;
 	}
-
-	public void setTelefono(String telefono) {
-		this.telefono = telefono;
-	}
-
-	public String getRole() {
-		return role;
-	}
-
-	public void setRole(String role) {
-		this.role = role;
-	}
-
+	@Override
 	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
+		return contraseña;
 	}
 
 }

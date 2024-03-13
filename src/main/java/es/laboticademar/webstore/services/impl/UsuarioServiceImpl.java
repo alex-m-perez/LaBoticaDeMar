@@ -7,10 +7,10 @@ import org.springframework.stereotype.Service;
 
 import es.laboticademar.webstore.entities.Usuario;
 import es.laboticademar.webstore.repositories.UsuarioRepo;
-import es.laboticademar.webstore.services.InicioService;
+import es.laboticademar.webstore.services.UsuarioService;
 
 @Service
-public class InicioServiceImpl implements InicioService {
+public class UsuarioServiceImpl implements UsuarioService {
 
 	@Autowired
     private UsuarioRepo usuarioRepo;
