@@ -41,6 +41,6 @@ public class InicioController {
 			e.printStackTrace();
 			return "inicio";
 		}
-		
 	}
+
 }
