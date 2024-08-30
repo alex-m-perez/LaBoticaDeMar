@@ -34,10 +34,7 @@ public class JwtService {
         return generateToken(new HashMap<>(), userDetails);
     }
 
-    public String generateToken(
-        Map<String, Object> extractClaims,
-        UserDetails userDetails
-    ){
+    public String generateToken(Map<String, Object> extractClaims, UserDetails userDetails){
         return Jwts
             .builder()
             .setClaims(extractClaims)
@@ -66,7 +63,7 @@ public class JwtService {
             .parserBuilder()
             .setSigningKey(getSignInKey())
             .build()
-            .parseClaimsJwt(token)
+            .parseClaimsJws(token)
             .getBody();
     }
 

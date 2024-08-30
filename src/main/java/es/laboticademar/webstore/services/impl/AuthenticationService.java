@@ -49,8 +49,7 @@ public class AuthenticationService {
                 request.getPassword()
             )
         );
-        var usuario = usuarioRepo.getByCorreo(request.getCorreo())
-            .orElseThrow();
+        var usuario = usuarioRepo.getByCorreo(request.getCorreo()).orElseThrow();
         var jwtToken = jwtService.generateToken(usuario);
         return AuthenticationResponse.builder().token(jwtToken).build();
     }

@@ -2,6 +2,7 @@ package es.laboticademar.webstore.security.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -22,18 +23,20 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf
-                        .disable())
-                .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/api/v1/auth/**")
-                        .permitAll()
-                        .anyRequest()
-                        .authenticated())
-                .sessionManagement(management -> management
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+            .csrf(csrf -> csrf.disable()) // Asegúrate de que CSRF está desactivado
+            .authorizeHttpRequests(requests -> requests
+                .requestMatchers("/api/v1/auth/**").permitAll() // Permite el acceso sin autenticación
+                .requestMatchers("/home/**").permitAll() // Permite el acceso sin autenticación
+                .requestMatchers(HttpMethod.GET).permitAll() // Permite el acceso sin autenticación
+                .anyRequest().authenticated() // Requiere autenticación para otras solicitudes
+            )
+            .sessionManagement(management -> management
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Configura la política de sesión
+            )
+            .authenticationProvider(authenticationProvider) // Configura el proveedor de autenticación
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class); // Agrega el filtro JWT
 
         return http.build();
     }
 }
+
