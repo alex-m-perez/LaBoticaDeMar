@@ -1,10 +1,8 @@
-.gitignore
-    target/*
-    *.class
-    *.jar
-    *.war
-    *.ear
-    *.logs
-    *.iml
-    /.vscode
-    /.ideamv 
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.logs
+*.iml
+.vscode

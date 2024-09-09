@@ -14,6 +14,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -21,13 +22,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 public class Usuario implements UserDetails {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private String apodo;
 	private String nombre;
 	private String apellido1;
 	private String apellido2;
@@ -39,7 +40,7 @@ public class Usuario implements UserDetails {
 	@Enumerated(EnumType.STRING)
 	private Role role;
 
-	private String contraseña;
+	private String passwd;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -67,7 +68,7 @@ public class Usuario implements UserDetails {
 	}
 	@Override
 	public String getPassword() {
-		return contraseña;
+		return passwd;
 	}
 
 }

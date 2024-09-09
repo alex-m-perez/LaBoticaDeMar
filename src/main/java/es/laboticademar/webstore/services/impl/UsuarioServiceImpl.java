@@ -20,5 +20,11 @@ public class UsuarioServiceImpl implements UsuarioService {
         List<Usuario> usuarios = usuarioRepo.findAll();
         return usuarios;
     }
+
+    @Override
+    public List<Usuario> getAllByCorreo() {
+        List<Usuario> usuarios = usuarioRepo.getAllByCorreo();
+        return usuarios;
+    }
 }
 

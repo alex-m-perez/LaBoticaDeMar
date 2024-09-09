@@ -7,4 +7,5 @@ import es.laboticademar.webstore.entities.Usuario;
 public interface UsuarioService {
 
 	public List<Usuario> getAllUsers();
+	public List<Usuario> getAllByCorreo();
 }
