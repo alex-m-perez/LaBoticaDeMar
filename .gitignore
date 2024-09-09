@@ -5,6 +5,4 @@ target/
 *.ear
 *.logs
 *.iml
-jdbc.properties
-.settings
 .vscode

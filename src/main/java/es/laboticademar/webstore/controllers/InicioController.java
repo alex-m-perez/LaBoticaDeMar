@@ -19,13 +19,13 @@ public class InicioController {
     @Autowired
     private UsuarioService usuarioService;
 
-    @GetMapping("/login")
-    public String mostrarLogin() {
-        return "login";  // Nombre del JSP de login, sin la extensión .jsp
+    @GetMapping("/welcome")
+    public String accessWelcomePage() {
+        return "welcome";
     }
 
     @GetMapping("/prueba")
-    public String greeting(Model model) {
+    public String mostrarFormLogin(Model model) {
         List<Usuario> usuarios = usuarioService.getAllUsers();
         String prueba = "prueba";
         for (Usuario usuario : usuarios) {

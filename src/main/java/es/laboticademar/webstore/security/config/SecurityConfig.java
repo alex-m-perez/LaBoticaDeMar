@@ -25,7 +25,7 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable()) // Asegúrate de que CSRF está desactivado
             .authorizeHttpRequests(requests -> requests
-                .requestMatchers("/api/v1/auth/**").permitAll() // Permite el acceso sin autenticación
+                .requestMatchers("/auth/**").permitAll() // Permite el acceso sin autenticación
                 .requestMatchers("/home/**").permitAll() // Permite el acceso sin autenticación
                 .requestMatchers(HttpMethod.GET).permitAll() // Permite el acceso sin autenticación
                 .anyRequest().authenticated() // Requiere autenticación para otras solicitudes
