@@ -27,6 +27,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(requests -> requests
                 .requestMatchers("/auth/**").permitAll() // Permite el acceso sin autenticación
                 .requestMatchers("/home/**").permitAll() // Permite el acceso sin autenticación
+                .requestMatchers("/css/**").permitAll() // Permite el acceso sin autenticación
                 .requestMatchers(HttpMethod.GET).permitAll() // Permite el acceso sin autenticación
                 .anyRequest().authenticated() // Requiere autenticación para otras solicitudes
             )
