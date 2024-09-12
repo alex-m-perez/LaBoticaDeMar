@@ -1,0 +1,15 @@
+{
+  "name": "laboticademar",
+  "version": "1.0.0",
+  "description": "Tienda online de productos de parafarmacia, con opción de registro de usuarios para uso de purchase points",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "build": "tailwindcss -i ./src/main/resources/static/css/input.css -o ./src/main/resources/static/css/output.css",
+    "watch": "tailwindcss --watch -i ./src/main/resources/static/css/input.css -o ./src/main/resources/static/css/output.css",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
