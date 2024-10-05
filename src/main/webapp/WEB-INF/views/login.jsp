@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
@@ -6,8 +6,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar sesión - [Nombre de la tienda online]</title>
-    <link rel="stylesheet"  href="${pageContext.request.contextPath}/css/output.css">
+    <title>Iniciar sesión</title>
+    <link rel="stylesheet"  href="/css/output.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 
@@ -26,12 +26,12 @@ function login(event) {
     });
 
     $.ajax({
-        url: 'http://localhost:8080/auth/authenticate',
+        url: '/auth/authenticate',
         type: "POST",
         contentType: 'application/json',
         data: JSON.stringify(formObject),
         success: function(response, textStatus, jqXHR) {
-            window.location.href = "http://localhost:8080/home/welcome";
+            window.location.href = "/home/welcome";
         },
         error: function(jqXHR, textStatus, errorThrown) {
             console.log(errorThrown);
@@ -43,7 +43,7 @@ function login(event) {
 </script>
 
 
-<header class="bg-violet-600 text-white p-4 h-16">
+<header class="bg-pink-600 text-white p-4 h-16">
     <div class="container mx-auto flex items-center">
         <!-- Imagen del logo, ajustada al tamaño del header -->
         <img src="${pageContext.request.contextPath}/images/logo.png" alt="Logo" class="h-10 mr-4">

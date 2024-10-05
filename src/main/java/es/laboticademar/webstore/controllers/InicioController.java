@@ -24,6 +24,21 @@ public class InicioController {
         return "welcome";
     }
 
+    @GetMapping("/profile")
+    public String accessProfile() {
+        return "perfil";
+    }
+
+    @GetMapping("/cart")
+    public String goShoppingCart() {
+        return "shopping_cart";
+    }
+
+    @GetMapping("/wishlist")
+    public String goWishlist() {
+        return "wishlist";
+    }
+
     @GetMapping("/prueba")
     public String mostrarFormLogin(Model model) {
         List<Usuario> usuarios = usuarioService.getAllUsers();
