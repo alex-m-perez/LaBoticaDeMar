@@ -28,18 +28,12 @@ public class AuthenticationController {
     }
     
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> register (@RequestBody AuthenticationRequest request) {
-        return ResponseEntity.ok(authenticationService.authenticate(request));
-
-        /* Boolean isAuthenticated = authenticationService.authenticate(request).getToken() != null;
-        if (isAuthenticated) {
-            // Devolver respuesta con éxito
-            AuthenticationResponse response = new AuthenticationResponse(true); // O el objeto que uses
+    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
+        try {
+            AuthenticationResponse response = authenticationService.authenticate(request);
             return ResponseEntity.ok(response);
-        } else {
-            // Devolver error 401 si la autenticación falla
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new AuthenticationResponse(false));
-        } */
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
     }
-
 }

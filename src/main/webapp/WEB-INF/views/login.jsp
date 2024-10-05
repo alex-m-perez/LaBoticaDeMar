@@ -26,23 +26,20 @@ function login(event) {
     });
 
     $.ajax({
-        url: 'http://localhost:8080/auth/authenticate', 
+        url: 'http://localhost:8080/auth/authenticate',
         type: "POST",
         contentType: 'application/json',
         data: JSON.stringify(formObject),
-        success: function(response) {
-            if (response !== null && response !== "") {
-                window.location.href = "http://localhost:8080/home/welcome";
-            } else {
-                alert('Error: Autenticación fallida.');
-            }
+        success: function(response, textStatus, jqXHR) {
+            window.location.href = "http://localhost:8080/home/welcome";
         },
         error: function(jqXHR, textStatus, errorThrown) {
-            alert('Error: Autenticación fallida. Verifica tus credenciales.');
             console.log(errorThrown);
+            alert('Dirección de correo o contraseña incorrectos.');
         }
     });
 }
+
 </script>
 
 
