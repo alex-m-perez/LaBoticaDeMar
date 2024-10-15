@@ -31,7 +31,7 @@ function login(event) {
         contentType: 'application/json',
         data: JSON.stringify(formObject),
         success: function(response, textStatus, jqXHR) {
-            window.location.href = "/home/welcome";
+            window.location.href = "/welcome";
         },
         error: function(jqXHR, textStatus, errorThrown) {
             console.log(errorThrown);
