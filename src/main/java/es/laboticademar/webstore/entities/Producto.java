@@ -51,4 +51,7 @@ public class Producto {
 
     @Column(name = "RATING", nullable = true, length = 1)
     private Integer rating;
+
+    @Column(name = "RATING_COUNT", nullable = true, length = 1)
+    private Integer ratingCount;
 }

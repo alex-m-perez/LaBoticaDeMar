@@ -4,14 +4,10 @@
 %>
 <!DOCTYPE html>
 <html lang="es">
-
-    <!-- Incluir el head -->
     <%@ include file="includes/head.jsp" %>
-
-    <!-- Incluir el navbar -->
     <%@ include file="includes/navbar.jsp" %>
     
-    <div class="flex-grow">
+    <main class="flex-grow">
 
         <!-- CONTENIDO -->
         <!-- _________ -->
@@ -19,9 +15,7 @@
         <!-- _________ -->
         <!-- _________ -->
 
-    </div>
+    </main>
     
-    <!-- Incluir el footer -->
     <%@ include file="includes/footer.jsp" %>
-
 </html>

@@ -4,26 +4,22 @@
 %>
 <!DOCTYPE html>
 <html lang="es">
-
-    <<!-- Incluir el head -->
     <%@ include file="/WEB-INF/views/includes/head.jsp" %>
-    
-    <!-- Incluir el navbar -->
     <%@ include file="/WEB-INF/views/includes/navbar.jsp" %>
     
-    <div class="flex-grow">
+    <main class="flex-grow">
         <div class="container mx-auto mt-10">
             <div class="bg-white p-8 rounded-lg shadow-md flex">
 
                 <!-- Columna izquierda: Foto del producto -->
                 <div class="w-1/2">
-                    <img src="ruta/foto-del-producto.jpg" alt="Producto" class="w-full h-auto rounded-lg">
+                    <img src="${producto.imagenPath != null ? producto.imagenPath : 'https://via.placeholder.com/300x200'}" alt="Producto" class="w-full h-auto rounded-lg">
                 </div>
 
                 <!-- Columna central: Descripción y desplegables -->
                 <div class="w-1/2 pl-8">
                     <!-- Título del producto -->
-                    <h1 class="text-3xl font-bold text-gray-800 mb-4">Nombre del Producto</h1>
+                    <h1 class="text-3xl font-bold text-gray-800 mb-4">${producto.nombre}</h1>
                     
                     <!-- Descripción breve -->
                     <p class="text-gray-600 mb-4">
@@ -113,67 +109,136 @@
 
             </div>
 
-            <!-- Carousel de productos recomendados usando Flowbite -->
-            <div class="mt-10 mb-10">
-                <h2 class="text-2xl font-bold mb-6">Productos recomendados</h2>
-                <!-- Carousel container -->
-                <div id="carouselExample" class="relative w-full items-center flex justify-between" data-carousel="static">
-                    <button type="button" class="top-0 left-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-prev>
-                        <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gray-500 group-hover:bg-gray-600 dark:bg-gray-800 dark:group-hover:bg-gray-700">
-                            <svg aria-hidden="true" class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            <!-- Sección de Productos Destacados -->
+            <section class="container mx-auto px-4 py-8">
+                <h2 class="text-2xl font-bold text-gray-800 text-start mb-8">PRODUCTOS DESTACADOS</h2>
+                <!-- Carousel Container -->
+                <div class="w-full h-96 relative">
+                    <!-- Swiper Carousel -->
+                    <div class="swiper multiple-slide-carousel swiper-container h-full w-full relative">
+                        <div class="swiper-wrapper">
+                            <!-- Reemplazamos las diapositivas estándar con tus tarjetas de producto -->
+                            <c:forEach var="producto" items="${destacados}">
+                                    <div class="swiper-slide bg-white shadow-md rounded-lg overflow-hidden flex flex-col w-full h-full mx-2">
+                                        <img src="${producto.imagenPath != null ? producto.imagenPath : 'https://via.placeholder.com/300x200'}" 
+                                            href="${pageContext.request.contextPath}/product/${producto.id}" alt="Imagen del Producto" class="w-full h-3/5 object-cover">
+                                        <div class="p-4 flex-grow flex h-2/5 flex-col justify-between">
+                                            <div class="h-3/6">
+                                                <span onclick="window.location.href='/product/${producto.id}'" class="text-sm font-semibold cursor-pointer text-gray-800">${producto.nombre}</span>
+                                            </div>
+                                            <div class="flex items-center h-1/6">
+                                                <c:forEach var="i" begin="1" end="5">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" 
+                                                        fill="${i <= producto.rating ? '#FFD700' : '#D3D3D3'}" 
+                                                        viewBox="0 0 24 24" 
+                                                        class="w-5 h-5 ${i <= producto.rating ? 'text-yellow-400' : 'text-gray-300'}">
+                                                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                                                    </svg>
+                                                </c:forEach>
+                                            </div>
+                                            <div class="mt-2 flex justify-between items-center h-2/6">
+                                                <div class="flex flex-col">
+                                                    <span class="text-sm ${producto.stock > 0 ? 'text-green-600' : 'text-red-600'}">
+                                                        ${producto.stock > 0 ? 'En stock' : 'No disponible'}
+                                                    </span>
+                                                    <!-- Stock information -->
+                                                    <div class="flex justify-between items-center">
+                                                        <span class="text-gray-800 font-bold">${producto.price} €</span>
+                                                    </div>
+                                                </div>
+                                                <div class="h-8">
+                                                    <button class="bg-gray-300 text-gray-800 p-2 h-full rounded-lg hover:bg-red-300">
+                                                        <img src="${pageContext.request.contextPath}/images/heart.svg" class="h-full cursor-pointer" alt="Mi carrito">
+                                                    </button>
+                                                    <button class="bg-gray-300 text-gray-800 p-2 h-full rounded-lg hover:bg-green-300">
+                                                        <img src="${pageContext.request.contextPath}/images/shopping-cart.svg" class="h-full cursor-pointer" alt="Mi carrito">
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                            </c:forEach>
+                        </div>
+
+                        <!-- Botones funcionales (invisibles) -->
+                        <button id="slider-button-left" class="invisible swiper-button-prev group !p-2 flex justify-center items-center border border-solid border-indigo-600 !w-12 !h-12 transition-all duration-500 rounded-full  hover:bg-indigo-600 !-translate-x-16" data-carousel-prev>
+                            <svg class="h-5 w-5 text-indigo-600 group-hover:text-white" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path d="M10.0002 11.9999L6 7.99971L10.0025 3.99719" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
                             </svg>
-                            <span class="sr-only">Previous</span>
-                        </span>
-                    </button>
-                    <div class="flex justify-between items-center w-full overflow-hidden rounded-lg">
-                        <!-- Slide 1 -->
-                        <div class="w-1/5 p-4 flex flex-col justify-center items-center">
-                            <img src="ruta/producto1.jpg" class="w-24 h-24 rounded-lg" alt="Producto 1">
-                            <h3 class="text-lg font-bold">Producto 1</h3>
-                            <p class="text-gray-600">$19.99</p>
-                        </div>
-                        <!-- Slide 2 -->
-                        <div class="w-1/5 p-4 flex flex-col justify-center items-center">
-                            <img src="ruta/producto1.jpg" class="w-24 h-24 rounded-lg" alt="Producto 1">
-                            <h3 class="text-lg font-bold">Producto 1</h3>
-                            <p class="text-gray-600">$19.99</p>
-                        </div>
-                        <!-- Slide 3 -->
-                        <div class="w-1/5 p-4 flex flex-col justify-center items-center">
-                            <img src="ruta/producto1.jpg" class="w-24 h-24 rounded-lg" alt="Producto 1">
-                            <h3 class="text-lg font-bold">Producto 1</h3>
-                            <p class="text-gray-600">$19.99</p>
-                        </div>
-                        <!-- Slide 4 -->
-                        <div class="w-1/5 p-4 flex flex-col justify-center items-center">
-                            <img src="ruta/producto1.jpg" class="w-24 h-24 rounded-lg" alt="Producto 1">
-                            <h3 class="text-lg font-bold">Producto 1</h3>
-                            <p class="text-gray-600">$19.99</p>
-                        </div>
-                        <!-- Slide 5 -->
-                        <div class="w-1/5 p-4 flex flex-col justify-center items-center">
-                            <img src="ruta/producto1.jpg" class="w-24 h-24 rounded-lg" alt="Producto 1">
-                            <h3 class="text-lg font-bold">Producto 1</h3>
-                            <p class="text-gray-600">$19.99</p>
-                        </div>
-                        <!-- Slide 5 -->
-                        <div class="w-1/5 p-4 flex flex-col justify-center items-center">
-                            <img src="ruta/producto1.jpg" class="w-24 h-24 rounded-lg" alt="Producto 1">
-                            <h3 class="text-lg font-bold">Producto 1</h3>
-                            <p class="text-gray-600">$19.99</p>
-                        </div>
+                        </button>
+                        <button id="slider-button-right" class="invisible swiper-button-next group !p-2 flex justify-center items-center border border-solid border-indigo-600 !w-12 !h-12 transition-all duration-500 rounded-full hover:bg-indigo-600 !translate-x-16" data-carousel-next>
+                            <svg class="h-5 w-5 text-indigo-600 group-hover:text-white" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path d="M5.99984 4.00012L10 8.00029L5.99748 12.0028" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </button>
+
                     </div>
-                    <button type="button" class="top-0 right-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-next>
-                        <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gray-500 group-hover:bg-gray-600 dark:bg-gray-800 dark:group-hover:bg-gray-700">
-                            <svg aria-hidden="true" class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+
+                    <!-- Botones estilizados (visibles) -->
+                    <div>
+                        <button type="button" id="product-carousel-prev" class="absolute top-1/2 left-0 z-30 transform -translate-y-1/2 bg-gray-700 text-white rounded-full p-2 hover:bg-gray-500 focus:outline-none" data-carousel-prev>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
                             </svg>
-                            <span class="sr-only">Next</span>
-                        </span>
-                    </button>
+                        </button>
+
+                        <button type="button" id="product-carousel-next" class="absolute top-1/2 right-0 z-30 transform -translate-y-1/2 bg-gray-700 text-white rounded-full p-2 hover:bg-gray-500 focus:outline-none" data-carousel-next>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <script>
+                        const swiper = new Swiper('.multiple-slide-carousel', {
+                            slidesPerView: 5,  // Valor máximo de elementos por vista
+                            spaceBetween: 5,  // Espacio entre productos
+                            loop: true, 
+                            navigation: {
+                                nextEl: '.swiper-button-next',
+                                prevEl: '.swiper-button-prev',
+                            },
+                            breakpoints: {
+                                // Cuando la pantalla es menor a 640px de ancho, mostrar 1 elemento
+                                240: {
+                                    slidesPerView: 2,
+                                    spaceBetween: 10,
+                                },
+                                // Cuando la pantalla es menor a 768px, mostrar 2 elementos
+                                700: {
+                                    slidesPerView: 3,
+                                    spaceBetween: 15,
+                                },
+                                // Cuando la pantalla es menor a 1024px, mostrar 3 elementos
+                                900: {
+                                    slidesPerView: 4,
+                                    spaceBetween: 20,
+                                },
+                                // Cuando la pantalla es mayor a 1024px, mostrar 5 elementos
+                                1100: {
+                                    slidesPerView: 5,
+                                    spaceBetween: 20,
+                                },
+                                // A partir de 1440px en adelante, mostrar 5 elementos
+                                1440: {
+                                    slidesPerView: 6,
+                                    spaceBetween: 20,
+                                }
+                            }
+                        });
+
+                        // Para el botón "anterior" estilizado
+                        document.getElementById('product-carousel-prev').addEventListener('click', function() {
+                            document.getElementById('slider-button-left').click();
+                        });
+
+                        // Para el botón "siguiente" estilizado
+                        document.getElementById('product-carousel-next').addEventListener('click', function() {
+                            document.getElementById('slider-button-right').click();
+                        });
+                    </script>
                 </div>
-            </div>
+            </section>
         </div>
 
         <!-- Scripts para manejar los desplegables -->
@@ -187,9 +252,7 @@
                 }
             }
         </script>
-    </div>
+    </main>
     
-    <!-- Incluir el footer -->
     <%@ include file="/WEB-INF/views/includes/footer.jsp" %>
-
 </html>

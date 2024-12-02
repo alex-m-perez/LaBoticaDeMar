@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import es.laboticademar.webstore.entities.Usuario;
+import es.laboticademar.webstore.services.DestacadoService;
 import es.laboticademar.webstore.services.ProductService;
 import es.laboticademar.webstore.services.UsuarioService;
 
@@ -20,13 +21,16 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
+    @Autowired
+    private DestacadoService destacadoService;
 
     @GetMapping("/{id}")
     public String goProduct(@PathVariable("id") Integer id, Model model) {
 
-        model.addAttribute("usuarios", productService.getProductoById(id));
+        model.addAttribute("destacados", destacadoService.getAllDestacados());
+        model.addAttribute("producto", productService.getProductoById(id));
 
-        return "welcome";
+        return "product/product";
     }
     
 }

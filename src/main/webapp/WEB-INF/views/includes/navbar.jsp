@@ -7,8 +7,8 @@
         <div class="flex justify-between items-center">
             <!-- Logo a la izquierda -->
             <div class="flex-1 flex justify-start items-center">
-                <img src="${pageContext.request.contextPath}/images/logo.png" alt="Logo" class="h-14 mr-2">
-                <a href="#" class="text-3xl font-bold" style="font-family: 'Satisfy', cursive; color: #86207e;">
+                <img src="${pageContext.request.contextPath}/images/logo.png" alt="Logo" class="h-14 mr-2 ">
+                <a href="#" class="text-3xl font-bold hidden lg:block" style="font-family: 'Satisfy', cursive; color: #86207e;">
                     La Botica de Mar
                 </a>
             </div>
