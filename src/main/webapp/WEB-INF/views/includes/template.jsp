@@ -7,7 +7,7 @@
     <%@ include file="includes/head.jsp" %>
     <%@ include file="includes/navbar.jsp" %>
     
-    <main class="flex-grow">
+    <main class="flex-grow bg-white">
 
         <!-- CONTENIDO -->
         <!-- _________ -->

@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= pageTitle != null ? pageTitle : "Tienda Online" %></title>
     <link rel="icon" href="/images/icono_tab2.png" type="image/png">
-    <!-- Tailwind CSS CDN -->
+    
+    <!-- Tailwind CSS -->
     <link rel="stylesheet"  href="/css/output.css">    
     <!-- Fuentes -->
     <link href="https://fonts.googleapis.com/css2?family=Satisfy&display=swap" rel="stylesheet">

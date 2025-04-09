@@ -6,7 +6,7 @@
     <%@ include file="/WEB-INF/views/includes/head.jsp" %>
     <%@ include file="/WEB-INF/views/includes/navbar.jsp" %>
 
-    <main class="flex-grow">
+    <main class="flex-grow bg-white">
         <!-- Carrusel de imágenes -->
         <section id="carouselHero" class="relative bg-cover bg-center h-72">
             <!-- Contenedor del carrusel -->

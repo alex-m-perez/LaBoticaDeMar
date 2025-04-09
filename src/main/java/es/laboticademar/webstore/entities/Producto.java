@@ -1,9 +1,12 @@
 package es.laboticademar.webstore.entities;
 
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -54,4 +57,7 @@ public class Producto {
 
     @Column(name = "RATING_COUNT", nullable = true, length = 1)
     private Integer ratingCount;
+
+    @ManyToMany(mappedBy = "productos")
+    private List<Wishlist> wishlists;
 }
