@@ -11,6 +11,8 @@ import es.laboticademar.webstore.security.auth.AuthenticationRequest;
 import es.laboticademar.webstore.security.auth.AuthenticationResponse;
 import es.laboticademar.webstore.security.auth.RegisterRequest;
 import es.laboticademar.webstore.services.impl.AuthenticationService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 
@@ -28,12 +30,27 @@ public class AuthenticationController {
     }
     
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
+    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request,
+                                                                 HttpServletResponse response) {
         try {
-            AuthenticationResponse response = authenticationService.authenticate(request);
-            return ResponseEntity.ok(response);
+            // Autentica al usuario y genera el JWT.
+            AuthenticationResponse authResponse = authenticationService.authenticate(request);
+
+            // Crear la cookie con el JWT.
+            Cookie jwtCookie = new Cookie("jwtToken", authResponse.getToken());
+            jwtCookie.setHttpOnly(true); // Evita que el token sea accesible desde JavaScript.
+            jwtCookie.setSecure(true);   // Recomendable: solo se enviará en conexiones HTTPS.
+            jwtCookie.setPath("/");      // La cookie estará disponible para toda la aplicación.
+            jwtCookie.setMaxAge(3600);   // Opcional: establecer tiempo de expiración en segundos (ej., 1 hora).
+
+            // Agregar la cookie a la respuesta.
+            response.addCookie(jwtCookie);
+
+            return ResponseEntity.ok(authResponse);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
     }
+
+    
 }

@@ -45,20 +45,35 @@ public class InicioController {
         return "wishlist";
     }
 
+    @GetMapping("")
+    public String accessWelcomePage(Model model) {
+        model.addAttribute("destacados", destacadoService.getAllDestacados());
+
+        return "main/welcome";
+    }
+
+    @GetMapping("/login")
+    public String goLoginPage() {
+        return "main/login";
+    }
+
+    @GetMapping("/profile")
+    public String accessProfile() {
+        return "perfil";
+    }
+
+    @GetMapping("/cart")
+    public String goShoppingCart() {
+        return "shopping_cart";
+    }
+
+    @GetMapping("/wishlist")
+    public String goWishlist() {
+        return "wishlist";
+    }
+
     @GetMapping("/product")
     public String goProduct() {
         return "product/product";
-    }
-
-    @GetMapping("/prueba")
-    public String mostrarFormLogin(Model model) {
-        List<Usuario> usuarios = usuarioService.getAllUsers();
-        String prueba = "prueba";
-        for (Usuario usuario : usuarios) {
-            System.out.println(usuario.getNombre());
-        }
-        model.addAttribute("usuarios", usuarios);
-        model.addAttribute("prueba", prueba);
-        return "login";  // Nombre del JSP de inicio, sin la extensión .jsp
     }
 }

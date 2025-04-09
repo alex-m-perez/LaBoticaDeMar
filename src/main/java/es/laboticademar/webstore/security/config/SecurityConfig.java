@@ -24,24 +24,26 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable()) // Desactiva CSRF
-            .authorizeHttpRequests(requests -> requests
-                // Permitir el acceso sin autenticación a las rutas públicas
-                .requestMatchers("/WEB-INF/**", "/css/**", "/images/**", "/js/**", "/public/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/", "/product/**", "/auth/**").permitAll()
-                // Proteger las rutas que requieren autenticación
-                .requestMatchers("/wishlist", "/cart", "/profile").authenticated()
-                .anyRequest().authenticated() // Otras rutas requieren autenticación
-            )
-            // Redirigir al login si el usuario no está autenticado
-            .exceptionHandling(handling -> handling
-                .authenticationEntryPoint((request, response, authException) -> response.sendRedirect("/auth/login"))
-            )
-            .sessionManagement(management -> management
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Configura la política de sesión como stateless
-            )
-            .authenticationProvider(authenticationProvider) // Configura el proveedor de autenticación
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class); // Agrega el filtro JWT
+        .csrf(csrf -> csrf.disable()) // Desactiva CSRF
+        .authorizeHttpRequests(requests -> requests
+            // Permitir el acceso sin autenticación a las rutas públicas
+            .requestMatchers("/WEB-INF/**", "/css/**", "/images/**", "/js/**", "/public/**").permitAll()
+            .requestMatchers(HttpMethod.GET, "/", "/login", "/product/**", "/auth/**").permitAll()
+            // Permitir POST para /auth/authenticate sin autenticación
+            .requestMatchers(HttpMethod.POST, "/auth/authenticate").permitAll()
+            // Proteger las rutas que requieren autenticación
+            .requestMatchers("/wishlist", "/cart", "/profile").authenticated()
+            .anyRequest().authenticated() // Otras rutas requieren autenticación
+        )
+        // Redirigir al login si el usuario no está autenticado
+        .exceptionHandling(handling -> handling
+            .authenticationEntryPoint((request, response, authException) -> response.sendRedirect("/login"))
+        )
+        .sessionManagement(management -> management
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Configura la política de sesión como stateless
+        )
+        .authenticationProvider(authenticationProvider) // Configura el proveedor de autenticación
+        .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class); // Agrega el filtro JWT
 
         return http.build();
     }
