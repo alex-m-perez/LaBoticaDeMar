@@ -12,6 +12,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
@@ -19,28 +20,40 @@ import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-public class JwtAuthentication extends OncePerRequestFilter{
+public class JwtAuthentication extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
 
-    @SuppressWarnings("null")
     @Override
     protected void doFilterInternal(
         @NonNull HttpServletRequest request,
         @NonNull HttpServletResponse response,
         @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
-        final String authHeader = request.getHeader("Authorization");
-        final String jwt;
-        final String correoUsuario;
-        if (authHeader == null || !authHeader.startsWith("Bearer ")){
+        String jwt = null;
+        String correoUsuario = null;
+
+        // Extraer la cookie "jwtToken" de la solicitud
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("jwtToken".equals(cookie.getName())) {
+                    jwt = cookie.getValue();
+                    break;
+                }
+            }
+        }
+
+        // Si no se encontró el token en la cookie, continúa sin autenticación
+        if (jwt == null) {
             filterChain.doFilter(request, response);
             return;
         }
-        jwt = authHeader.substring(7);
-        correoUsuario = jwtService.extractUsername(jwt); //Extraer usuario de email del JWT token;
-        if (correoUsuario != null && SecurityContextHolder.getContext().getAuthentication() == null){
+
+        // Extraer el nombre de usuario (correo) del token JWT
+        correoUsuario = jwtService.extractUsername(jwt);
+        if (correoUsuario != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(correoUsuario);
             if (jwtService.isTokenValid(jwt, userDetails)) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
@@ -54,5 +67,5 @@ public class JwtAuthentication extends OncePerRequestFilter{
         }
         filterChain.doFilter(request, response);
     }
-    
 }
+
