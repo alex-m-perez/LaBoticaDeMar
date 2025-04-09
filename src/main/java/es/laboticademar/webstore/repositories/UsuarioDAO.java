@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import es.laboticademar.webstore.entities.Usuario;
 
-public interface UsuarioRepo extends JpaRepository<Usuario, Long> {
+public interface UsuarioDAO extends JpaRepository<Usuario, Long> {
     
     Optional<Usuario> getByCorreo(String correo);
     

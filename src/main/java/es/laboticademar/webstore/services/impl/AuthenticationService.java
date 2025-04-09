@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import es.laboticademar.webstore.entities.Role;
 import es.laboticademar.webstore.entities.Usuario;
-import es.laboticademar.webstore.repositories.UsuarioRepo;
+import es.laboticademar.webstore.repositories.UsuarioDAO;
 import es.laboticademar.webstore.security.auth.AuthenticationRequest;
 import es.laboticademar.webstore.security.auth.AuthenticationResponse;
 import es.laboticademar.webstore.security.auth.RegisterRequest;
@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class AuthenticationService {
 
     @Autowired
-    private final UsuarioRepo usuarioRepo;
+    private final UsuarioDAO usuarioRDAO;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
@@ -37,7 +37,7 @@ public class AuthenticationService {
             .passwd(passwordEncoder.encode(request.getPassword()))
             .role(Role.USUARIO)
             .build();
-        usuarioRepo.save(usuario);
+        usuarioRDAO.save(usuario);
         var jwtToken = jwtService.generateToken(usuario);
         return AuthenticationResponse.builder().token(jwtToken).build();
     }
@@ -49,7 +49,7 @@ public class AuthenticationService {
                 request.getPassword()
             )
         );
-        var usuario = usuarioRepo.getByCorreo(request.getCorreo()).orElseThrow();
+        var usuario = usuarioRDAO.getByCorreo(request.getCorreo()).orElseThrow();
         var jwtToken = jwtService.generateToken(usuario);
         return AuthenticationResponse.builder().token(jwtToken).build();
     }
