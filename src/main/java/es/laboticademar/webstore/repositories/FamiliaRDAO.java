@@ -2,8 +2,8 @@ package es.laboticademar.webstore.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import es.laboticademar.webstore.entities.Categoria;
+import es.laboticademar.webstore.entities.Familia;
 
-public interface Producto_CategoriaRepo extends JpaRepository<Categoria, Long> {
+public interface FamiliaRDAO extends JpaRepository<Familia, Long> {
     // No es necesario definir un método findAll() aquí
 }

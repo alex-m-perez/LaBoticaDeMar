@@ -25,7 +25,7 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register (@RequestBody RegisterRequest request) {
+    public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
         return ResponseEntity.ok(authenticationService.register(request));
     }
     
@@ -33,24 +33,22 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request,
                                                                  HttpServletResponse response) {
         try {
-            // Autentica al usuario y genera el JWT.
+            // Autentica y genera el JWT.
             AuthenticationResponse authResponse = authenticationService.authenticate(request);
-
-            // Crear la cookie con el JWT.
+            
+            // Crear la cookie con el token.
             Cookie jwtCookie = new Cookie("jwtToken", authResponse.getToken());
-            jwtCookie.setHttpOnly(true); // Evita que el token sea accesible desde JavaScript.
-            jwtCookie.setSecure(true);   // Recomendable: solo se enviará en conexiones HTTPS.
-            jwtCookie.setPath("/");      // La cookie estará disponible para toda la aplicación.
-            jwtCookie.setMaxAge(3600);   // Opcional: establecer tiempo de expiración en segundos (ej., 1 hora).
-
+            jwtCookie.setHttpOnly(true); // Evita acceso desde JavaScript.
+            jwtCookie.setSecure(true);   // Solo se envía vía HTTPS.
+            jwtCookie.setPath("/");      // Disponible en toda la aplicación.
+            jwtCookie.setMaxAge(3600);   // 1 hora (ajustable según necesidades).
+            
             // Agregar la cookie a la respuesta.
             response.addCookie(jwtCookie);
-
+            
             return ResponseEntity.ok(authResponse);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
     }
-
-    
 }

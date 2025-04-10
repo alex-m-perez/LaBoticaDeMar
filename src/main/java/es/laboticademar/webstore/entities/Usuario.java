@@ -1,18 +1,24 @@
 package es.laboticademar.webstore.entities;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -32,20 +38,25 @@ public class Usuario implements UserDetails {
 	private String nombre;
 	private String apellido1;
 	private String apellido2;
-	private Integer puntos;
-	private String correo;
-	private String direccionPostal;
-	private Integer telefono;
+    private Integer puntos;
+    private String correo;
+    private String direccionPostal;
+    private Integer telefono;
 
-	@Enumerated(EnumType.STRING)
-	private Role role;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "usuario_roles", joinColumns = @JoinColumn(name = "usuario_id"))
+    @Column(name = "rol")
+    private Set<String> roles = new HashSet<>();
 
 	private String passwd;
 
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return List.of(new SimpleGrantedAuthority(role.name()));
-	}
+     @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        // Convierte cada String del set en una autoridad simple.
+        return roles.stream()
+                    .map(SimpleGrantedAuthority::new)
+                    .collect(Collectors.toList());
+    }
 	@Override
 	public String getUsername() {
 		return correo;

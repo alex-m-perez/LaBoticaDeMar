@@ -11,18 +11,18 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import es.laboticademar.webstore.repositories.UsuarioRepo;
+import es.laboticademar.webstore.repositories.UsuarioDAO;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
 @RequiredArgsConstructor
 public class ApplicationConfig {
 
-    private final UsuarioRepo usuarioRepo;
+    private final UsuarioDAO usuarioRDAO;
     
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> usuarioRepo.getByCorreo(username)
+        return username -> usuarioRDAO.getByCorreo(username)
             .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
