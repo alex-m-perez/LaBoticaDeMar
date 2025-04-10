@@ -1,12 +1,13 @@
 package es.laboticademar.webstore.services.impl;
 
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import es.laboticademar.webstore.entities.Role;
 import es.laboticademar.webstore.entities.Usuario;
 import es.laboticademar.webstore.repositories.UsuarioDAO;
 import es.laboticademar.webstore.security.auth.AuthenticationRequest;
@@ -35,7 +36,7 @@ public class AuthenticationService {
             .direccionPostal(request.getDireccionPostal())
             .telefono(request.getTelefono())
             .passwd(passwordEncoder.encode(request.getPassword()))
-            .role(Role.USUARIO)
+            .roles(Set.of("ROLE_USUARIO"))
             .build();
         usuarioRDAO.save(usuario);
         var jwtToken = jwtService.generateToken(usuario);

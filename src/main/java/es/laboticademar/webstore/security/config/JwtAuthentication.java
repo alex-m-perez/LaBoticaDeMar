@@ -27,14 +27,13 @@ public class JwtAuthentication extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(
-        @NonNull HttpServletRequest request,
-        @NonNull HttpServletResponse response,
-        @NonNull FilterChain filterChain
-    ) throws ServletException, IOException {
+            @NonNull HttpServletRequest request,
+            @NonNull HttpServletResponse response,
+            @NonNull FilterChain filterChain) throws ServletException, IOException {
         String jwt = null;
         String correoUsuario = null;
 
-        // Extraer la cookie "jwtToken" de la solicitud
+        // Extraer la cookie "jwtToken"
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
@@ -45,27 +44,36 @@ public class JwtAuthentication extends OncePerRequestFilter {
             }
         }
 
-        // Si no se encontró el token en la cookie, continúa sin autenticación
-        if (jwt == null) {
-            filterChain.doFilter(request, response);
-            return;
+        if (jwt != null) {
+            try {
+                correoUsuario = jwtService.extractUsername(jwt);
+            } catch (io.jsonwebtoken.ExpiredJwtException e) {
+                // El token está expirado
+                SecurityContextHolder.clearContext();
+                // Opcional: Eliminar la cookie expiradas del navegador
+                Cookie expiredCookie = new Cookie("jwtToken", null);
+                expiredCookie.setPath("/");
+                expiredCookie.setHttpOnly(true);
+                expiredCookie.setSecure(true);
+                expiredCookie.setMaxAge(0);
+                response.addCookie(expiredCookie);
+            }
         }
 
-        // Extraer el nombre de usuario (correo) del token JWT
-        correoUsuario = jwtService.extractUsername(jwt);
+        // Si no hay token o este fue inválido, el usuario se queda sin autenticar;
+        // AnonymousAuthenticationFilter (configurado por defecto en Spring Security) asigna el rol "ROLE_ANONYMOUS".
         if (correoUsuario != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(correoUsuario);
-            if (jwtService.isTokenValid(jwt, userDetails)) {
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                    userDetails,
-                    null,
-                    userDetails.getAuthorities()
-                );
+            UserDetails userDetails = userDetailsService.loadUserByUsername(correoUsuario);
+            if (jwt != null && jwtService.isTokenValid(jwt, userDetails)) {
+                UsernamePasswordAuthenticationToken authToken =
+                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         }
+
         filterChain.doFilter(request, response);
     }
-}
 
+
+}

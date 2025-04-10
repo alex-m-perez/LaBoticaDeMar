@@ -25,12 +25,19 @@
             </div>
 
             <div class="flex-1 flex justify-end space-x-4 items-center">
+                <sec:authorize access="isAuthenticated()">
+                    <p>Bienvenido, ${usuario.nombre}</p>
+                    <!-- Otros elementos para usuarios logueados -->
+                </sec:authorize>
+                <sec:authorize access="!isAuthenticated()">
+                    <p>Iniciar Sesion | Registro</p>
+                </sec:authorize>
+                <img src="${pageContext.request.contextPath}/images/user-circle.svg" class="h-6 cursor-pointer" alt="Mi perfil"
+                    onclick="window.location.href='/profile'">
                 <img src="${pageContext.request.contextPath}/images/heart.svg" class="h-6 cursor-pointer" alt="Artículos que me gustan"
                     onclick="window.location.href='/wishlist'">
                 <img src="${pageContext.request.contextPath}/images/shopping-cart.svg" class="h-6 cursor-pointer" alt="Mi carrito"
                     onclick="window.location.href='/cart'">
-                <img src="${pageContext.request.contextPath}/images/user-circle.svg" class="h-6 cursor-pointer" alt="Mi perfil"
-                    onclick="window.location.href='/profile'">
             </div>
         </div>
 
