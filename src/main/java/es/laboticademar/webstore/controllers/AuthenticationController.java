@@ -39,7 +39,7 @@ public class AuthenticationController {
             // Crear la cookie con el token.
             Cookie jwtCookie = new Cookie("jwtToken", authResponse.getToken());
             jwtCookie.setHttpOnly(true); // Evita acceso desde JavaScript.
-            jwtCookie.setSecure(true);   // Solo se envía vía HTTPS.
+            jwtCookie.setSecure(false);   // Solo se envía vía HTTPS.
             jwtCookie.setPath("/");      // Disponible en toda la aplicación.
             jwtCookie.setMaxAge(3600);   // 1 hora (ajustable según necesidades).
             

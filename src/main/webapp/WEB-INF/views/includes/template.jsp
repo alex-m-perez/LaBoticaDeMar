@@ -4,8 +4,8 @@
 %>
 <!DOCTYPE html>
 <html lang="es">
-    <%@ include file="includes/head.jsp" %>
-    <%@ include file="includes/navbar.jsp" %>
+    <%@ include file="../includes/head.jsp" %>
+    <%@ include file="../includes/navbar.jsp" %>
     
     <main class="flex-grow bg-white">
 
@@ -17,5 +17,5 @@
 
     </main>
     
-    <%@ include file="includes/footer.jsp" %>
+    <%@ include file="../includes/footer.jsp" %>
 </html>

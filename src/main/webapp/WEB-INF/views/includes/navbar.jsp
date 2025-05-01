@@ -1,5 +1,3 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
 <script src="${pageContext.request.contextPath}/js/navbar/navbar.js" defer></script>
 
 <nav id="navbar" class="bg-white shadow-md sticky top-0 w-full z-50 transition-all duration-300 ease-in-out">
@@ -30,7 +28,7 @@
                     <!-- Otros elementos para usuarios logueados -->
                 </sec:authorize>
                 <sec:authorize access="!isAuthenticated()">
-                    <p>Iniciar Sesion | Registro</p>
+                    <p>Iniciar Sesion</p>
                 </sec:authorize>
                 <img src="${pageContext.request.contextPath}/images/user-circle.svg" class="h-6 cursor-pointer" alt="Mi perfil"
                     onclick="window.location.href='/profile'">
@@ -38,6 +36,11 @@
                     onclick="window.location.href='/wishlist'">
                 <img src="${pageContext.request.contextPath}/images/shopping-cart.svg" class="h-6 cursor-pointer" alt="Mi carrito"
                     onclick="window.location.href='/cart'">
+                <sec:authorize access="hasRole('ROLE_ADMIN')">
+                    <img src="${pageContext.request.contextPath}/images/settings.svg" class="h-6 cursor-pointer" alt="Administracion"
+                        onclick="window.location.href='/admin/home'">
+                </sec:authorize>
+                
             </div>
         </div>
 

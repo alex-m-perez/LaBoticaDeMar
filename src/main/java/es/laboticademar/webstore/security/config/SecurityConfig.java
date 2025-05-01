@@ -38,7 +38,7 @@ public class SecurityConfig {
                 // EMPLOYEE y ADMIN pueden acceder a /employee/**
                 .requestMatchers("/employee/**").hasAnyRole("EMPLOYEE", "ADMIN")
                 // Los clientes (USER) pueden acceder a carrito, wishlist y perfil
-                .requestMatchers("/cart", "/wishlist", "/profile").hasRole("USER")
+                .requestMatchers("/cart", "/wishlist", "/profile").hasAnyRole("USER", "ADMIN")
                 
                 // El resto requiere autenticación
                 .anyRequest().authenticated()
