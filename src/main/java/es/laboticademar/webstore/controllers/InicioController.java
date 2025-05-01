@@ -44,12 +44,12 @@ public class InicioController {
 
     @GetMapping("/cart")
     public String goShoppingCart() {
-        return "shopping_cart";
+        return "purchases/shopping_cart";
     }
 
     @GetMapping("/wishlist")
     public String goWishlist() {
-        return "wishlist";
+        return "purchases/wishlist";
     }
 
     @GetMapping("/login")

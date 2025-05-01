@@ -5,11 +5,8 @@
 <!DOCTYPE html>
 <html lang="es">
 
-    <!-- Incluir el head -->
-    <%@ include file="includes/head.jsp" %>
-
-    <!-- Incluir el navbar -->
-    <%@ include file="includes/navbar.jsp" %>
+    <%@ include file="../includes/head.jsp" %>
+    <%@ include file="../includes/navbar.jsp" %>
     
     <div class="flex-grow">
         <div class="container mx-auto my-10 flex-grow">
@@ -69,6 +66,6 @@
     </div>
     
     <!-- Incluir el footer -->
-    <%@ include file="includes/footer.jsp" %>
+    <%@ include file="../includes/footer.jsp" %>
 
 </html>
