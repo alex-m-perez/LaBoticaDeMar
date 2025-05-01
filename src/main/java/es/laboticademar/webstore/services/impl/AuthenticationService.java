@@ -2,13 +2,13 @@ package es.laboticademar.webstore.services.impl;
 
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import es.laboticademar.webstore.entities.Usuario;
+import es.laboticademar.webstore.entities.UsuarioPrincipal;
 import es.laboticademar.webstore.repositories.UsuarioDAO;
 import es.laboticademar.webstore.security.auth.AuthenticationRequest;
 import es.laboticademar.webstore.security.auth.AuthenticationResponse;
@@ -19,8 +19,6 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
-
-    @Autowired
     private final UsuarioDAO usuarioRDAO;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
@@ -39,7 +37,9 @@ public class AuthenticationService {
             .roles(Set.of("ROLE_USUARIO"))
             .build();
         usuarioRDAO.save(usuario);
-        var jwtToken = jwtService.generateToken(usuario);
+
+        var usuarioPrincipal = new UsuarioPrincipal(usuario);
+        var jwtToken = jwtService.generateToken(usuarioPrincipal);
         return AuthenticationResponse.builder().token(jwtToken).build();
     }
 
@@ -50,8 +50,10 @@ public class AuthenticationService {
                 request.getPassword()
             )
         );
+
         var usuario = usuarioRDAO.getByCorreo(request.getCorreo()).orElseThrow();
-        var jwtToken = jwtService.generateToken(usuario);
+        var usuarioPrincipal = new UsuarioPrincipal(usuario);
+        var jwtToken = jwtService.generateToken(usuarioPrincipal);
         return AuthenticationResponse.builder().token(jwtToken).build();
     }
     

@@ -7,9 +7,11 @@ import java.util.function.Function;
 
 import javax.crypto.SecretKey;
 
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import es.laboticademar.webstore.entities.UsuarioPrincipal;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -33,13 +35,17 @@ public class JwtService {
     
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
-        // Opcional: incluir roles en el JWT
-        claims.put("roles", userDetails.getAuthorities()
-                                       .stream()
-                                       .map(auth -> auth.getAuthority())
-                                       .toList());
+
+        if (userDetails instanceof UsuarioPrincipal usuarioPrincipal) {
+            claims.put("roles", usuarioPrincipal.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .toList());
+        }
+
         return generateToken(claims, userDetails);
     }
+
     
     public String generateToken(Map<String, Object> extractClaims, UserDetails userDetails){
         return Jwts

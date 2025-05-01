@@ -1,19 +1,19 @@
 package es.laboticademar.webstore.services.impl;
 
 import java.util.List;
-import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import es.laboticademar.webstore.entities.Producto;
 import es.laboticademar.webstore.repositories.ProductDAO;
 import es.laboticademar.webstore.services.ProductService;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 
 @Service
-public class ProductServiceImpl implements ProductService{
-    @Autowired
-    private ProductDAO productDAO;
+@RequiredArgsConstructor
+public class ProductServiceImpl implements ProductService {
+    private final ProductDAO productDAO;
 
     @Override
     public Producto saveOrUpdateProducto(Producto producto) {
@@ -22,7 +22,8 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public Producto getProductoById(Integer id) {
-        return productDAO.findById(id).get();
+        return productDAO.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado con ID: " + id));
     }
 
     @Override

@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import es.laboticademar.webstore.entities.Usuario;
+import es.laboticademar.webstore.entities.UsuarioPrincipal;
 import es.laboticademar.webstore.repositories.UsuarioDAO;
 import lombok.RequiredArgsConstructor;
 
@@ -28,11 +29,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         Usuario usuario = usuarioRDAO.getByCorreo(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado: " + username));
 
-        List<GrantedAuthority> authorities = usuario.getRoles()
-                .stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
-
-        return new User(usuario.getCorreo(), usuario.getPassword(), authorities);
+        return new UsuarioPrincipal(usuario);
     }
+
 }

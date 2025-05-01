@@ -4,18 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import es.laboticademar.webstore.entities.Destacado;
 import es.laboticademar.webstore.entities.Producto;
 import es.laboticademar.webstore.repositories.DestacadoDAO;
 import es.laboticademar.webstore.services.DestacadoService;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class DestacadoServiceImpl implements DestacadoService{
-    @Autowired
-    private DestacadoDAO destacadoDAO;
+    private final DestacadoDAO destacadoDAO;
 
     @Override
     public Destacado saveOrUpdateDestacado(Destacado destacado) {
@@ -23,8 +24,9 @@ public class DestacadoServiceImpl implements DestacadoService{
     }
 
     @Override
-    public Optional<Destacado> getDestacadoById(Integer id) {
-        return destacadoDAO.findById(id);
+    public Destacado getDestacadoById(Integer id) {
+        return destacadoDAO.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado con ID: " + id));
     }
 
     @Override

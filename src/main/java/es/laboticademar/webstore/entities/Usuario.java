@@ -29,7 +29,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Builder
-public class Usuario implements UserDetails {
+public class Usuario{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,37 +49,5 @@ public class Usuario implements UserDetails {
     private Set<String> roles = new HashSet<>();
 
 	private String passwd;
-
-     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Convierte cada String del set en una autoridad simple.
-        return roles.stream()
-                    .map(SimpleGrantedAuthority::new)
-                    .collect(Collectors.toList());
-    }
-	@Override
-	public String getUsername() {
-		return correo;
-	}
-	@Override
-	public boolean isAccountNonExpired() {
-		return true;
-	}
-	@Override
-	public boolean isAccountNonLocked() {
-		return true;
-	}
-	@Override
-	public boolean isCredentialsNonExpired() {
-		return true;
-	}
-	@Override
-	public boolean isEnabled() {
-		return true;
-	}
-	@Override
-	public String getPassword() {
-		return passwd;
-	}
 
 }
