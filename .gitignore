@@ -5,4 +5,5 @@ target/
 *.ear
 *.logs
 *.iml
-*.vscode
+.vscode
+node_modules/
