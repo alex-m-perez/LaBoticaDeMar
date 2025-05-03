@@ -7,16 +7,11 @@ import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 
-import es.laboticademar.webstore.WebstoreApplication;
 import es.laboticademar.webstore.entities.Usuario;
 import es.laboticademar.webstore.entities.UsuarioPrincipal;
 import es.laboticademar.webstore.security.config.JwtService;
 
-@SpringBootTest(classes = WebstoreApplication.class)
-@AutoConfigureMockMvc
 public class JwtServiceTest {
 
     private JwtService jwtService;
