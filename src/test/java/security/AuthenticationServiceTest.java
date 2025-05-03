@@ -15,13 +15,18 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import es.laboticademar.webstore.WebstoreApplication;
 import es.laboticademar.webstore.entities.Usuario;
+import es.laboticademar.webstore.entities.UsuarioPrincipal;
 import es.laboticademar.webstore.repositories.UsuarioDAO;
 import es.laboticademar.webstore.security.auth.AuthenticationRequest;
 import es.laboticademar.webstore.security.auth.AuthenticationResponse;
@@ -31,20 +36,20 @@ import es.laboticademar.webstore.services.impl.AuthenticationService;
 
 public class AuthenticationServiceTest {
 
-    @Mock
-    private UsuarioDAO usuarioDAO;
+@Mock
+private UsuarioDAO usuarioDAO;
 
-    @Mock
-    private PasswordEncoder passwordEncoder;
+@Mock
+private PasswordEncoder passwordEncoder;
 
-    @Mock
-    private JwtService jwtService;
+@Mock
+private JwtService jwtService;
 
-    @Mock
-    private AuthenticationManager authenticationManager;
+@Mock
+private AuthenticationManager authenticationManager;
 
-    @InjectMocks
-    private AuthenticationService authenticationService;
+@InjectMocks
+private AuthenticationService authenticationService;
 
     @BeforeEach
     void setUp() {
@@ -74,7 +79,8 @@ public class AuthenticationServiceTest {
 
         when(passwordEncoder.encode("pass")).thenReturn("encoded");
         when(usuarioDAO.save(any(Usuario.class))).thenReturn(usuario);
-        when(jwtService.generateToken(any())).thenReturn("mock-jwt-token");
+        when(jwtService.generateToken(any(UsuarioPrincipal.class))).thenReturn("mock-jwt-token");
+
 
         AuthenticationResponse response = authenticationService.register(request);
 

@@ -13,9 +13,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 
+import es.laboticademar.webstore.WebstoreApplication;
 import es.laboticademar.webstore.services.impl.AuthenticationService;
 
-@SpringBootTest(classes = es.laboticademar.webstore.WebstoreApplication.class)
+@SpringBootTest(classes = WebstoreApplication.class)
 @AutoConfigureMockMvc
 public class SecurityConfigIntegrationTest {
 
