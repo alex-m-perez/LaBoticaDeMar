@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "destacado", schema = "laboticademar")
+@Table(name = "destacado")
 public class Destacado {
 
     @Id
@@ -25,6 +25,6 @@ public class Destacado {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "PRODUCTO", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "PRODUCTO", nullable = false)
     private Producto producto;
 }

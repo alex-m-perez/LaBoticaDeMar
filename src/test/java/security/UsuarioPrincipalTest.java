@@ -5,15 +5,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 
-import es.laboticademar.webstore.WebstoreApplication;
 import es.laboticademar.webstore.entities.Usuario;
 import es.laboticademar.webstore.entities.UsuarioPrincipal;
 
-@SpringBootTest(classes = WebstoreApplication.class)
-@AutoConfigureMockMvc
 public class UsuarioPrincipalTest {
 
     @Test
