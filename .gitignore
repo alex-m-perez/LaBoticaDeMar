@@ -1,9 +1,22 @@
+# Build outputs
 target/
-*.class
-*.jar
-*.war
-*.ear
-*.logs
+build/
+
+# Eclipse / STS
+.classpath
+.project
+.settings/
+
+# IntelliJ
 *.iml
-.vscode
+.idea/
+
+# VSCode
+.vscode/
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Node
 node_modules/
