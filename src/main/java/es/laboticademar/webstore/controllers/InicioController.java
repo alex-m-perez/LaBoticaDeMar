@@ -20,6 +20,7 @@ public class InicioController {
     private UsuarioService usuarioService;
     @Autowired
     private DestacadoService destacadoService;
+    
 
     @GetMapping("/")
     public String accessWelcomePage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
