@@ -8,8 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import es.laboticademar.webstore.services.DestacadoService;
-import es.laboticademar.webstore.services.UsuarioService;
+import es.laboticademar.webstore.services.interfaces.DestacadoService;
+import es.laboticademar.webstore.services.interfaces.UsuarioService;
 
 
 @Controller

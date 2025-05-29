@@ -10,6 +10,7 @@ module.exports = {
             colors: {
                 'dark-moss-green': '#516040ff',
                 'pistachio': '#88b861ff',
+                'pistachio-dark': '#689a3f',
                 'thistle': '#ddcce1ff',
                 'pomp-and-power': '#84599bff',
                 'finn': '#6b436eff',

@@ -12,48 +12,89 @@ const brandsArrowUp = document.getElementById('brands_arrowUp');
 let isCategoriesVisible = false;
 let isBrandsVisible = false;
 
-function toggleMenu(menuToShow, menuToHide, arrowDownToShow, arrowUpToShow, arrowDownToHide, arrowUpToHide, visibilityFlagToShow, visibilityFlagToHide) {
-    // Si el menú que se intenta mostrar está abierto, lo cerramos
-    if (visibilityFlagToShow) {
-        menuToShow.classList.add('hidden');
-        menuToShow.classList.remove('block');
-        arrowDownToShow.classList.remove('hidden');
-        arrowUpToShow.classList.add('hidden');
-        visibilityFlagToShow = false;
+// Utilidades
+function clearSelection() {
+    const navbarItems = document.querySelectorAll('.navbar-item');
+    navbarItems.forEach(el => {
+        el.classList.remove("text-pistachio", "text-red-600", "hover:text-gray-800", "hover:text-red-800");
+        if (el.id === "toggleBrandsBtn" || el.id === "toggleCategoriesBtn" || el.classList.contains("text-gray-500")) {
+            el.classList.add("text-gray-500", "hover:text-gray-800");
+        } else {
+            el.classList.add("text-red-500", "hover:text-red-800");
+        }
+    });
+}
+
+function setActive(element) {
+    element.classList.remove("text-gray-500", "hover:text-gray-800", "text-red-500", "hover:text-red-800");
+    if (element.classList.contains("text-red-500")) {
+        element.classList.add("text-red-600");
     } else {
-        // Mostramos el menú deseado
+        element.classList.add("text-pistachio");
+    }
+}
+
+// Menú desplegable
+function toggleMenu(menuToShow, menuToHide, arrowDownToShow, arrowUpToShow, arrowDownToHide, arrowUpToHide, btnToActivate, btnToDeactivate, visibilityFlagToShow, visibilityFlagToHide) {
+    const shouldClose = visibilityFlagToShow;
+
+    if (!shouldClose) {
         menuToShow.classList.remove('hidden');
         menuToShow.classList.add('block');
         arrowDownToShow.classList.add('hidden');
         arrowUpToShow.classList.remove('hidden');
-        visibilityFlagToShow = true;
 
-        // Ocultamos el otro menú si está visible
-        if (visibilityFlagToHide) {
-            menuToHide.classList.add('hidden');
-            menuToHide.classList.remove('block');
-            arrowDownToHide.classList.remove('hidden');
-            arrowUpToHide.classList.add('hidden');
-            visibilityFlagToHide = false;
-        }
+        menuToHide.classList.add('hidden');
+        menuToHide.classList.remove('block');
+        arrowDownToHide.classList.remove('hidden');
+        arrowUpToHide.classList.add('hidden');
+
+        clearSelection();
+        setActive(btnToActivate);
+    } else {
+        menuToShow.classList.add('hidden');
+        menuToShow.classList.remove('block');
+        arrowDownToShow.classList.remove('hidden');
+        arrowUpToShow.classList.add('hidden');
+
+        clearSelection();
     }
 
-    // Actualizamos las variables globales directamente
-    isCategoriesVisible = (menuToShow === categoriesList) ? visibilityFlagToShow : visibilityFlagToHide;
-    isBrandsVisible = (menuToShow === brandsList) ? visibilityFlagToShow : visibilityFlagToHide;
+    isCategoriesVisible = (menuToShow === categoriesList) ? !shouldClose : false;
+    isBrandsVisible = (menuToShow === brandsList) ? !shouldClose : false;
 }
 
-// Evento de clic en Categorías
-toggleCategoriesBtn.addEventListener('click', function() {
-    toggleMenu(categoriesList, brandsList, categoriesArrowDown, categoriesArrowUp, brandsArrowDown, brandsArrowUp, isCategoriesVisible, isBrandsVisible);
+// Clicks
+toggleCategoriesBtn.addEventListener('click', function () {
+    toggleMenu(categoriesList, brandsList, categoriesArrowDown, categoriesArrowUp, brandsArrowDown, brandsArrowUp, toggleCategoriesBtn, toggleBrandsBtn, isCategoriesVisible, isBrandsVisible);
 });
 
-// Evento de clic en Marcas
-toggleBrandsBtn.addEventListener('click', function() {
-    toggleMenu(brandsList, categoriesList, brandsArrowDown, brandsArrowUp, categoriesArrowDown, categoriesArrowUp, isBrandsVisible, isCategoriesVisible);
+toggleBrandsBtn.addEventListener('click', function () {
+    toggleMenu(brandsList, categoriesList, brandsArrowDown, brandsArrowUp, categoriesArrowDown, categoriesArrowUp, toggleBrandsBtn, toggleCategoriesBtn, isBrandsVisible, isCategoriesVisible);
 });
 
+// Click en enlaces no desplegables
+const navbarItems = document.querySelectorAll('.navbar-item');
 
+navbarItems.forEach(item => {
+    if (item.id !== "toggleCategoriesBtn" && item.id !== "toggleBrandsBtn") {
+        item.addEventListener('click', () => {
+            categoriesList.classList.add('hidden');
+            brandsList.classList.add('hidden');
+            categoriesArrowDown.classList.remove('hidden');
+            categoriesArrowUp.classList.add('hidden');
+            brandsArrowDown.classList.remove('hidden');
+            brandsArrowUp.classList.add('hidden');
+            isCategoriesVisible = false;
+            isBrandsVisible = false;
+
+            clearSelection();
+            setActive(item);
+        });
+    }
+});
+
+// Generador alfabético (sin cambios)
 const alphabetContainer = document.getElementById('alphabetButtons');
 const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 

@@ -1,46 +1,88 @@
-// secciones.js
-
-document.addEventListener("DOMContentLoaded", function () {
-    const links = document.querySelectorAll('#section-nav a');
+    const links      = document.querySelectorAll('#section-nav a');
     const contentArea = document.getElementById('content-area');
 
-    const sectionRoutes = {
-        "Ventas": "/admin/ventas",
-        "Devoluciones": "views/admin/returns/sample.jsp",
-        "Productos": "views/admin/products/sample.jsp",
-        "Ofertas": "views/admin/offers/sample.jsp",
-        "Empleados": "views/admin/employees/sample.jsp",
-        "Usuarios": "views/admin/users/sample.jsp"
-    };
+    function loadSection(url, addToHistory = true) {
+    fetch(url, {
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(res => {
+            if (!res.ok) throw new Error('Error al cargar la vista.');
+            return res.text();
+        })
+        .then(html => {
+            // 1) Inserta el fragmento
+            contentArea.innerHTML = html;
 
-    links.forEach(link => {
-        link.addEventListener('click', function (e) {
-            e.preventDefault();
-
-            // Estilos activos
-            links.forEach(l => l.classList.remove("text-black"));
-            links.forEach(l => l.classList.add("text-gray-500"));
-
-            this.classList.remove("text-gray-500");
-            this.classList.add("text-black");
-
-            const section = this.getAttribute("data-section");
-            const url = sectionRoutes[section];
-
-            if (url) {
-                fetch(url)
-                    .then(response => {
-                        if (!response.ok) throw new Error("Error al cargar contenido");
-                        return response.text();
-                    })
-                    .then(html => {
-                        contentArea.innerHTML = html;
-                    })
-                    .catch(err => {
-                        contentArea.innerHTML = "<p class='text-red-500'>No se pudo cargar el contenido.</p>";
-                        console.error(err);
-                    });
+            // 2) Actualiza clases activas
+            links.forEach(l => {
+                l.classList.remove('text-pistachio', 'font-bold');
+                l.classList.add('text-gray-500');
+            });
+            const active = Array.from(links)
+                                .find(l => l.getAttribute('href') === url);
+            if (active) {
+                active.classList.remove('text-gray-500');
+                active.classList.add('text-pistachio', 'font-bold');
             }
+
+            // 3) Cambia la URL sin recargar (si procede)
+            if (addToHistory) {
+                history.pushState({ sectionUrl: url }, '', url);
+            }
+
+            // 4) Cargar dinámicamente el JS de la sección:
+            const section = url.split('/').pop();          // e.g. "products"
+            const scriptId = 'section-script';
+            // eliminar posible script anterior
+            document.getElementById(scriptId)?.remove();
+            // crear nuevo <script>
+            const script = document.createElement('script');
+            script.src = `${window.contextPath}/js/admin/${section}.js`;
+            script.id  = scriptId;
+            script.defer = true;
+            // cuando cargue, ejecutar el inicializador si existe
+            script.onload = () => {
+                const initFn = window[`init${section[0].toUpperCase()}${section.slice(1)}Page`];
+                if (typeof initFn === 'function') initFn();
+            };
+            document.body.appendChild(script);
+
+            // 5) history
+            if (addToHistory) history.pushState({ sectionUrl: url }, '', url);
+        })
+        .catch(err => {
+            contentArea.innerHTML = `<p class="text-red-500">Error al cargar el contenido.</p>`;
+            console.error(err);
         });
+    }
+
+    //  A) Hijack clicks para navegación interna
+    links.forEach(link => {
+    link.addEventListener('click', e => {
+        e.preventDefault();
+        const url = link.getAttribute('href');
+        loadSection(url, true);
     });
-});
+    });
+
+    //  B) Manejar back/forward
+    window.addEventListener('popstate', (e) => {
+    const state = e.state;
+    if (state && state.sectionUrl) {
+        loadSection(state.sectionUrl, false);
+    } else {
+        // Sin estado, volvemos a home
+        loadSection('/admin/home', false);
+    }
+    });
+
+    //  C) Carga inicial según URL
+    document.addEventListener('DOMContentLoaded', () => {
+    const path = window.location.pathname;
+    if (path !== '/admin/home') {
+        loadSection(path, false);
+    } else {
+        // opcional: carga home si tu fragmento home es distinto de la página
+        loadSection('/admin/home', false);
+    }
+    });

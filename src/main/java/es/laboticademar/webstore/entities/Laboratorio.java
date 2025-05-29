@@ -12,13 +12,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "familia")
-public class Familia {
+@Table(name = "laboratorio")
+public class Laboratorio {
 
     @Id
     @Column(name = "ID", nullable = false)
     private Long id;
 
-    @Column(name = "NOMBRE", nullable = false, length = 60)
+    @Column(name = "NOMBRE", nullable = false, length = 100)
     private String nombre;
 }
