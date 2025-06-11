@@ -1,5 +1,6 @@
 package es.laboticademar.webstore.entities;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,7 +19,8 @@ public class TipoFactura {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
-    private String etiqueta;
+    @Column(name = "ID", nullable = false)
+	private Long id;
+    private String nombre;
 
 }

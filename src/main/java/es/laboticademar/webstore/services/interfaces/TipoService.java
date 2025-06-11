@@ -4,5 +4,5 @@ import java.util.Optional;
 import es.laboticademar.webstore.entities.TipoProducto;
 
 public interface TipoService {
-    Optional<TipoProducto> findByName(String name);
+    Optional<TipoProducto> findByNombre(String name);
 }

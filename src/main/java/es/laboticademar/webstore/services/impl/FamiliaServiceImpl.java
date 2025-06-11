@@ -17,7 +17,7 @@ public class FamiliaServiceImpl implements FamiliaService {
     private final FamiliaDAO familiaDAO;
 
     @Override
-    public Optional<Familia> findByName(String name) {
-        return familiaDAO.findByName(name);
+    public Optional<Familia> findByNombre(String name) {
+        return familiaDAO.findByNombre(name);
     }
 }

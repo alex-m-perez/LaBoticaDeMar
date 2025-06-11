@@ -58,28 +58,28 @@ public class ExcelToProductMapper {
         String famTxt = fmt.formatCellValue(row.getCell(2)).trim();
         Optional.of(famTxt)
                 .filter(s -> !s.isEmpty())
-                .flatMap(familiaService::findByName)
+                .flatMap(familiaService::findByNombre)
                 .ifPresent(prod::setFamilia);
 
         // --- 4) Categoría ---
         String catTxt = fmt.formatCellValue(row.getCell(3)).trim();
-        Optional.of(catTxt)
+            Optional.of(catTxt)
                 .filter(s -> !s.isEmpty())
-                .flatMap(categoriaService::findByName)
+                .flatMap(categoriaService::findByNombre)
                 .ifPresent(prod::setCategoria);
 
         // --- 5) Subcategoría ---
         String subTxt = fmt.formatCellValue(row.getCell(4)).trim();
         Optional.of(subTxt)
                 .filter(s -> !s.isEmpty())
-                .flatMap(subcategoriaService::findByName)
+                .flatMap(subcategoriaService::findByNombre)
                 .ifPresent(prod::setSubCategoria);
 
         // --- 6) Tipo ---
         String tipoTxt = fmt.formatCellValue(row.getCell(5)).trim();
         Optional.of(tipoTxt)
                 .filter(s -> !s.isEmpty())
-                .flatMap(tipoService::findByName)
+                .flatMap(tipoService::findByNombre)
                 .ifPresent(prod::setTipo);
 
         // --- 7) Stock actual ---
@@ -93,7 +93,7 @@ public class ExcelToProductMapper {
         String labTxt = fmt.formatCellValue(row.getCell(27)).trim();
         Optional.of(labTxt)
                 .filter(s -> !s.isEmpty())
-                .flatMap(laboratorioService::findByName)
+                .flatMap(laboratorioService::findByNombre)
                 .ifPresent(prod::setLaboratorio);
 
         // --- 10) Precio (P.V.P.) ---

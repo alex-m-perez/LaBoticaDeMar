@@ -183,7 +183,6 @@
                     </tr>
                 </thead>
                 <tbody id="productosBody" class="text-gray-700 divide-y">
-                    <!-- Aquí inyectaremos los <tr> dinámicamente -->
                 </tbody>
             </table>
         </div>
@@ -367,9 +366,7 @@
     </div>
 
     <!-- Modal Carga Masiva -->
-    <div
-        id="cargaMasivaModal"
-        class="fixed inset-0 flex items-center justify-center hidden z-[10000]">
+    <div id="cargaMasivaModal" class="fixed inset-0 flex items-center justify-center hidden z-[10000]">
         <div class="bg-white rounded-2xl shadow-lg w-full max-w-md p-6 relative">
             <div class="relative mb-4">
                 <button
@@ -384,7 +381,7 @@
             </div>
             <form id="cargaMasivaForm" class="space-y-4">
                 <div>
-                    <input type="file" id="fileInput" name="file" accept=".csv" class="hidden"/>
+                    <input type="file" id="fileInput" name="file" accept=".csv, .xls, .xlsx" class="hidden"/>
                     <label for="fileInput"
                            class="w-full h-32 border-2 border-dashed border-gray-300 rounded-md
                                   flex items-center justify-center text-gray-500

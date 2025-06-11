@@ -30,6 +30,13 @@ public class Producto {
     @Column(name = "NOMBRE", nullable = false, length = 60)
     private String nombre;
 
+    @Column(name = "DESCRIPCION", nullable = true, length = 1250)
+    private String descripcion;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "FAMILIA", nullable = false)
+    private Familia familia;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CATEGORIA", nullable = false)
     private Categoria categoria;
@@ -37,6 +44,10 @@ public class Producto {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "SUBCATEGORIA", nullable = true)
     private Subcategoria subCategoria;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "LABORATORIO", nullable = true)
+    private Laboratorio laboratorio;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TIPO", nullable = true)
@@ -47,17 +58,6 @@ public class Producto {
 
     @Column(name = "ACTIVO", nullable = false)
     private Boolean activo;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "FAMILIA", nullable = false)
-    private Familia familia;
-
-    @Column(name = "DESCRIPCION", nullable = true, length = 1250)
-    private String descripcion;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "LABORATORIO", nullable = true)
-    private Laboratorio laboratorio;
 
     @Column(name = "PRECIO", nullable = true)
     private Float price;

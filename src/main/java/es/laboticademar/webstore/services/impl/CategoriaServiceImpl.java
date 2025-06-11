@@ -16,7 +16,7 @@ public class CategoriaServiceImpl implements CategoriaService {
     private final CategoriaDAO categoriaDAO;
 
     @Override
-    public Optional<Categoria> findByName(String name) {
-        return categoriaDAO.findByName(name);
+    public Optional<Categoria> findByNombre(String name) {
+        return categoriaDAO.findByNombre(name);
     }
 }

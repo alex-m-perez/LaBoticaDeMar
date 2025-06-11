@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import es.laboticademar.webstore.entities.Familia;
 
 public interface FamiliaDAO extends JpaRepository<Familia, Long> {
-    Optional<Familia> findByName(String name);
+    Optional<Familia> findByNombre(String name);
 }

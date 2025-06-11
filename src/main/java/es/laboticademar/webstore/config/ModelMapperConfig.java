@@ -21,7 +21,7 @@ public class ModelMapperConfig {
         typeMap.addMapping(
             src -> {
                 return src.getCategoria() != null
-                    ? src.getCategoria().getEtiqueta()
+                    ? src.getCategoria().getNombre()
                     : "";
             },
             ProductoDTO::setCategoriaEtiqueta

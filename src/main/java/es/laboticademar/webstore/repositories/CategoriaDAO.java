@@ -8,5 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import es.laboticademar.webstore.entities.Categoria;
 
 public interface CategoriaDAO extends JpaRepository<Categoria, Long> {
-    Optional<Categoria> findByName(String name);
+    Optional<Categoria> findByNombre(String name);
 }

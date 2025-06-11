@@ -16,7 +16,7 @@ public class SubcategoriaServiceImpl implements SubcategoriaService {
     private final SubcategoriaDAO subcategoriaDAO;
 
     @Override
-    public Optional<Subcategoria> findByName(String name) {
-        return subcategoriaDAO.findByName(name);
+    public Optional<Subcategoria> findByNombre(String name) {
+        return subcategoriaDAO.findByNombre(name);
     }
 }

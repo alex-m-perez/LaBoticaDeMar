@@ -65,8 +65,8 @@ public class ProductServiceImpl implements ProductService {
             // Ajuste para la etiqueta de categoría
             dto.setCategoriaEtiqueta(
                 ent.getCategoria() != null
-                  ? ent.getCategoria().getEtiqueta()
-                  : ""
+                    ? ent.getCategoria().getNombre()
+                    : ""
             );
             return dto;
         });

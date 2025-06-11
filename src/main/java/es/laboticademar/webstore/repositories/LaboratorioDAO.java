@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import es.laboticademar.webstore.entities.Laboratorio;
 
 public interface LaboratorioDAO extends JpaRepository<Laboratorio, Long> {
-    Optional<Laboratorio> findByName(String name);
+    Optional<Laboratorio> findByNombre(String name);
 }

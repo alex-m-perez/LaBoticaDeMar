@@ -25,7 +25,7 @@ public class ProductApiController {
         this.productService = service;
     }
 
-    @GetMapping
+    @GetMapping("get_products_list")
     public Page<ProductoDTO> list(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size

@@ -16,7 +16,7 @@ public class LaboratorioServiceImpl implements LaboratorioService {
     private final LaboratorioDAO laboratorioDAO;
 
     @Override
-    public Optional<Laboratorio> findByName(String name) {
-        return laboratorioDAO.findByName(name);
+    public Optional<Laboratorio> findByNombre(String name) {
+        return laboratorioDAO.findByNombre(name);
     }
 }

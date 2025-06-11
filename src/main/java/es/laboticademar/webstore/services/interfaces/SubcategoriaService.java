@@ -4,5 +4,5 @@ import java.util.Optional;
 import es.laboticademar.webstore.entities.Subcategoria;
 
 public interface SubcategoriaService {
-    Optional<Subcategoria> findByName(String name);
+    Optional<Subcategoria> findByNombre(String name);
 }

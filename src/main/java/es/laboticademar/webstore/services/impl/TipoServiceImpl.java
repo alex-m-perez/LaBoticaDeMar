@@ -16,7 +16,7 @@ public class TipoServiceImpl implements TipoService {
     private final TipoDAO tipoDAO;
 
     @Override
-    public Optional<TipoProducto> findByName(String name) {
-        return tipoDAO.findByName(name);
+    public Optional<TipoProducto> findByNombre(String name) {
+        return tipoDAO.findByNombre(name);
     }
 }

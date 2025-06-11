@@ -1,10 +1,12 @@
 package es.laboticademar.webstore.dto;
 
+import java.math.BigDecimal;
+
 import lombok.Data;
 
 @Data
 public class ProductoDTO {
-    private Long id;
+    private BigDecimal id;
     private String nombre;
     private String categoriaEtiqueta;
     private Integer stock;

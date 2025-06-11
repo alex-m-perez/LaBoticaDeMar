@@ -1,4 +1,4 @@
-package es.laboticademar.webstore.entities;
+package es.laboticademar.webstore.enumerations;
 
 public enum Role {
 

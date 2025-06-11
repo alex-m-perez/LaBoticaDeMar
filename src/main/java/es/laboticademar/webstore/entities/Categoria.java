@@ -12,9 +12,14 @@ public class Categoria {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID", nullable = false)
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "FAMILIA", nullable = false)
+    private Familia familia;
+
     // Nombre descriptivo de la categoría
-    @Column(name = "ETIQUETA", nullable = false, length = 60)
-    private String etiqueta;
+    @Column(name = "NOMBRE", nullable = false, length = 60)
+    private String nombre;
 }
