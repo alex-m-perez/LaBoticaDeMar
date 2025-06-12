@@ -11,8 +11,10 @@ import es.laboticademar.webstore.entities.Producto;
 public interface ProductService {
     Producto saveOrUpdateProducto(Producto producto);
     Producto getProductoById(BigDecimal id);
-    List<Producto> getAllProductos();
+    List<Producto> findAll();
     void deleteProductoById(BigDecimal id);
     Page<ProductoDTO> getAllProducts(int page, int size);
     List<Producto> bulkUpload(MultipartFile file) throws Exception;
+    List<String> findNamesContaining(String q);
+    List<String> findNamesContainingActive(String q);
 }

@@ -44,7 +44,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Producto> getAllProductos() {
+    public List<Producto> findAll() {
         return productDAO.findAll();
     }
 
@@ -98,5 +98,22 @@ public class ProductServiceImpl implements ProductService {
         }
 
         return duplicados;
+    }
+
+    @Override
+    public List<String> findNamesContaining(String q) {
+      return productDAO
+        .findTop10ByNombreContainingIgnoreCase(q)
+        .stream()
+        .map(Producto::getNombre)
+        .toList();
+    }
+
+    @Override
+    public List<String> findNamesContainingActive(String q) {
+        return productDAO.findTop10ByNombreContainingIgnoreCaseAndActivoTrue(q)
+                          .stream()
+                          .map(Producto::getNombre)
+                          .toList();
     }
 }

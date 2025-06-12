@@ -3,7 +3,7 @@
 	<!-- Filtros de Productos -->
     <div class="flex justify-center mb-10">
         <div class="p-4 bg-gray-100 border border-gray-200 rounded-xl shadow-sm inline-block">
-            <form class="flex flex-wrap items-start justify-center gap-4 text-sm">
+            <form id="filterForm" class="flex flex-wrap items-start justify-center gap-4 text-sm">
                 <!-- Código Nacional -->
                 <div class="flex flex-col">
                     <label for="codNacional" class="text-gray-600">Cód. Nacional</label>
@@ -11,12 +11,34 @@
                             class="w-40 border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-pistachio focus:border-pistachio"/>
                 </div>
 
-                <!-- Nombre del Producto -->
-                <div class="flex flex-col">
-                    <label for="nombreProducto" class="text-gray-600">Nombre</label>
-                    <input type="text" id="nombreProducto" placeholder="Ej: Ibuprofeno"
-                            class="w-40 border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-pistachio focus:border-pistachio"/>
-                </div>
+               <!-- Nombre del Producto -->
+               <div class="flex flex-col relative">
+                   <label for="nombreProducto" class="text-gray-600">Nombre</label>
+                   <input
+                       type="text"
+                       id="nombreProducto"
+                       placeholder="Ej: Ibuprofeno"
+                       class="w-40 border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-pistachio focus:border-pistachio"
+                   />
+                   <ul
+                       id="nombreSuggestions"
+                       class="
+                           absolute
+                           top-full     <!-- justo debajo -->
+                           left-0
+                           w-40         <!-- mismo ancho que el input -->
+                           bg-white
+                           border border-gray-300
+                           rounded-md
+                           shadow
+                           mt-1         <!-- pequeño margen entre input y lista -->
+                           max-h-48
+                           overflow-auto
+                           hidden
+                           z-10       <!-- por encima de todo -->
+                       "
+                   ></ul>
+               </div>
 
                 <!-- Activo -->
                 <div class="flex flex-col">
@@ -32,12 +54,9 @@
                 <!-- Categoría -->
                 <div class="flex flex-col">
                     <label for="categoria" class="text-gray-600">Categoría</label>
-                    <select id="categoria"
+                    <select id="categoria_select" name="categoria"
                             class="w-40 border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-pistachio focus:border-pistachio">
                         <option value="">Todas</option>
-                        <option value="analgesicos">Analgésicos</option>
-                        <option value="vitaminas">Vitaminas</option>
-                        <option value="dermocosmetica">Dermocosmética</option>
                     </select>
                 </div>
 
@@ -64,18 +83,19 @@
                 <!-- Familia -->
                 <div class="flex flex-col">
                     <label for="familia" class="text-gray-600">Familia</label>
-                    <select id="familia"
+                    <select id="familia_select" name="familia"
                             class="w-40 border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-pistachio focus:border-pistachio">
                         <option value="">Todas</option>
-                        <!-- más opciones -->
                     </select>
                 </div>
 
                 <!-- Laboratorio -->
                 <div class="flex flex-col">
                     <label for="laboratorio" class="text-gray-600">Laboratorio</label>
-                    <input type="text" id="laboratorio" placeholder="Ej: FarmaLab"
-                            class="w-40 border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-pistachio focus:border-pistachio"/>
+                    <select id="laboratorio_select" name="laboratorio"
+                            class="w-40 border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-pistachio focus:border-pistachio">
+                        <option value="">Todos</option>
+                    </select>
                 </div>
 
                 <!-- Presentación -->

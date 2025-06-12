@@ -1,18 +1,50 @@
 // products.js
 (function(){
 	// ——————————————————————————————
-	// 1) Paginación y renderizado de productos
+	// 0) Carga dinámica de <select> desde la API
+	// ——————————————————————————————
+	function loadOptions(endpoint, selectId, placeholderText) {
+        const url = `${window.contextPath}${endpoint}`;
+        console.log('⏳ GET', url);
+        fetch(url)
+            .then(res => {
+                console.log('📥', endpoint, 'status:', res.status);
+                if (!res.ok) throw new Error(`Status ${res.status}`);
+                return res.json();
+            })
+            .then(list => {
+                console.log('📝 datos para', selectId, list);
+                const sel = document.getElementById(selectId);
+                sel.innerHTML = `<option value="">${placeholderText}</option>`;
+                list.forEach(item => {
+                    const opt = document.createElement('option');
+                    opt.value = item.id;
+                    opt.textContent = item.nombre;
+                    sel.appendChild(opt);
+                });
+            })
+            .catch(err => console.error(`❌ fallo en ${selectId}:`, err));
+        }
+
+	// carga las categorías, familias y laboratorios
+	loadOptions('/api/categoria/get_categorias',  'categoria_select',   'Todas');
+	loadOptions('/api/familia/get_familias',      'familia_select',     'Todas');
+    loadOptions('/api/laboratorio/get_labs',      'laboratorio_select', 'Todos');
+
+
+	// ——————————————————————————————
+	// 1) Paginación, filtrado y renderizado de productos
 	// ——————————————————————————————
 	function initProductsPage() {
 		let currentPage = 0,
-		    totalPages  = 1,
-		    size        = 20;
+			totalPages  = 1,
+			size        = 20;
 
 		const tbody        = document.getElementById('productosBody'),
-		      prevBtn      = document.getElementById('prevBtn'),
-		      nextBtn      = document.getElementById('nextBtn'),
-		      pageNumEl    = document.getElementById('pageNum'),
-		      totalPagesEl = document.getElementById('totalPages');
+			  prevBtn      = document.getElementById('prevBtn'),
+			  nextBtn      = document.getElementById('nextBtn'),
+			  pageNumEl    = document.getElementById('pageNum'),
+			  totalPagesEl = document.getElementById('totalPages');
 
 		function renderTable(content) {
 			tbody.innerHTML = '';
@@ -44,7 +76,14 @@
 		}
 
 		function loadPage(page) {
-			fetch(`${window.contextPath}/admin/api/products/get_products_list?page=${page}&size=${size}`)
+			const fm     = new FormData(document.getElementById('filterForm'));
+			const params = new URLSearchParams({ page, size });
+
+			for (const [k, v] of fm.entries()) {
+				if (v !== '') params.append(k, v);
+			}
+
+			fetch(`${window.contextPath}/admin/api/products/get_pagable_list?` + params)
 				.then(res => {
 					if (!res.ok) throw new Error('Error al cargar productos');
 					return res.json();
@@ -55,9 +94,7 @@
 					renderTable(data.content);
 					updateControls();
 				})
-				.catch(err => {
-					console.error(err);
-				});
+				.catch(err => console.error(err));
 		}
 
 		prevBtn.addEventListener('click', () => {
@@ -67,22 +104,28 @@
 			if (currentPage + 1 < totalPages) loadPage(currentPage + 1);
 		});
 
-		// Carga inicial
+		document.getElementById('filterForm')
+			.addEventListener('submit', e => {
+				e.preventDefault();
+				loadPage(0);
+			});
+
+		// carga inicial de la primera página
 		loadPage(0);
 	}
 
-	// Exportar para home.js
+	// exponemos la función para que pueda llamarla home.js
 	window.initProductsPage = initProductsPage;
 
 
 	// ——————————————————————————————
 	// 2) Modal "Nuevo producto"
 	// ——————————————————————————————
-	const overlay    = document.getElementById('modalOverlay');
-	const nuevoBtn   = document.getElementById('nuevoBtn');
-	const modal      = document.getElementById('nuevoModal');
-	const closeModal = document.getElementById('closeModal');
-	const nuevoForm  = document.getElementById('nuevoForm');
+	const overlay      = document.getElementById('modalOverlay');
+	const nuevoBtn     = document.getElementById('nuevoBtn');
+	const modal        = document.getElementById('nuevoModal');
+	const closeModal   = document.getElementById('closeModal');
+	const nuevoForm    = document.getElementById('nuevoForm');
 
 	function openModal() {
 		overlay.classList.remove('hidden');
@@ -112,7 +155,7 @@
 			if (!res.ok) throw new Error('Error al guardar');
 			return res.json();
 		})
-		.then(data => {
+		.then(() => {
 			hideModal();
 			loadSection('/admin/products', false);
 		})
@@ -181,7 +224,7 @@
 			if (!res.ok) throw new Error(`HTTP ${res.status}`);
 			return res.text();
 		})
-		.then(_ => {
+		.then(() => {
 			hideCargaMasiva();
 			alert('📤 Archivo subido con éxito.');
 			loadSection('/admin/products', false);
@@ -191,5 +234,57 @@
 			alert('❌ Error al subir el archivo: ' + err.message);
 		});
 	});
+
+
+    // ——————————————————————————————
+    // 4) Sugerencias de nombres
+    // ——————————————————————————————
+
+    const input     = document.getElementById('nombreProducto');
+    const suggBox   = document.getElementById('nombreSuggestions');
+    let   timer;
+
+    input.addEventListener('input', e => {
+        const q = e.target.value.trim();
+        clearTimeout(timer);
+        if (q.length < 3) {
+            suggBox.innerHTML = '';
+            suggBox.classList.add('hidden');
+            return;
+        }
+        timer = setTimeout(() => {
+            fetch(`${window.contextPath}/admin/api/products/search_names?q=${encodeURIComponent(q)}`)
+                .then(res => {
+                    if (!res.ok) throw new Error(`Status ${res.status}`);
+                    return res.json();
+                })
+                .then(list => {
+                    if (list.length === 0) {
+                        suggBox.classList.add('hidden');
+                        return;
+                    }
+                    suggBox.innerHTML = list
+                        .map(name => `<li class="px-2 py-1 hover:bg-gray-100 cursor-pointer">${name}</li>`)
+                        .join('');
+                    suggBox.classList.remove('hidden');
+
+                    suggBox.querySelectorAll('li').forEach(li => {
+                        li.addEventListener('mousedown', () => {
+                            input.value = li.textContent;
+                            suggBox.classList.add('hidden');
+                        });
+                    });
+                })
+                .catch(err => {
+                    console.error('Error autocomplete:', err);
+                    suggBox.classList.add('hidden');
+                });
+        }, 300);
+    });
+
+    input.addEventListener('blur', () => {
+        setTimeout(() => suggBox.classList.add('hidden'), 200);
+    });
+
 
 })();

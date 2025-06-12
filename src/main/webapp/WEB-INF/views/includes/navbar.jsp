@@ -12,15 +12,33 @@
 
             <div class="flex-1 flex justify-center">
                 <form action="/search" method="get" class="relative w-full max-w-lg">
-                    <input type="text" name="query" placeholder="Buscar productos..." 
-                        class="w-full py-2 px-4 rounded-lg border border-gray-300 focus:outline-none focus:border-blue-500 pl-10">
-                    
-                    <img src="${pageContext.request.contextPath}/images/search.svg" 
-                        class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-500" 
-                        style="fill: currentColor;" 
-                        alt="Buscar">  
+                    <input
+                        type="text"
+                        id="navbarSearchInput"
+                        name="query"
+                        placeholder="Buscar productos..."
+                        class="w-full py-2 px-4 rounded-lg border border-gray-300 focus:outline-none focus:border-blue-500 pl-10"
+                        autocomplete="off"
+                    />
+                    <img
+                        src="${pageContext.request.contextPath}/images/search.svg"
+                        class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-500"
+                        style="fill: currentColor;"
+                        alt="Buscar"
+                    />
+                    <ul
+                        id="navbarSuggestions"
+                        class="
+                            absolute
+                            top-full left-0
+                            w-full
+                            bg-white border border-gray-300 rounded-md shadow mt-1 max-h-60 overflow-auto
+                            hidden z-40
+                        "
+                    ></ul>
                 </form>
             </div>
+
 
             <div class="flex-1 flex justify-end space-x-4 items-center">
                 <sec:authorize access="isAuthenticated()">
