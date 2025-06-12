@@ -14,7 +14,26 @@ public interface ProductService {
     List<Producto> findAll();
     void deleteProductoById(BigDecimal id);
     Page<ProductoDTO> getAllProducts(int page, int size);
+    Page<ProductoDTO> getAllProducts(
+        int page,
+        int size,
+        String id,
+        String nombreProducto,
+        Boolean activo,
+        Long categoriaId,
+        Long subCategoriaId,
+        Long tipoId,
+        Long familiaId,
+        Long laboratorioId,
+        Long presentacionId,
+        Boolean stock,
+        BigDecimal precioMin,
+        BigDecimal precioMax
+    );
     List<Producto> bulkUpload(MultipartFile file) throws Exception;
     List<String> findNamesContaining(String q);
     List<String> findNamesContainingActive(String q);
+    Long countAllProducts();
+    Long countByActivo(Boolean activo);
+    Integer sumTotalStock();
 }

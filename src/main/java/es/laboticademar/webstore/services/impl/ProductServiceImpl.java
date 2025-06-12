@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -63,13 +64,96 @@ public class ProductServiceImpl implements ProductService {
             // Copiamos propiedades sencillas
             org.springframework.beans.BeanUtils.copyProperties(ent, dto);
             // Ajuste para la etiqueta de categoría
-            dto.setCategoriaEtiqueta(
+            dto.setCategoriaNombre(
                 ent.getCategoria() != null
                     ? ent.getCategoria().getNombre()
                     : ""
             );
             return dto;
         });
+    }
+
+    @Override
+    public Page<ProductoDTO> getAllProducts(
+        int page,
+        int size,
+        String id,
+        String nombreProducto,
+        Boolean activo,
+        Long categoriaId,
+        Long subCategoriaId,
+        Long tipoId,
+        Long familiaId,
+        Long laboratorioId,
+        Long presentacionId,
+        Boolean stock,
+        BigDecimal precioMin,
+        BigDecimal precioMax
+    ) {
+        Specification<Producto> spec = Specification.where(null);
+
+        if (id != null && !id.isBlank()) {
+            try {
+                BigDecimal idVal = new BigDecimal(id.trim());
+                spec = spec.and((root, query, cb) ->
+                    cb.equal(root.get("id"), idVal)
+                );
+            } catch (NumberFormatException e) { }
+        }
+        if (nombreProducto != null && !nombreProducto.isBlank()) {
+            spec = spec.and((r, q, cb) ->
+                cb.like(cb.lower(r.get("nombre")),
+                        "%"+nombreProducto.toLowerCase()+"%"));
+        }
+        if (activo != null) {
+            spec = spec.and((r, q, cb) ->
+                cb.equal(r.get("activo"), activo));
+        }
+        if (categoriaId != null) {
+            spec = spec.and((r, q, cb) ->
+                cb.equal(r.get("categoria").get("id"), categoriaId));
+        }
+        if (subCategoriaId != null) {
+            spec = spec.and((r, q, cb) ->
+                cb.equal(r.get("subCategoria").get("id"), subCategoriaId));
+        }
+        if (tipoId != null) {
+            spec = spec.and((r, q, cb) ->
+                cb.equal(r.get("tipo").get("id"), tipoId));
+        }
+        if (familiaId != null) {
+            spec = spec.and((r, q, cb) ->
+                cb.equal(r.get("familia").get("id"), familiaId));
+        }
+        if (laboratorioId != null) {
+            spec = spec.and((r, q, cb) ->
+                cb.equal(r.get("laboratorio").get("id"), laboratorioId));
+        }
+        if (presentacionId != null) {
+            spec = spec.and((r, q, cb) ->
+                cb.equal(r.get("presentacion").get("id"), presentacionId));
+        }
+        if (stock != null) {
+            if (stock) {
+                spec = spec.and((r, q, cb) ->
+                    cb.greaterThan(r.get("stock"), 0));
+            } else {
+                spec = spec.and((r, q, cb) ->
+                    cb.equal(r.get("stock"), 0));
+            }
+        }
+        if (precioMin != null) {
+            spec = spec.and((r, q, cb) ->
+                cb.ge(r.get("price"), precioMin));
+        }
+        if (precioMax != null) {
+            spec = spec.and((r, q, cb) ->
+                cb.le(r.get("price"), precioMax));
+        }
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by("nombre"));
+        return productDAO.findAll(spec, pageable)
+                   .map(ProductoDTO::fromEntity);
     }
 
     @Override
@@ -115,5 +199,26 @@ public class ProductServiceImpl implements ProductService {
                           .stream()
                           .map(Producto::getNombre)
                           .toList();
+    }
+
+    @Override
+    public Long countAllProducts() {
+        return productDAO.count();
+    }
+
+    @Override
+    public Long countByActivo(Boolean activo) {
+        try {
+            if (activo)  return productDAO.countByActivoTrue();
+            if (!activo)  return productDAO.countByActivoFalse();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return (long) 0;
+    }
+
+    @Override
+    public Integer sumTotalStock() {
+        return productDAO.sumTotalStock();
     }
 }

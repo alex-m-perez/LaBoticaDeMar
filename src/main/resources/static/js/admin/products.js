@@ -1,44 +1,12 @@
 // products.js
 (function(){
 	// ——————————————————————————————
-	// 0) Carga dinámica de <select> desde la API
-	// ——————————————————————————————
-	function loadOptions(endpoint, selectId, placeholderText) {
-        const url = `${window.contextPath}${endpoint}`;
-        console.log('⏳ GET', url);
-        fetch(url)
-            .then(res => {
-                console.log('📥', endpoint, 'status:', res.status);
-                if (!res.ok) throw new Error(`Status ${res.status}`);
-                return res.json();
-            })
-            .then(list => {
-                console.log('📝 datos para', selectId, list);
-                const sel = document.getElementById(selectId);
-                sel.innerHTML = `<option value="">${placeholderText}</option>`;
-                list.forEach(item => {
-                    const opt = document.createElement('option');
-                    opt.value = item.id;
-                    opt.textContent = item.nombre;
-                    sel.appendChild(opt);
-                });
-            })
-            .catch(err => console.error(`❌ fallo en ${selectId}:`, err));
-        }
-
-	// carga las categorías, familias y laboratorios
-	loadOptions('/api/categoria/get_categorias',  'categoria_select',   'Todas');
-	loadOptions('/api/familia/get_familias',      'familia_select',     'Todas');
-    loadOptions('/api/laboratorio/get_labs',      'laboratorio_select', 'Todos');
-
-
-	// ——————————————————————————————
 	// 1) Paginación, filtrado y renderizado de productos
 	// ——————————————————————————————
 	function initProductsPage() {
 		let currentPage = 0,
 			totalPages  = 1,
-			size        = 20;
+			size        = 25;
 
 		const tbody        = document.getElementById('productosBody'),
 			  prevBtn      = document.getElementById('prevBtn'),
@@ -47,20 +15,44 @@
 			  totalPagesEl = document.getElementById('totalPages');
 
 		function renderTable(content) {
-			tbody.innerHTML = '';
-			content.forEach(prod => {
-				const tr = document.createElement('tr');
-				tr.innerHTML = `
-					<td class="px-4 py-2">${prod.id}</td>
-					<td class="px-4 py-2">${prod.nombre}</td>
-					<td class="px-4 py-2">${prod.categoriaEtiqueta || ''}</td>
-					<td class="px-4 py-2">${prod.stock || 0}</td>
-					<td class="px-4 py-2">${(prod.price || 0).toFixed(2)} €</td>
-					<td class="px-4 py-2">${prod.activo ? 'Activo' : 'Inactivo'}</td>
-				`;
-				tbody.appendChild(tr);
-			});
-		}
+            tbody.innerHTML = '';
+
+            // Si no hay productos, mostramos un mensaje centrado
+            if (content.length === 0) {
+                const tr = document.createElement('tr');
+                const td = document.createElement('td');
+                td.colSpan = 6;                              // abarca todas las columnas
+                td.className = 'text-center italic text-xl py-4';     // centrado, cursiva y padding vertical
+                td.textContent = 'No hay resultados que coincidan con los filtros';
+                tr.appendChild(td);
+                tbody.appendChild(tr);
+                return;
+            }
+
+            // Si hay datos, los renderizamos normalmente
+            content.forEach(prod => {
+                const tr = document.createElement('tr');
+                tr.classList.add('cursor-pointer', 'hover:bg-gray-50');
+                tr.addEventListener('click', () => openEditModal(prod));
+                tbody.appendChild(tr);
+
+                tr.innerHTML = `
+                    <td class="px-4 py-2">${prod.id}</td>
+                    <td class="px-4 py-2">${prod.nombre}</td>
+                    <td class="px-4 py-2">${prod.categoriaNombre || ''}</td>
+                    <td class="px-4 py-2 ${prod.stock === 0 ? 'text-red-500 font-bold' : ''}">
+                        ${prod.stock || 0}
+                    </td>
+                    <td class="px-4 py-2">${(prod.price || 0).toFixed(2)} €</td>
+                    <td class="px-4 py-2 ${prod.activo ? 'text-pistachio' : 'text-red-500'}">
+                        ${prod.activo ? 'Activo' : 'Inactivo'}
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+        }
+
 
 		function toggleBtn(btn, isDisabled) {
 			btn.disabled = isDisabled;
@@ -164,6 +156,36 @@
 			console.error(err);
 		});
 	});
+
+    function openEditModal(prod) {
+        // Cambiar título
+        document.querySelector('#nuevoModal h3').textContent = 'Editar producto';
+
+        // Campos de texto, número, etc.
+        document.getElementById('newCod').value      = prod.id || '';
+        document.getElementById('newNombre').value   = prod.nombre || '';
+        document.getElementById('newDesc').value     = prod.descripcion || '';
+        document.getElementById('newStock').value    = prod.stock != null ? prod.stock : '';
+        document.getElementById('newPrice').value    = prod.price != null ? prod.price : '';
+        document.getElementById('newDiscount').value = prod.discount != null ? prod.discount : '';
+
+        // Selects
+        document.getElementById('newFamilia').value       = prod.familiaId       || '';
+        document.getElementById('newCategoria').value     = prod.categoriaId     || '';
+        document.getElementById('newSubcategoria').value  = prod.subCategoriaId  || '';
+        document.getElementById('newLaboratorio').value   = prod.laboratorioId   || '';
+        document.getElementById('newTipo').value          = prod.tipoId          || '';
+
+        // Activo / Destacado
+        document.getElementById('newActivo').value       = prod.activo != null ? String(prod.activo) : 'true';
+        document.getElementById('newDestacado').value    = prod.destacado != null ? String(prod.destacado) : 'false';
+
+        // Mostrar modal
+        overlay.classList.remove('hidden');
+        modal.classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+    }
+
 
 
 	// ——————————————————————————————

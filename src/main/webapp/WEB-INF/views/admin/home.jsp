@@ -1,7 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%
-    String pageTitle = "La Botica de Mar - ADMIN";
-%>
+    
+<% String pageTitle = "La Botica de Mar - ADMIN";%>
 <!DOCTYPE html>
 <html lang="es">
     <head>
