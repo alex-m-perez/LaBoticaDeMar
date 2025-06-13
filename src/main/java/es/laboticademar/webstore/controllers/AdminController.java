@@ -38,7 +38,7 @@ public class AdminController {
 
         }
     }
-    @GetMapping({"/home", "/ventas", "/devoluciones", "/products", "/empleados"})
+    @GetMapping({"/home", "/ventas", "/devoluciones", "/products", "/ofertas", "/empleados", "/usuarios"})
     public String section(HttpServletRequest request) {
         boolean isAjax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
 
@@ -55,8 +55,12 @@ public class AdminController {
                     return "admin/devoluciones_dashboard";
                 case "products":
                     return "admin/products_dashboard";
+                case "ofertas":
+                    return "admin/ofertas_dashboard";
                 case "empleados":
                     return "admin/empleados_dashboard";
+                case "usuarios":
+                    return "admin/usuarios_dashboard";
                 case "home":
                 default:
                     // si quisieras un fragmento de home distinto, podrías devolverlo aquí

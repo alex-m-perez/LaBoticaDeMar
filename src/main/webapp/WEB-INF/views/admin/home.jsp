@@ -1,6 +1,9 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-    
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+
 <% String pageTitle = "La Botica de Mar - ADMIN";%>
+
 <!DOCTYPE html>
 <html lang="es">
     <head>
@@ -46,7 +49,7 @@
                     <a href="/admin/products" class="text-xl text-gray-500 transition-colors whitespace-nowrap" data-section="Productos">Productos</a>
                     <a href="/admin/ofertas" class="text-xl text-gray-500 transition-colors whitespace-nowrap" data-section="Ofertas">Ofertas</a>
                     <a href="/admin/empleados" class="text-xl text-gray-500 transition-colors whitespace-nowrap" data-section="Empleados">Empleados</a>
-                    <a href="#" class="text-xl text-gray-500 transition-colors whitespace-nowrap" data-section="Usuarios">Usuarios</a>
+                    <a href="/admin/usuarios" class="text-xl text-gray-500 transition-colors whitespace-nowrap" data-section="Usuarios">Usuarios</a>
                 </nav>
             </div>
 

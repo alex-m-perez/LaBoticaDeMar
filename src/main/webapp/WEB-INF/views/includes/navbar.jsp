@@ -42,7 +42,7 @@
 
             <div class="flex-1 flex justify-end space-x-4 items-center">
                 <sec:authorize access="isAuthenticated()">
-                    <p>Bienvenido, ${usuario.nombre}</p>
+                    <p>Bienvenido, ${currentUserName}</p>
                 </sec:authorize>
                 <sec:authorize access="!isAuthenticated()">
                     <p>Iniciar Sesión</p>

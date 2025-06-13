@@ -58,31 +58,36 @@
 
     //  A) Hijack clicks para navegación interna
     links.forEach(link => {
-    link.addEventListener('click', e => {
-        e.preventDefault();
-        const url = link.getAttribute('href');
-        loadSection(url, true);
-    });
+        link.addEventListener('click', e => {
+            e.preventDefault();
+            const url = link.getAttribute('href');
+            loadSection(url, true);
+        });
     });
 
     //  B) Manejar back/forward
     window.addEventListener('popstate', (e) => {
-    const state = e.state;
-    if (state && state.sectionUrl) {
-        loadSection(state.sectionUrl, false);
-    } else {
-        // Sin estado, volvemos a home
-        loadSection('/admin/home', false);
-    }
+        const state = e.state;
+        if (state && state.sectionUrl) {
+            loadSection(state.sectionUrl, false);
+        } else {
+            // Sin estado, volvemos a home
+            loadSection('/admin/home', false);
+        }
     });
 
-    //  C) Carga inicial según URL
+    // C) Carga inicial según URL
     document.addEventListener('DOMContentLoaded', () => {
-    const path = window.location.pathname;
-    if (path !== '/admin/home') {
-        loadSection(path, false);
-    } else {
-        // opcional: carga home si tu fragmento home es distinto de la página
-        loadSection('/admin/home', false);
-    }
+        const path = window.location.pathname;
+        // definimos la URL por defecto
+        const defaultSection = '/admin/ventas';
+
+        if (path !== '/admin/home') {
+            // si venimos de otra sección (o acceden directamente) la cargamos
+            loadSection(path, false);
+        } else {
+            // si estamos en home sin selección previa, cargamos ventas
+            loadSection(defaultSection, false);
+        }
     });
+

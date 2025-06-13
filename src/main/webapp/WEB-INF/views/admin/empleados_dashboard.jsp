@@ -1,136 +1,182 @@
 <div class="bg-white min-h-screen space-y-6">
 
-	<!-- Filtros de Empleados -->
-	<div class="flex justify-center mb-10">
-		<div class="p-4 bg-gray-100 border border-gray-200 rounded-xl shadow-sm inline-block">
-			<form class="flex flex-wrap items-end justify-center gap-4 text-sm">
+    <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-				<!-- Nombre -->
-				<div class="flex flex-col">
-					<label for="nombreEmpleado" class="text-gray-600">Nombre</label>
-					<input type="text" id="nombreEmpleado" placeholder="Ej: Laura M."
-						class="w-40 border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-pistachio focus:border-pistachio" />
-				</div>
+    <!-- Dashboard de KPIs: 2x2 tablas -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <!-- Ranking Ventas Totales -->
+        <div class="bg-white p-6 rounded-2xl shadow border">
+            <h2 class="text-lg font-semibold mb-4">Ventas Totales</h2>
+            <div class="overflow-auto">
+                <table id="tablaTopVentas" class="min-w-full text-sm">
+                    <thead class="text-gray-500 border-b">
+                        <tr>
+                            <th class="px-4 py-2 text-left">Empleado</th>
+                            <th class="px-4 py-2 text-left">Ventas Totales</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:forEach var="r" items="${topSales}">
+                            <tr>
+                                <td class="px-4 py-2">${r.nombre}</td>
+                                <td class="px-4 py-2">${r.totalSales}</td>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- Ranking Ticket Medio Venta -->
+        <div class="bg-white p-6 rounded-2xl shadow border">
+            <h2 class="text-lg font-semibold mb-4">Ticket Medio Venta (€)</h2>
+            <div class="overflow-auto">
+                <table id="tablaTopAvgVenta" class="min-w-full text-sm">
+                    <thead class="text-gray-500 border-b">
+                        <tr>
+                            <th class="px-4 py-2 text-left">Empleado</th>
+                            <th class="px-4 py-2 text-left">Ticket Medio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:forEach var="r" items="${topAvgSale}">
+                            <tr>
+                                <td class="px-4 py-2">${r.nombre}</td>
+                                <td class="px-4 py-2">${r.avgSaleTicket}</td>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- Ranking Devoluciones Totales -->
+        <div class="bg-white p-6 rounded-2xl shadow border">
+            <h2 class="text-lg font-semibold mb-4">Devoluciones Totales</h2>
+            <div class="overflow-auto">
+                <table id="tablaTopDevoluciones" class="min-w-full text-sm">
+                    <thead class="text-gray-500 border-b">
+                        <tr>
+                            <th class="px-4 py-2 text-left">Empleado</th>
+                            <th class="px-4 py-2 text-left">Devoluciones Totales</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:forEach var="r" items="${topReturns}">
+                            <tr>
+                                <td class="px-4 py-2">${r.nombre}</td>
+                                <td class="px-4 py-2">${r.totalReturns}</td>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- Ranking Ticket Medio Devolución -->
+        <div class="bg-white p-6 rounded-2xl shadow border">
+            <h2 class="text-lg font-semibold mb-4">Ticket Medio Devolución (€)</h2>
+            <div class="overflow-auto">
+                <table id="tablaTopAvgDevolucion" class="min-w-full text-sm">
+                    <thead class="text-gray-500 border-b">
+                        <tr>
+                            <th class="px-4 py-2 text-left">Empleado</th>
+                            <th class="px-4 py-2 text-left">Ticket Medio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:forEach var="r" items="${topAvgReturn}">
+                            <tr>
+                                <td class="px-4 py-2">${r.nombre}</td>
+                                <td class="px-4 py-2">${r.avgReturnTicket}</td>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
-				<!-- Rol -->
-				<div class="flex flex-col">
-					<label for="rol" class="text-gray-600">Rol</label>
-					<select id="rol"
-						class="w-40 border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-pistachio focus:border-pistachio">
-						<option value="">Todos</option>
-						<option value="admin">Administrador</option>
-						<option value="vendedor">Vendedor</option>
-						<option value="almacen">Almacén</option>
-					</select>
-				</div>
+    <!-- Tabla de Empleados -->
+    <div class="bg-white p-6 rounded-2xl shadow border">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-lg font-semibold mb-0">Listado de Empleados</h2>
+            <button id="nuevoEmpBtn"
+                    class="flex items-center bg-pistachio text-white font-medium px-4 py-1.5 rounded-md hover:bg-pistachio-dark transition">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                          d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" />
+                </svg>
+                Nuevo Empleado
+            </button>
+        </div>
+        <div class="overflow-auto">
+            <table id="tablaEmpleados" class="min-w-full text-sm">
+                <thead class="text-gray-500 border-b">
+                    <tr>
+                        <th class="px-4 py-2 text-left">ID</th>
+                        <th class="px-4 py-2 text-left">Nombre</th>
+                        <th class="px-4 py-2 text-left">Rol</th>
+                        <th class="px-4 py-2 text-left">Ventas (€)</th>
+                        <th class="px-4 py-2 text-left">Pedidos</th>
+                    </tr>
+                </thead>
+                <tbody id="empleadosBody" class="text-gray-700 divide-y"></tbody>
+            </table>
+        </div>
 
-				<!-- Estado -->
-				<div class="flex flex-col">
-					<label for="estadoEmpleado" class="text-gray-600">Estado</label>
-					<select id="estadoEmpleado"
-						class="w-40 border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-pistachio focus:border-pistachio">
-						<option value="">Todos</option>
-						<option value="activo">Activo</option>
-						<option value="inactivo">Inactivo</option>
-					</select>
-				</div>
+        <!-- Paginación -->
+        <div id="paginationEmp" class="flex justify-between items-center mt-4">
+            <button id="prevEmpBtn" class="bg-gray-200 text-gray-700 font-medium px-4 py-1.5 rounded-md hover:bg-gray-300 transition" disabled>
+                Anterior
+            </button>
+            <span>Página <span id="pageEmpNum">1</span> de <span id="totalEmpPages">1</span></span>
+            <button id="nextEmpBtn" class="bg-gray-200 text-gray-700 font-medium px-4 py-1.5 rounded-md hover:bg-gray-300 transition">
+                Siguiente
+            </button>
+        </div>
+    </div>
 
-				<!-- Botones -->
-				<div class="flex gap-2 self-end">
-					<button type="submit"
-						class="bg-pistachio text-white font-medium px-4 py-1.5 rounded-md hover:bg-pistachio-dark transition">
-						Buscar
-					</button>
-					<button type="reset"
-						class="bg-gray-200 text-gray-700 font-medium px-4 py-1.5 rounded-md hover:bg-gray-300 transition">
-						Limpiar
-					</button>
-				</div>
-			</form>
-		</div>
-	</div>
+    <!-- Modal Nuevo/Editar Empleado -->
+    <div id="empleadoModal" class="fixed inset-0 flex items-center justify-center hidden z-[10000]">
+        <div class="bg-white rounded-2xl shadow-lg w-full max-w-lg p-6 relative">
+            <button id="closeEmpModal" class="absolute right-4 top-4 text-2xl text-gray-500 hover:text-red-500 transition">&times;</button>
+            <h3 class="text-xl font-semibold text-center mb-4" id="empleadoModalTitle">Crear Empleado</h3>
+            <form id="empleadoForm" class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="empNombre" class="block text-sm text-gray-600">Nombre</label>
+                        <input type="text" id="empNombre" name="nombre" required class="w-full border border-gray-300 rounded-md px-2 py-1 focus:ring-pistachio focus:border-pistachio" />
+                    </div>
+                    <div>
+                        <label for="empDepto" class="block text-sm text-gray-600">Departamento</label>
+                        <select id="empDepto" name="departamentoId" required class="w-full border border-gray-300 rounded-md px-2 py-1 focus:ring-pistachio focus:border-pistachio">
+                            <option value="">Selecciona</option>
+                            <c:forEach var="dep" items="${departamentos}"><option value="${dep.id}">${dep.nombre}</option></c:forEach>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="empRol" class="block text-sm text-gray-600">Rol</label>
+                        <select id="empRol" name="rolId" required class="w-full border border-gray-300 rounded-md px-2 py-1 focus:ring-p pistachio focus:border-pistachio">
+                            <option value="">Selecciona</option>
+                            <c:forEach var="rol" items="${roles}"><option value="${rol.id}">${rol.nombre}</option></c:forEach>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="empActivo" class="block text-sm text-gray-600">Activo</label>
+                        <select id="empActivo" name="activo" required class="w-full border border-gray-300 rounded-md px-2 py-1 focus:ring-pistachio focus:border-pistachio">
+                            <option value="true">Sí</option>
+                            <option value="false">No</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="empFechaIngreso" class="block text-sm text-gray-600">Fecha Ingreso</label>
+                        <input type="date" id="empFechaIngreso" name="fechaIngreso" required class="w-full border border-gray-300 rounded-md px-2 py-1 focus:ring-p pistachio focus:border-p pistachio" />
+                    </div>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="bg-pistachio text-white font-medium px-6 py-2 rounded-md hover:bg-pistachio-dark transition">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-	<!-- KPIs de Empleados -->
-	<div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-		<div class="p-4 rounded-2xl shadow border">
-			<h2 class="text-sm text-gray-500">Total Empleados</h2>
-			<p class="text-2xl font-bold">45</p>
-		</div>
-		<div class="p-4 rounded-2xl shadow border">
-			<h2 class="text-sm text-gray-500">Empleados Activos</h2>
-			<p class="text-2xl font-bold">38</p>
-		</div>
-		<div class="p-4 rounded-2xl shadow border">
-			<h2 class="text-sm text-gray-500">Inactivos</h2>
-			<p class="text-2xl font-bold">7</p>
-		</div>
-		<div class="p-4 rounded-2xl shadow border">
-			<h2 class="text-sm text-gray-500">Nuevos este mes</h2>
-			<p class="text-2xl font-bold">3</p>
-		</div>
-	</div>
-
-	<!-- Roles Chart Section -->
-	<div class="bg-white p-6 rounded-2xl shadow border">
-		<h2 class="text-lg font-semibold mb-4">Distribución por Rol</h2>
-		<div id="employee-roles-pie-chart" class="w-full h-64 bg-gray-100 flex items-center justify-center text-gray-400">
-			[Gráfico de Roles de Empleados]
-		</div>
-	</div>
-
-	<!-- Últimos Empleados Añadidos -->
-	<div class="bg-white p-6 rounded-2xl shadow border">
-		<h2 class="text-lg font-semibold mb-4">Últimos Empleados Añadidos</h2>
-		<ul class="space-y-2 text-sm">
-			<li class="flex justify-between">
-				<span>María López</span>
-				<span class="text-gray-500">15/05/2025</span>
-			</li>
-			<li class="flex justify-between">
-				<span>Iván Ruiz</span>
-				<span class="text-gray-500">13/05/2025</span>
-			</li>
-			<li class="flex justify-between">
-				<span>Daniela Pérez</span>
-				<span class="text-gray-500">10/05/2025</span>
-			</li>
-		</ul>
-	</div>
-
-	<!-- Tabla de Empleados -->
-	<div class="bg-white p-6 rounded-2xl shadow border">
-		<h2 class="text-lg font-semibold mb-4">Listado de Empleados</h2>
-		<div class="overflow-auto">
-			<table class="min-w-full text-sm">
-				<thead class="text-gray-500 border-b">
-					<tr>
-						<th class="px-4 py-2 text-left">ID</th>
-						<th class="px-4 py-2 text-left">Nombre</th>
-						<th class="px-4 py-2 text-left">Correo</th>
-						<th class="px-4 py-2 text-left">Rol</th>
-						<th class="px-4 py-2 text-left">Estado</th>
-						<th class="px-4 py-2 text-left">Fecha Alta</th>
-					</tr>
-				</thead>
-				<tbody class="text-gray-700 divide-y">
-					<tr>
-						<td class="px-4 py-2">#E032</td>
-						<td class="px-4 py-2">Laura Martínez</td>
-						<td class="px-4 py-2">laura@empresa.com</td>
-						<td class="px-4 py-2">Vendedor</td>
-						<td class="px-4 py-2 text-green-600">Activo</td>
-						<td class="px-4 py-2">05/03/2024</td>
-					</tr>
-					<tr>
-						<td class="px-4 py-2">#E033</td>
-						<td class="px-4 py-2">Carlos Gutiérrez</td>
-						<td class="px-4 py-2">carlos@empresa.com</td>
-						<td class="px-4 py-2">Almacén</td>
-						<td class="px-4 py-2 text-red-500">Inactivo</td>
-						<td class="px-4 py-2">21/01/2023</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-	</div>
 </div>
