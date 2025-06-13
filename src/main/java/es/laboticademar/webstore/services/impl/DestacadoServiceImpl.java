@@ -9,13 +9,14 @@ import org.springframework.stereotype.Service;
 import es.laboticademar.webstore.entities.Destacado;
 import es.laboticademar.webstore.entities.Producto;
 import es.laboticademar.webstore.repositories.DestacadoDAO;
-import es.laboticademar.webstore.services.DestacadoService;
+import es.laboticademar.webstore.services.interfaces.DestacadoService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class DestacadoServiceImpl implements DestacadoService{
+    
     private final DestacadoDAO destacadoDAO;
 
     @Override
