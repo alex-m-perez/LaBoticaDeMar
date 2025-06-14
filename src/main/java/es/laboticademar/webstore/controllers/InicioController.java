@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import es.laboticademar.webstore.enumerations.PreferenciaEnum;
 import es.laboticademar.webstore.services.interfaces.DestacadoService;
 import es.laboticademar.webstore.services.interfaces.UsuarioService;
 
@@ -46,6 +47,13 @@ public class InicioController {
     @GetMapping("/login")
     public String goLoginPage() {
         return "main/login";
+    }
+
+    @GetMapping("/register")
+    public String goRegisterPage(Model model) {
+        // Mete directamente el array de enums en el modelo
+        model.addAttribute("preferenciasEnumList", PreferenciaEnum.values());
+        return "main/registro";
     }
 
     @GetMapping("/product")

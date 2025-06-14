@@ -14,6 +14,7 @@ module.exports = {
                 'thistle': '#ddcce1ff',
                 'pomp-and-power': '#84599bff',
                 'finn': '#6b436eff',
+                'logo-purple': '#86207e',
             },
         },
     },

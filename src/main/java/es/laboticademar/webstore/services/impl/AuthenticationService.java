@@ -26,22 +26,39 @@ public class AuthenticationService {
     
     @SuppressWarnings("null")
     public AuthenticationResponse register(RegisterRequest request) {
+        String direccion = String.format(
+            "%s %s%s%s, %s, %s, %s (%s)",
+            request.getCalle(), request.getNumero(),
+            request.getPiso() != null ? ", " + request.getPiso() : "º",
+            request.getPuerta() != null ? " " + request.getPuerta() : "",
+            request.getCodigoPostal(), request.getLocalidad(),
+            request.getProvincia(), request.getPais()
+        );
+
         var usuario = Usuario.builder()
             .nombre(request.getNombre())
             .apellido1(request.getApellido1())
             .apellido2(request.getApellido2())
             .correo(request.getCorreo())
-            .direccionPostal(request.getDireccionPostal())
-            .telefono(request.getTelefono())
             .passwd(passwordEncoder.encode(request.getPassword()))
+            .telefono(request.getTelefono())
+            .fechaNac(java.sql.Date.valueOf(request.getFechaNac()))
+            .genero(request.getGenero())
+            .direccionPostal(direccion)
+            .aceptaPromociones(Boolean.TRUE.equals(request.getAceptaPromociones()))
+            .aceptaTerminos(Boolean.TRUE.equals(request.getAceptaTerminos()))
+            .aceptaPrivacidad(Boolean.TRUE.equals(request.getAceptaPrivacidad()))
+            .preferencias(request.getPreferencias())
             .roles(Set.of("ROLE_USUARIO"))
             .build();
+
         usuarioRDAO.save(usuario);
 
         var usuarioPrincipal = new UsuarioPrincipal(usuario);
         var jwtToken = jwtService.generateToken(usuarioPrincipal);
         return AuthenticationResponse.builder().token(jwtToken).build();
     }
+
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(
