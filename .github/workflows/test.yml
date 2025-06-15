@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - Develop
+      - main
   pull_request:
     branches:
       - Develop
@@ -30,5 +31,19 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-maven
 
-      - name: Compilar y ejecutar tests
-        run: mvn clean test
+      - name: Arrancar aplicación Spring Boot
+        run: mvn spring-boot:run -Dspring-boot.run.arguments=--server.port=8080 &
+
+      - name: Esperar a que el servidor arranque
+        run: |
+          for i in {1..30}; do
+            if nc -z localhost 8080; then
+              echo "Servidor Spring Boot arriba"
+              break
+            fi
+            echo "Esperando Spring Boot..."
+            sleep 1
+          done
+
+      - name: Ejecutar tests
+        run: mvn clean test -B --fail-at-end
