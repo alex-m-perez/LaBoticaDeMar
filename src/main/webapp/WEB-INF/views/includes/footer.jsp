@@ -3,4 +3,3 @@
             2024 La Botica de Mar. Todos los derechos reservados.
         </div>
     </footer>
-</body>

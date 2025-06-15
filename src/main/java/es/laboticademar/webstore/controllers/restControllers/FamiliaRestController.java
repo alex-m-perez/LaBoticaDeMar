@@ -6,20 +6,21 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import es.laboticademar.webstore.entities.Laboratorio;
-import es.laboticademar.webstore.services.interfaces.LaboratorioService;
+import es.laboticademar.webstore.entities.Familia;
+import es.laboticademar.webstore.services.interfaces.FamiliaService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/laboratorio")
+@RequestMapping("/api/familia")
 @RequiredArgsConstructor
-public class LaboratorioApiController {
+public class FamiliaRestController {
 
-    private final LaboratorioService labService;
+    private final FamiliaService familiaService;
 
-    @GetMapping("/get_labs")
-    public List<Laboratorio> all(){
-        return labService.findAll();
+    @GetMapping("/get_familias")
+    public List<Familia> all(){
+        return familiaService.findAll();
     }
+
 
 }

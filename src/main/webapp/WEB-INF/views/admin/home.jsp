@@ -34,9 +34,7 @@
              z-[9999]">
     </div>
     
-    <script>
-        window.contextPath = '<%= request.getContextPath() %>';
-    </script>
+    <script> window.contextPath = '<%= request.getContextPath() %>'; </script>
     <script src="${pageContext.request.contextPath}/js/admin/home.js" defer></script>
     
     <main class="flex-grow bg-white">

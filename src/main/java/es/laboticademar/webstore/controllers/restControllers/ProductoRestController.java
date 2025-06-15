@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/admin/api/products")
 @RequiredArgsConstructor
-public class ProductoApiController {
+public class ProductoRestController {
 
     private final ProductService productService;
     

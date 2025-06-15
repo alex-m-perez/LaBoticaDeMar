@@ -1,3 +1,5 @@
+<%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <script src="${pageContext.request.contextPath}/js/navbar/navbar.js" defer></script>
 
 <nav id="navbar" class="bg-white shadow-md sticky top-0 w-full z-50 transition-all duration-300 ease-in-out">
@@ -45,7 +47,17 @@
                     <p>Bienvenido, ${currentUserName}</p>
                 </sec:authorize>
                 <sec:authorize access="!isAuthenticated()">
-                    <p>Iniciar Sesión</p>
+                    <div>
+                        <a href="${pageContext.request.contextPath}/login" 
+                            class="text-gray-800 hover:text-gray-600">
+                            Iniciar Sesión
+                        </a>
+                        <span class="mx-1 text-gray-500">|</span>
+                        <a href="${pageContext.request.contextPath}/register" 
+                            class="text-gray-800 hover:text-gray-600">
+                            Registrarse
+                        </a>
+                    </div>
                 </sec:authorize>
                 <img src="${pageContext.request.contextPath}/images/user-circle.svg" class="h-6 cursor-pointer" alt="Mi perfil"
                     onclick="window.location.href='/profile'">
@@ -146,6 +158,3 @@
 
     </div>
 </nav>
-
-
-

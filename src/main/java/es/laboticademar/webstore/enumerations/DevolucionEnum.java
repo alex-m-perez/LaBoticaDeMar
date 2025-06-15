@@ -1,6 +1,6 @@
 package es.laboticademar.webstore.enumerations;
 
-public enum MotivoDevolucion {
+public enum DevolucionEnum {
 
     PRODUCTO_DANADO_ENVIO(1, "Producto dañado en envío", "El producto llegó dañado durante el envío"),
     PRODUCTO_DEFECTUOSO(2, "Producto defectuoso", "El producto presenta un defecto de fabricación"),
@@ -17,7 +17,7 @@ public enum MotivoDevolucion {
     private final String etiqueta;
     private final String descripcion;
 
-    MotivoDevolucion(int id, String etiqueta, String descripcion) {
+    DevolucionEnum(int id, String etiqueta, String descripcion) {
         this.id = id;
         this.etiqueta = etiqueta;
         this.descripcion = descripcion;
@@ -41,8 +41,8 @@ public enum MotivoDevolucion {
     }
 
     // Método útil para obtener el enum por ID
-    public static MotivoDevolucion fromId(int id) {
-        for (MotivoDevolucion motivo : values()) {
+    public static DevolucionEnum fromId(int id) {
+        for (DevolucionEnum motivo : values()) {
             if (motivo.id == id) {
                 return motivo;
             }
