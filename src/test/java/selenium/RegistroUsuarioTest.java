@@ -1,27 +1,50 @@
 package selenium;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.Duration;
 import java.util.List;
 import java.util.UUID;
 
-import org.junit.jupiter.api.*;
-import org.openqa.selenium.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.*;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
 
+import es.laboticademar.webstore.WebstoreApplication;
+
+@SpringBootTest(
+    classes = WebstoreApplication.class,
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
+)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class RegistroUsuarioTest {
 
+    @LocalServerPort
+    private int port;
+
     private WebDriver driver;
     private WebDriverWait wait;
-    private final String baseUrl = "http://localhost:8080/register";
+    private String baseUrl;
 
     @BeforeEach
     public void setupTest() {
+        this.baseUrl = "http://localhost:" + port + "/register";
+
         ChromeOptions opts = new ChromeOptions();
         opts.addArguments("--headless=new", "--no-sandbox", "--disable-dev-shm-usage", "--remote-allow-origins=*");
         opts.addArguments("--user-data-dir=/tmp/selenium-profile-" + UUID.randomUUID());
@@ -87,8 +110,8 @@ public class RegistroUsuarioTest {
 
         // por último pulsar “Terminar” y comprobar redirección…
         driver.findElement(By.id("next-btn")).click();
-        wait.until(ExpectedConditions.urlToBe("http://localhost:8080/"));
-        assertEquals("http://localhost:8080/", driver.getCurrentUrl());
+        wait.until(ExpectedConditions.urlToBe("http://localhost:" + port +"/"));
+        assertEquals("http://localhost:" + port + "/", driver.getCurrentUrl());
     }
 
     @Test
