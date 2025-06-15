@@ -1,4 +1,4 @@
-package security;
+package unit.security;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -12,7 +12,7 @@ import es.laboticademar.webstore.entities.Usuario;
 import es.laboticademar.webstore.entities.UsuarioPrincipal;
 import es.laboticademar.webstore.security.config.JwtService;
 
-public class JwtServiceTest {
+class JwtServiceTest {
 
     private JwtService jwtService;
     private Usuario testUser;
@@ -28,19 +28,11 @@ public class JwtServiceTest {
 
     @Test
     void generateAndValidateToken() {
-        var principal = new UsuarioPrincipal(testUser);
+        UsuarioPrincipal principal = new UsuarioPrincipal(testUser);
         String token = jwtService.generateToken(principal);
 
         assertThat(jwtService.isTokenValid(token, principal)).isTrue();
         assertThat(jwtService.extractUsername(token)).isEqualTo("test@example.com");
-    }
-
-    @Test
-    void tokenExpirationWorks() throws InterruptedException {
-        // Token generado con fecha actual
-        var principal = new UsuarioPrincipal(testUser);
-        String token = jwtService.generateToken(principal);
-        assertThat(jwtService.isTokenValid(token, principal)).isTrue();
     }
 
     @Test

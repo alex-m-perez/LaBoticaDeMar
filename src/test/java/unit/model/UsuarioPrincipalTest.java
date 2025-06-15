@@ -1,4 +1,4 @@
-package security;
+package unit.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -9,16 +9,16 @@ import org.junit.jupiter.api.Test;
 import es.laboticademar.webstore.entities.Usuario;
 import es.laboticademar.webstore.entities.UsuarioPrincipal;
 
-public class UsuarioPrincipalTest {
+class UsuarioPrincipalTest {
 
     @Test
-    void testGetAuthorities() {
-        Usuario usuario = new Usuario();
-        usuario.setCorreo("user@example.com");
-        usuario.setPasswd("pass");
-        usuario.setRoles(Set.of("ROLE_USUARIO", "ROLE_ADMIN"));
+    void testGetAuthoritiesAndCredentials() {
+        Usuario user = new Usuario();
+        user.setCorreo("user@example.com");
+        user.setPasswd("pass");
+        user.setRoles(Set.of("ROLE_USUARIO", "ROLE_ADMIN"));
 
-        UsuarioPrincipal principal = new UsuarioPrincipal(usuario);
+        UsuarioPrincipal principal = new UsuarioPrincipal(user);
 
         assertThat(principal.getAuthorities()).hasSize(2);
         assertThat(principal.getUsername()).isEqualTo("user@example.com");
