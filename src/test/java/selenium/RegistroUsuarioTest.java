@@ -4,11 +4,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.UUID;
 
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -21,9 +23,11 @@ public class RegistroUsuarioTest {
     @BeforeEach
     public void setupTest() {
         ChromeOptions opts = new ChromeOptions();
-
+        opts.addArguments("--headless=new", "--no-sandbox", "--disable-dev-shm-usage", "--remote-allow-origins=*");
+        opts.addArguments("--user-data-dir=/tmp/selenium-profile-" + UUID.randomUUID());
         driver = new ChromeDriver(opts);
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+        driver.manage().window().setSize(new Dimension(1920, 1080));  // o .maximize()
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         driver.get(baseUrl);
     }
@@ -67,15 +71,22 @@ public class RegistroUsuarioTest {
         driver.findElement(By.id("next-btn")).click();
         wait.until(ExpectedConditions.textToBe(By.id("step-label"), "Paso 3 de 3"));
 
-        // --- Paso 3 ---
-        // Seleccionamos primero y tercer interés
+            // --- Paso 3 ---
         List<WebElement> intereses = driver.findElements(By.cssSelector(".select-interes"));
-        intereses.get(0).click();
-        intereses.get(2).click();
 
+        for (int idx : new int[]{0, 2}) {
+            WebElement interes = intereses.get(idx);
+
+            wait.until(ExpectedConditions.elementToBeClickable(interes));
+
+            ((JavascriptExecutor) driver)
+                .executeScript("arguments[0].scrollIntoView({block:'center'});", interes);
+
+            new Actions(driver).moveToElement(interes).click().perform();
+        }
+
+        // por último pulsar “Terminar” y comprobar redirección…
         driver.findElement(By.id("next-btn")).click();
-
-        // Esperar redirección al home (wizard se envía con fetch y redirige a "/")
         wait.until(ExpectedConditions.urlToBe("http://localhost:8080/"));
         assertEquals("http://localhost:8080/", driver.getCurrentUrl());
     }
