@@ -13,6 +13,7 @@
 	<artifactId>
 	webstore</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+    <packaging>war</packaging>
 	<name>webstore</name>
 	<description>Tienda online para productos de parafarmacia</description>
 	
@@ -114,7 +115,6 @@
 		<dependency>
 			<groupId>org.apache.tomcat.embed</groupId>
 			<artifactId>tomcat-embed-jasper</artifactId>
-			<scope>provided</scope>
 		</dependency>
 		
 		<!--CSS-->
