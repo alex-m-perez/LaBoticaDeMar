@@ -8,8 +8,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import es.laboticademar.webstore.services.DestacadoService;
-import es.laboticademar.webstore.services.UsuarioService;
+import es.laboticademar.webstore.enumerations.PreferenciaEnum;
+import es.laboticademar.webstore.services.interfaces.DestacadoService;
+import es.laboticademar.webstore.services.interfaces.UsuarioService;
 
 
 @Controller
@@ -24,16 +25,6 @@ public class InicioController {
 
     @GetMapping("/")
     public String accessWelcomePage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
-        if (userDetails != null) {
-            // En este caso, el userDetails.getUsername() devuelve el correo.
-            String correo = userDetails.getUsername();
-
-            // Buscar el usuario completo en la base de datos mediante el DAO.
-            // Suponiendo que getByCorreo devuelve un Optional<Usuario>.
-            usuarioService.getUserByCorreo(correo).ifPresent(usuario -> {
-                model.addAttribute("usuario", usuario);
-            });
-        }
         model.addAttribute("destacados", destacadoService.getAllDestacados());
         return "main/welcome";
     }
@@ -56,6 +47,13 @@ public class InicioController {
     @GetMapping("/login")
     public String goLoginPage() {
         return "main/login";
+    }
+
+    @GetMapping("/register")
+    public String goRegisterPage(Model model) {
+        // Mete directamente el array de enums en el modelo
+        model.addAttribute("preferenciasEnumList", PreferenciaEnum.values());
+        return "main/registro";
     }
 
     @GetMapping("/product")

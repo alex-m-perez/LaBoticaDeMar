@@ -1,4 +1,4 @@
-package security;
+package integration.security;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -22,13 +22,13 @@ import es.laboticademar.webstore.services.impl.AuthenticationService;
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @EntityScan(basePackages = "es.laboticademar.webstore.entities")
-public class SecurityConfigIntegrationTest {
+class SecurityConfigIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private AuthenticationService authService; // Evitamos ejecución real de lógica de negocio
+    private AuthenticationService authService;
 
     @BeforeEach
     void cleanBefore() {
@@ -42,26 +42,15 @@ public class SecurityConfigIntegrationTest {
 
     @Test
     void shouldAllowAccessToPublicRoutes() throws Exception {
-        mockMvc.perform(get("/"))
-               .andExpect(status().isOk());
-
-        mockMvc.perform(get("/login"))
-               .andExpect(status().isOk());
-
-        mockMvc.perform(get("/product"))
-               .andExpect(status().isOk());
+        mockMvc.perform(get("/")).andExpect(status().isOk());
+        mockMvc.perform(get("/login")).andExpect(status().isOk());
+        mockMvc.perform(get("/product")).andExpect(status().isOk());
     }
-
 
     @Test
     void shouldBlockAccessToProtectedRoutesWithoutAuth() throws Exception {
-        mockMvc.perform(get("/profile"))
-               .andExpect(status().is3xxRedirection());
-
-        mockMvc.perform(get("/admin/home"))
-               .andExpect(status().is3xxRedirection());
-
-        mockMvc.perform(get("/cart"))
-               .andExpect(status().is3xxRedirection());
+        mockMvc.perform(get("/profile")).andExpect(status().is3xxRedirection());
+        mockMvc.perform(get("/admin/home")).andExpect(status().is3xxRedirection());
+        mockMvc.perform(get("/cart")).andExpect(status().is3xxRedirection());
     }
 }

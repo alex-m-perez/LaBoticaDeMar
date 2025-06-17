@@ -90,7 +90,7 @@
 
         <p class="text-center text-sm text-gray-600 mt-4">
             ¿No tienes una cuenta?
-            <a href="/auth/register" class="text-blue-600 hover:underline">Regístrate aquí</a>
+            <a href="/register" class="text-blue-600 hover:underline">Regístrate aquí</a>
         </p>
     </div>
   </div>

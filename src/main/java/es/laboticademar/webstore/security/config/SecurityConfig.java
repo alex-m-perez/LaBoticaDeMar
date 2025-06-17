@@ -29,8 +29,9 @@ public class SecurityConfig {
             .authorizeHttpRequests(requests -> requests
                 // Recursos públicos
                 .requestMatchers("/WEB-INF/**", "/css/**", "/images/**", "/js/**", "/public/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/", "/login", "/product/**", "/auth/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/", "/login", "/register", "/product/**", "/auth/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/auth/authenticate", "/auth/register").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
                 
                 // Endpoints protegidos:
                 // Sólo ADMIN tiene acceso a /admin/**

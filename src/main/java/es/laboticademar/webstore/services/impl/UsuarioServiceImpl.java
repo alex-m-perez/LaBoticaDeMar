@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import es.laboticademar.webstore.entities.Usuario;
 import es.laboticademar.webstore.repositories.UsuarioDAO;
-import es.laboticademar.webstore.services.UsuarioService;
+import es.laboticademar.webstore.services.interfaces.UsuarioService;
 import lombok.RequiredArgsConstructor;
 
 @Service
