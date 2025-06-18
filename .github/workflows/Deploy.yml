@@ -2,14 +2,14 @@ name: Deploy to AWS EC2
 
 on:
   workflow_run:
-    workflows: ["RunTests"]    # Debe coincidir con el `name:` de tu RunTests.yml
+    workflows: ["RunTests"]
     types: [completed]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
-    # Solo si RunTests terminó OK y es sobre main
+    # Solo si los tests pasaron en main
     if: >
       github.event.workflow_run.conclusion == 'success' &&
       github.event.workflow_run.head_branch == 'main'
@@ -18,20 +18,34 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Setup Java 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: 17
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-maven
+
+      - name: Build WAR artifact
+        run: mvn clean package -DskipTests
+
       - name: Extract version from commit message
         id: extract_version
         run: |
           MSG="${{ github.event.workflow_run.head_commit.message }}"
-          echo "🔍 Commit message: $MSG"
-          # Regex que captura X.Y.Z y opcional -suffix (beta, rc, alpha, etc)
-          VER=$(echo "$MSG" | grep -oE 'v?[0-9]+\.[0-9]+\.[0-9]+(-[A-Za-z0-9\.]+)?' \
-                  | head -n1 \
-                  | sed 's/^v//')
+          VER=$(echo "$MSG" \
+            | grep -oE 'v?[0-9]+\.[0-9]+\.[0-9]+(-[A-Za-z0-9\.]+)?' \
+            | head -n1 \
+            | sed 's/^v//')
           if [ -z "$VER" ]; then
             echo "::error::No se encontró versión en el mensaje del commit"
             exit 1
           fi
-          echo "Versión encontrada: $VER"
           echo "version=$VER" >> $GITHUB_OUTPUT
 
       - name: Log in to Docker Hub
@@ -46,8 +60,8 @@ jobs:
           context: .
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/miapp:${{ steps.extract_version.outputs.version }}
-            ${{ secrets.DOCKERHUB_USERNAME }}/miapp:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/LaBoticaDeMar:${{ steps.extract_version.outputs.version }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/LaBoticaDeMar:latest
 
       - name: Setup SSH key
         run: |
@@ -55,25 +69,27 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
 
-      - name: Add EC2 host to known_hosts
-        run: |
-          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+      - name: Add EC2 to known_hosts
+        run: ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
       - name: Deploy on EC2
         run: |
           ssh -i ~/.ssh/id_rsa ec2-user@${{ secrets.EC2_HOST }} << 'EOF'
-            # Detén y elimina la versión anterior
-            docker stop miapp || true
-            docker rm miapp   || true
+            # Detenemos y borramos el contenedor previo
+            docker stop LaBoticaDeMar || true
+            docker rm LaBoticaDeMar   || true
 
-            # Baja y arranca la nueva imagen
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/miapp:${{ steps.extract_version.outputs.version }}
+            # Tiramos la nueva imagen
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/LaBoticaDeMar:${{ steps.extract_version.outputs.version }}
 
+            # Arrancamos con todas las vars que funcionan localmente
             docker run -d \
-              --name miapp \
+              --name LaBoticaDeMar \
               -p 80:8080 \
-              -e SPRING_DATASOURCE_URL=jdbc:mysql://${{ secrets.DB_HOST }}:${{ secrets.DB_PORT }}/${{ secrets.DB_NAME }} \
+              -e SPRING_DATASOURCE_URL="jdbc:mysql://${{ secrets.DB_HOST }}:${{ secrets.DB_PORT }}/${{ secrets.DB_NAME }}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC" \
               -e SPRING_DATASOURCE_USERNAME=${{ secrets.DB_USER }} \
               -e SPRING_DATASOURCE_PASSWORD=${{ secrets.DB_PASSWORD }} \
-              ${{ secrets.DOCKERHUB_USERNAME }}/miapp:${{ steps.extract_version.outputs.version }}
+              -e SPRING_JPA_HIBERNATE_DDL_AUTO=update \
+              -e SPRING_PROFILES_ACTIVE=prod \
+              ${{ secrets.DOCKERHUB_USERNAME }}/LaBoticaDeMar:${{ steps.extract_version.outputs.version }}
           EOF
