@@ -1,8 +1,8 @@
-FROM eclipse-temurin:17-jdk-slim
-WORKDIR /app
+FROM openjdk:17-jdk-slim
+VOLUME /tmp
 
-# Copiamos el .war generado por el workflow
-COPY target/laboticademar.war laboticademar.war
+ARG WAR_FILE=target/*.war
+COPY ${WAR_FILE} laboticademar.war
 
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","laboticademar.war"]
+ENTRYPOINT ["java","-Dspring.profiles.active=${SPRING_PROFILES_ACTIVE:-dev}","-jar","/laboticademar.war"]
