@@ -31,6 +31,9 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-maven
 
+      - name: Build WAR artifact
+        run: mvn clean package -DskipTests
+
       - name: Extract version from commit message
         id: extract_version
         run: |
