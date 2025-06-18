@@ -13,10 +13,10 @@
   </parent>
 
   <groupId>es.laboticademar</groupId>
-  <artifactId>LaBoticaDeMar</artifactId>
+  <artifactId>laboticademar</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>war</packaging>
-  <name>LaBoticaDeMar</name>
+  <name>laboticademar</name>
   <description>Tienda online para productos de parafarmacia</description>
 
   <properties>

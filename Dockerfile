@@ -15,7 +15,7 @@ FROM eclipse-temurin:17-jdk-slim
 WORKDIR /app
 
 # Copia el WAR generado (ajusta el patrón si tu artefacto cambia de nombre)
-COPY --from=build /workspace/target/*.war LaBoticaDeMar.war
+COPY --from=build /workspace/target/*.war laboticademar.war
 
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","LaBoticaDeMar.war"]
+ENTRYPOINT ["java","-jar","laboticademar.war"]

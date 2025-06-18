@@ -31,9 +31,6 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-maven
 
-      - name: Build WAR artifact
-        run: mvn clean package -DskipTests
-
       - name: Extract version from commit message
         id: extract_version
         run: |
@@ -60,8 +57,8 @@ jobs:
           context: .
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/LaBoticaDeMar:${{ steps.extract_version.outputs.version }}
-            ${{ secrets.DOCKERHUB_USERNAME }}/LaBoticaDeMar:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/laboticademar:${{ steps.extract_version.outputs.version }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/laboticademar:latest
 
       - name: Setup SSH key
         run: |
@@ -76,20 +73,20 @@ jobs:
         run: |
           ssh -i ~/.ssh/id_rsa ec2-user@${{ secrets.EC2_HOST }} << 'EOF'
             # Detenemos y borramos el contenedor previo
-            docker stop LaBoticaDeMar || true
-            docker rm LaBoticaDeMar   || true
+            docker stop laboticademar || true
+            docker rm laboticademar   || true
 
             # Tiramos la nueva imagen
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/LaBoticaDeMar:${{ steps.extract_version.outputs.version }}
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/laboticademar:${{ steps.extract_version.outputs.version }}
 
             # Arrancamos con todas las vars que funcionan localmente
             docker run -d \
-              --name LaBoticaDeMar \
+              --name laboticademar \
               -p 80:8080 \
               -e SPRING_DATASOURCE_URL="jdbc:mysql://${{ secrets.DB_HOST }}:${{ secrets.DB_PORT }}/${{ secrets.DB_NAME }}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC" \
               -e SPRING_DATASOURCE_USERNAME=${{ secrets.DB_USER }} \
               -e SPRING_DATASOURCE_PASSWORD=${{ secrets.DB_PASSWORD }} \
               -e SPRING_JPA_HIBERNATE_DDL_AUTO=update \
               -e SPRING_PROFILES_ACTIVE=prod \
-              ${{ secrets.DOCKERHUB_USERNAME }}/LaBoticaDeMar:${{ steps.extract_version.outputs.version }}
+              ${{ secrets.DOCKERHUB_USERNAME }}/laboticademar:${{ steps.extract_version.outputs.version }}
           EOF
