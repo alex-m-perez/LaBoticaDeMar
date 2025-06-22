@@ -84,7 +84,8 @@ jobs:
             # Arrancamos con todas las vars que funcionan localmente
             docker run -d \
               --name laboticademar \
-              -p 80:8080 \
+              -p 127.0.0.1:8080:8080 \
+              -v /home/ec2-user/app-images:/home/ec2-user/app-images \
               -e SPRING_DATASOURCE_URL="jdbc:mysql://${{ secrets.DB_HOST }}:${{ secrets.DB_PORT }}/${{ secrets.DB_NAME }}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC" \
               -e SPRING_DATASOURCE_USERNAME=${{ secrets.DB_USER }} \
               -e SPRING_DATASOURCE_PASSWORD=${{ secrets.DB_PASSWORD }} \
