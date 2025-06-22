@@ -257,6 +257,30 @@
 		});
 	});
 
+    nuevoForm.addEventListener('submit', e => {
+        e.preventDefault();
+        const formData = new FormData(nuevoForm);
+
+        fetch(`${window.contextPath}/admin/api/products/new`, {
+            method: 'POST',
+            body: formData
+        })
+        .then(res => {
+            if (!res.ok) throw new Error('Error al guardar');
+            return res.json();
+        })
+        .then(dto => {
+            // dto es el ProductoDTO actualizado
+            hideModal();
+            loadSection('/admin/products', false);
+        })
+        .catch(err => {
+            alert('No se pudo guardar el producto.');
+            console.error(err);
+        });
+    });
+
+
 
     // ——————————————————————————————
     // 4) Sugerencias de nombres

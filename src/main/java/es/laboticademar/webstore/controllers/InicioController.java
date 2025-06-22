@@ -11,16 +11,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import es.laboticademar.webstore.enumerations.PreferenciaEnum;
 import es.laboticademar.webstore.services.interfaces.DestacadoService;
 import es.laboticademar.webstore.services.interfaces.UsuarioService;
+import lombok.RequiredArgsConstructor;
 
 
 @Controller
 @RequestMapping("")
+@RequiredArgsConstructor
 public class InicioController {
 
-    @Autowired
-    private UsuarioService usuarioService;
-    @Autowired
-    private DestacadoService destacadoService;
+    private final DestacadoService destacadoService;
     
 
     @GetMapping("/")
