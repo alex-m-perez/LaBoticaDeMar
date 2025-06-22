@@ -18,9 +18,9 @@ import lombok.RequiredArgsConstructor;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    
+
     private final JwtAuthentication jwtAuthFilter;
-    private final AuthenticationProvider authenticationProvider;
+    private final AuthenticationProvider authenticationProvider;    
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -30,7 +30,7 @@ public class SecurityConfig {
                 // Recursos públicos
                 .requestMatchers("/WEB-INF/**", "/css/**", "/images/**", "/js/**", "/public/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/", "/login", "/register", "/product/**", "/auth/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/auth/authenticate", "/auth/register").permitAll()
+                .requestMatchers(HttpMethod.POST, "/auth/authenticate", "/auth/register", "/auth/logout").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
                 
                 // Endpoints protegidos:
@@ -39,10 +39,16 @@ public class SecurityConfig {
                 // EMPLOYEE y ADMIN pueden acceder a /employee/**
                 .requestMatchers("/employee/**").hasAnyRole("EMPLOYEE", "ADMIN")
                 // Los clientes (USER) pueden acceder a carrito, wishlist y perfil
-                .requestMatchers("/cart", "/wishlist", "/profile").hasAnyRole("USER", "ADMIN")
+                .requestMatchers("/cart", "/wishlist", "/profile").hasAnyRole("USUARIO", "ADMIN")
                 
                 // El resto requiere autenticación
                 .anyRequest().authenticated()
+            )
+            .logout(logout -> logout
+                .logoutUrl("/auth/logout")
+                .deleteCookies("jwtToken")
+                .logoutSuccessUrl("/")  // o donde quieras redirigir
+                .permitAll()
             )
             .exceptionHandling(handling -> handling
                 .authenticationEntryPoint((request, response, authException) -> response.sendRedirect("/login"))

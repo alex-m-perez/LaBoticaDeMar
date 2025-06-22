@@ -1,0 +1,8 @@
+spring.jpa.hibernate.ddl-auto=update
+
+spring.datasource.url=<LOCAL_DDBB_URL>
+spring.datasource.username=<DDBB_USERNAM>
+spring.datasource.password=<DDBB_PASSWORD>
+
+images.storage-dir=<LOCAL_IMAGES_PATH>
+

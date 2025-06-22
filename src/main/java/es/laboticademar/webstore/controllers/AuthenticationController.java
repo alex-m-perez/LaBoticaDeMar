@@ -51,4 +51,16 @@ public class AuthenticationController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletResponse response) {
+        Cookie cookie = new Cookie("jwtToken", null);
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        cookie.setSecure(false);   // si usas HTTPS
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+        
+        return ResponseEntity.ok().build();
+    }
 }

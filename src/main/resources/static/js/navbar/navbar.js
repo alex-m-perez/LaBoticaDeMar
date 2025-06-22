@@ -154,3 +154,22 @@ navbarInput.addEventListener('blur', () => {
 	setTimeout(() => navbarBox.classList.add('hidden'), 200);
 });
 
+
+// Profile dropdown (solo si existe el menú)
+const profileContainer = document.getElementById('profileMenuContainer');
+const profileIcon      = document.getElementById('profileIcon');
+const profileMenu      = document.getElementById('profileMenu');
+
+if (profileMenu) {
+	profileContainer.addEventListener('mouseover', () => {
+		profileMenu.classList.remove('hidden');
+	});
+	profileContainer.addEventListener('mouseleave', () => {
+		profileMenu.classList.add('hidden');
+	});
+}
+
+// Click en icono de perfil: siempre va a /profile (Spring te redirige a login si no estás auth)
+profileIcon.addEventListener('click', () => {
+	window.location.href = `${window.contextPath}/profile`;
+});

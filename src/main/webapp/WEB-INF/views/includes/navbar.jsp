@@ -59,8 +59,47 @@
                         </a>
                     </div>
                 </sec:authorize>
-                <img src="${pageContext.request.contextPath}/images/user-circle.svg" class="h-6 cursor-pointer" alt="Mi perfil"
-                    onclick="window.location.href='/profile'">
+                <div id="profileMenuContainer" class="relative flex items-center space-x-2">
+                    <sec:authorize access="isAuthenticated()">
+                        <img
+                            id="profileIcon"
+                            src="${pageContext.request.contextPath}/images/user-circle.svg"
+                            class="h-6 cursor-pointer"
+                            alt="Mi perfil"
+                        />
+                        <div
+                            id="profileMenu"
+                            class="hidden absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md z-50"
+                        >
+                            <ul class="py-2">
+                                <li>
+                                    <a href="${pageContext.request.contextPath}/orders" class="block px-4 py-2 hover:bg-gray-100">Mis pedidos</a>
+                                </li>
+                                <li>
+                                    <a href="${pageContext.request.contextPath}/returns" class="block px-4 py-2 hover:bg-gray-100">Mis devoluciones</a>
+                                </li>
+                                <li>
+                                    <a href="${pageContext.request.contextPath}/profile" class="block px-4 py-2 hover:bg-gray-100">Mi perfil</a>
+                                </li>
+                                <li><hr class="my-2 border-gray-200"/></li>
+                                <li>
+                                    <a href="${pageContext.request.contextPath}/logout" class="block px-4 py-2 text-red-600 hover:bg-gray-100">Cerrar sesión</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </sec:authorize>
+                    <sec:authorize access="!isAuthenticated()">
+                        <a href="${pageContext.request.contextPath}/login" class="px-3 py-1 bg-pistachio text-white rounded-md hover:bg-pistachio-dark">Iniciar Sesión</a>
+                        <a href="${pageContext.request.contextPath}/register" class="px-3 py-1 bg-white text-pistachio border border-pistachio rounded-md hover:bg-gray-100">Crear Cuenta</a>
+                        <img
+                            id="profileIcon"
+                            src="${pageContext.request.contextPath}/images/user-circle.svg"
+                            class="h-6 cursor-pointer"
+                            alt="Mi perfil"
+                        />
+                    </sec:authorize>
+                </div>
+
                 <img src="${pageContext.request.contextPath}/images/heart.svg" class="h-6 cursor-pointer" alt="Artículos que me gustan"
                     onclick="window.location.href='/wishlist'">
                 <img src="${pageContext.request.contextPath}/images/shopping-cart.svg" class="h-6 cursor-pointer" alt="Mi carrito"

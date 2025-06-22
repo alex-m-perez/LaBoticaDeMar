@@ -7,6 +7,7 @@ import java.util.function.Function;
 
 import javax.crypto.SecretKey;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,8 @@ import io.jsonwebtoken.security.Keys;
 public class JwtService {
 
     // Esta clave debe ser larga y segura. Aquí se muestra en base64.
-    private static final String SECRET_KEY = "514f59314f43443750464b533848384745464342585a4d514b5441344334354b";
+    @Value("${auth.secret-key}")
+    private String SECRET_KEY;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);

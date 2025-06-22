@@ -1,4 +1,4 @@
-package es.laboticademar.webstore.config;
+package es.laboticademar.webstore.controllers.config;
 
 import es.laboticademar.webstore.entities.UsuarioPrincipal;
 import org.springframework.security.core.Authentication;

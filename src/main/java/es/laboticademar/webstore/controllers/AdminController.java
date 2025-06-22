@@ -35,9 +35,9 @@ public class AdminController {
             model.addAttribute("totalActivos",    productService.countByActivo(true));
             model.addAttribute("totalInactivos",  productService.countByActivo(false));
             model.addAttribute("stockTotal",      productService.sumTotalStock());
-
         }
     }
+    
     @GetMapping({"/home", "/ventas", "/devoluciones", "/products", "/ofertas", "/empleados", "/usuarios"})
     public String section(HttpServletRequest request) {
         boolean isAjax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));

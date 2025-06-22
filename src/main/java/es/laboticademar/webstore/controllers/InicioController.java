@@ -1,6 +1,5 @@
 package es.laboticademar.webstore.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -10,22 +9,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import es.laboticademar.webstore.enumerations.PreferenciaEnum;
 import es.laboticademar.webstore.services.interfaces.DestacadoService;
-import es.laboticademar.webstore.services.interfaces.UsuarioService;
+import lombok.RequiredArgsConstructor;
 
 
 @Controller
 @RequestMapping("")
+@RequiredArgsConstructor
 public class InicioController {
 
-    @Autowired
-    private UsuarioService usuarioService;
-    @Autowired
     private DestacadoService destacadoService;
     
 
     @GetMapping("/")
     public String accessWelcomePage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
-        model.addAttribute("destacados", destacadoService.getAllDestacados());
         return "main/welcome";
     }
 

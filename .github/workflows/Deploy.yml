@@ -91,5 +91,7 @@ jobs:
               -e SPRING_DATASOURCE_PASSWORD=${{ secrets.DB_PASSWORD }} \
               -e SPRING_JPA_HIBERNATE_DDL_AUTO=update \
               -e SPRING_PROFILES_ACTIVE=prod \
+              -e STRIPE_API_SECRET_KEY=${{ secrets.STRIPE_API_SECRET_KEY }} \
+              -e STRIPE_API_PUBLISHABLE_KEY=${{ secrets.STRIPE_API_PUBLISHABLE_KEY }} \
               ${{ secrets.DOCKERHUB_USERNAME }}/laboticademar:${{ steps.extract_version.outputs.version }}
           EOF
