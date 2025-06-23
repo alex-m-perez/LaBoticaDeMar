@@ -28,18 +28,17 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(requests -> requests
                 // Recursos públicos
-                .requestMatchers("/WEB-INF/**", "/css/**", "/images/**", "/js/**", "/public/**").permitAll()
+                .requestMatchers("/WEB-INF/views/**", "/css/**", "/images/**", "/js/**", "/public/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/", "/login", "/register", "/product/**", "/auth/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/auth/authenticate", "/auth/register", "/auth/logout").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
                 
                 // Endpoints protegidos:
-                // Sólo ADMIN tiene acceso a /admin/**
-                .requestMatchers("/admin/**").hasRole("ADMIN")
-                // EMPLOYEE y ADMIN pueden acceder a /employee/**
-                .requestMatchers("/employee/**").hasAnyRole("EMPLOYEE", "ADMIN")
-                // Los clientes (USER) pueden acceder a carrito, wishlist y perfil
-                .requestMatchers("/cart", "/wishlist", "/profile").hasAnyRole("USUARIO", "ADMIN")
+                .requestMatchers("/admin/**")
+                    .hasRole("ADMIN")
+                .requestMatchers("/employee/**")
+                    .hasAnyRole("EMPLOYEE", "ADMIN")
+                .requestMatchers("/cart/**", "/wishlist/**", "/profile/**")
+                    .hasAnyRole("USUARIO", "ADMIN")
                 
                 // El resto requiere autenticación
                 .anyRequest().authenticated()
@@ -47,7 +46,7 @@ public class SecurityConfig {
             .logout(logout -> logout
                 .logoutUrl("/auth/logout")
                 .deleteCookies("jwtToken")
-                .logoutSuccessUrl("/")  // o donde quieras redirigir
+                .logoutSuccessUrl("/")
                 .permitAll()
             )
             .exceptionHandling(handling -> handling

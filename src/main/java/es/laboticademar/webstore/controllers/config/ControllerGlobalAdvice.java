@@ -1,16 +1,34 @@
 package es.laboticademar.webstore.controllers.config;
 
-import es.laboticademar.webstore.entities.UsuarioPrincipal;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
+import es.laboticademar.webstore.entities.Categoria;
+import es.laboticademar.webstore.entities.Familia;
+import es.laboticademar.webstore.entities.Subcategoria;
+import es.laboticademar.webstore.entities.UsuarioPrincipal;
+import es.laboticademar.webstore.services.interfaces.CategoriaService;
+import es.laboticademar.webstore.services.interfaces.FamiliaService;
+import es.laboticademar.webstore.services.interfaces.SubcategoriaService;
+import lombok.RequiredArgsConstructor;
+
 /**
  * Añade al modelo el nombre completo del usuario autenticado en cada vista JSP.
  */
 @ControllerAdvice
+@RequiredArgsConstructor
 public class ControllerGlobalAdvice {
+
+    private final FamiliaService familiaService;
+    private final CategoriaService categoriaService;
+    private final SubcategoriaService subcategoriaService;
 
     @ModelAttribute("currentUserName")
     public String addLoggedUserName() {
@@ -27,8 +45,31 @@ public class ControllerGlobalAdvice {
                 return nombre + " " + apellido1;
             }
             return nombre;
-        }
+    }
         return null;
     }
 
+    @ModelAttribute("familiaCategorias")
+    public Map<Familia, List<Map<Categoria, List<Subcategoria>>>> addCategorias() {
+        List<Familia> familias = familiaService.findAll();
+        Map<Familia, List<Map<Categoria, List<Subcategoria>>>> result = new LinkedHashMap<>();
+
+        for (Familia fam : familias) {
+            // 1) obtengo todas las categorías de esta familia
+            List<Categoria> cats = categoriaService.findByFamilia(fam);
+            List<Map<Categoria, List<Subcategoria>>> listCatConSubs = new ArrayList<>();
+
+            for (Categoria cat : cats) {
+                // 2) para cada categoría, cargar sus subcategorías
+                List<Subcategoria> subs = subcategoriaService.findByCategoria(cat);
+                Map<Categoria, List<Subcategoria>> m = new LinkedHashMap<>();
+                m.put(cat, subs);
+                listCatConSubs.add(m);
+            }
+
+            result.put(fam, listCatConSubs);
+        }
+
+        return result;
+    }
 }

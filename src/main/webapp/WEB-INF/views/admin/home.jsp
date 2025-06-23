@@ -27,12 +27,7 @@
     
     <%@ include file="../includes/navbar.jsp" %>
 
-    <div
-      id="modalOverlay"
-      class="fixed top-0 left-0 w-screen h-screen
-             bg-black bg-opacity-50 hidden
-             z-[9999]">
-    </div>
+    <div id="modalOverlay" class="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-50 hidden z-[9999]"></div>
     
     <script> window.contextPath = '<%= request.getContextPath() %>'; </script>
     <script src="${pageContext.request.contextPath}/js/admin/home.js" defer></script>

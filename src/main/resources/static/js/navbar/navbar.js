@@ -1,3 +1,6 @@
+// ——————————————————————————————
+// TOOGLE CATEGORIAS
+// ——————————————————————————————
 const toggleCategoriesBtn = document.getElementById('toggleCategoriesBtn');
 const toggleBrandsBtn = document.getElementById('toggleBrandsBtn');
 
@@ -16,7 +19,7 @@ let isBrandsVisible = false;
 function clearSelection() {
     const navbarItems = document.querySelectorAll('.navbar-item');
     navbarItems.forEach(el => {
-        el.classList.remove("text-pistachio", "text-red-600", "hover:text-gray-800", "hover:text-red-800");
+        el.classList.remove("text-red-600", "hover:text-gray-800", "hover:text-red-800");
         if (el.id === "toggleBrandsBtn" || el.id === "toggleCategoriesBtn" || el.classList.contains("text-gray-500")) {
             el.classList.add("text-gray-500", "hover:text-gray-800");
         } else {
@@ -27,11 +30,7 @@ function clearSelection() {
 
 function setActive(element) {
     element.classList.remove("text-gray-500", "hover:text-gray-800", "text-red-500", "hover:text-red-800");
-    if (element.classList.contains("text-red-500")) {
-        element.classList.add("text-red-600");
-    } else {
-        element.classList.add("text-pistachio");
-    }
+    if (element.classList.contains("text-red-500")) element.classList.add("text-red-600");
 }
 
 // Menú desplegable
@@ -94,7 +93,41 @@ navbarItems.forEach(item => {
     }
 });
 
-// Generador alfabético (sin cambios)
+
+const familyItems = document.querySelectorAll('.family-item');
+const familyCategoriesList = document.getElementById('familyCategoriesList');
+
+familyItems.forEach(item => {
+    item.addEventListener('click', () => {
+        const isActive = item.classList.contains('bg-gray-200');
+
+        // 1) Limpiar estado de todas las Familias
+        familyItems.forEach(fi => {
+            fi.classList.remove('bg-gray-200');
+        });
+        // 2) Limpiar Contenedor de Categorías
+        familyCategoriesList.innerHTML = '';
+
+        // 3) Si antes no estaba activo, activarlo y mostrar sus Categorías
+        if (!isActive) {
+            item.classList.add('bg-gray-200');  // marca como activo
+            const hiddenSublist = item.querySelector('ul.hidden');
+            if (hiddenSublist) {
+                // Clonar cada <li> de categoría y añadirlo al contenedor
+                Array.from(hiddenSublist.children).forEach(catLi => {
+                    familyCategoriesList.appendChild(catLi.cloneNode(true));
+                });
+            }
+        }
+    });
+});
+
+
+
+
+// ——————————————————————————————
+// TOOGLE MARCAS
+// ——————————————————————————————
 const alphabetContainer = document.getElementById('alphabetButtons');
 const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
@@ -105,7 +138,11 @@ alphabet.forEach(letter => {
     alphabetContainer.appendChild(button);
 });
 
-// Autocomplete en el buscador del navbar (solo productos activos)
+
+
+// ——————————————————————————————
+// AUTCOMPLETAR NAVBAR
+// ——————————————————————————————
 const navbarInput   = document.getElementById('navbarSearchInput');
 const navbarBox     = document.getElementById('navbarSuggestions');
 let   navbarTimer;
@@ -119,7 +156,7 @@ navbarInput.addEventListener('input', e => {
 		return;
 	}
 	navbarTimer = setTimeout(() => {
-		fetch(`${window.contextPath}/admin/api/products/search_names?q=${encodeURIComponent(q)}&active=true`)
+		fetch(`${window.contextPath}/admin/api/products/search_names?q=${encodeURIComponent(q)}`)
 			.then(res => {
 				if (!res.ok) throw new Error(`Status ${res.status}`);
 				return res.json();
@@ -155,13 +192,17 @@ navbarInput.addEventListener('blur', () => {
 });
 
 
-// Profile dropdown (solo si existe el menú)
+
+// ——————————————————————————————
+// MENU CONTEXTUAL PROFILE
+// ——————————————————————————————
 const profileContainer = document.getElementById('profileMenuContainer');
 const profileIcon      = document.getElementById('profileIcon');
 const profileMenu      = document.getElementById('profileMenu');
 
-if (profileMenu) {
-	profileContainer.addEventListener('mouseover', () => {
+// Sólo si existe menú (es decir, estás autenticado)
+if (profileContainer && profileMenu) {
+	profileContainer.addEventListener('mouseenter', () => {
 		profileMenu.classList.remove('hidden');
 	});
 	profileContainer.addEventListener('mouseleave', () => {
@@ -169,7 +210,8 @@ if (profileMenu) {
 	});
 }
 
-// Click en icono de perfil: siempre va a /profile (Spring te redirige a login si no estás auth)
-profileIcon.addEventListener('click', () => {
-	window.location.href = `${window.contextPath}/profile`;
-});
+if (profileIcon) {
+	profileIcon.addEventListener('click', () => {
+		window.location.href = `${window.contextPath}/profile`;
+	});
+}

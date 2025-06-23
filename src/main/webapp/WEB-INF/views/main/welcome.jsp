@@ -16,7 +16,6 @@
         <!-- AJAX -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <!-- Flowbite CDN -->
-        <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
         <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
         <!-- Pagedone CDN -->
         <link href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" rel="stylesheet"/>
@@ -75,48 +74,48 @@
                         <div class="swiper-wrapper">
                             <!-- Reemplazamos las diapositivas estándar con tus tarjetas de producto -->
                             <c:forEach var="producto" items="${destacados}">
-                                    <div class="swiper-slide bg-white shadow-md rounded-lg overflow-hidden flex flex-col w-full h-full">
-                                        <img src="${producto.imagenPath != null ? producto.imagenPath : 'https://via.placeholder.com/300x200'}" 
-                                            href="${pageContext.request.contextPath}/product/${producto.id}" alt="Imagen del Producto" class="w-full h-3/5 object-cover">
-                                        <div class="p-4 flex-grow flex h-2/5 flex-col justify-between">
-                                            <div class="h-3/6">
-                                                <span onclick="window.location.href='/product/${producto.id}'" class="text-sm font-semibold cursor-pointer text-gray-800">${producto.nombre}</span>
-                                            </div>
-                                            <div class="flex items-center justify-start h-1/6">
-                                                <div class="flex ">
-                                                    <c:forEach var="i" begin="1" end="5">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" 
-                                                            fill="${i <= producto.rating ? '#FFD700' : '#D3D3D3'}" 
-                                                            viewBox="0 0 24 24" 
-                                                            class="w-5 h-5 ${i <= producto.rating ? 'text-yellow-400' : 'text-gray-300'}">
-                                                            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
-                                                        </svg>
+                                <div class="swiper-slide bg-white shadow-md rounded-lg overflow-hidden flex flex-col w-full h-full">
+                                    <img src="${producto.imagenPath != null ? producto.imagenPath : 'https://via.placeholder.com/300x200'}" 
+                                        href="${pageContext.request.contextPath}/product/${producto.id}" alt="Imagen del Producto" class="w-full h-3/5 object-cover">
+                                    <div class="p-4 flex-grow flex h-2/5 flex-col justify-between">
+                                        <div class="h-3/6">
+                                            <span onclick="window.location.href='/product/${producto.id}'" class="text-sm font-semibold cursor-pointer text-gray-800">${producto.nombre}</span>
+                                        </div>
+                                        <div class="flex items-center justify-start h-1/6">
+                                            <div class="flex ">
+                                                <c:forEach var="i" begin="1" end="5">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" 
+                                                        fill="${i <= producto.rating ? '#FFD700' : '#D3D3D3'}" 
+                                                        viewBox="0 0 24 24" 
+                                                        class="w-5 h-5 ${i <= producto.rating ? 'text-yellow-400' : 'text-gray-300'}">
+                                                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                                                    </svg>
 
-                                                    </c:forEach>
-                                                </div>
-                                                <span class="text-sm">(${producto.ratingCount})</span>
+                                                </c:forEach>
                                             </div>
-                                            <div class="mt-2 flex justify-between items-center h-2/6">
-                                                <div class="flex flex-col">
-                                                    <span class="text-sm ${producto.stock > 0 ? 'text-green-600' : 'text-red-600'}">
-                                                        ${producto.stock > 0 ? 'En stock' : 'No disponible'}
-                                                    </span>
-                                                    <!-- Stock information -->
-                                                    <div class="flex justify-between items-center">
-                                                        <span class="text-gray-800 font-bold">${producto.price} €</span>
-                                                    </div>
+                                            <span class="text-sm">(${producto.ratingCount})</span>
+                                        </div>
+                                        <div class="mt-2 flex justify-between items-center h-2/6">
+                                            <div class="flex flex-col">
+                                                <span class="text-sm ${producto.stock > 0 ? 'text-green-600' : 'text-red-600'}">
+                                                    ${producto.stock > 0 ? 'En stock' : 'No disponible'}
+                                                </span>
+                                                <!-- Stock information -->
+                                                <div class="flex justify-between items-center">
+                                                    <span class="text-gray-800 font-bold">${producto.price} €</span>
                                                 </div>
-                                                <div class="h-8">
-                                                    <button class="bg-gray-300 text-gray-800 p-2 h-full rounded-lg hover:bg-red-300">
-                                                        <img src="${pageContext.request.contextPath}/images/heart.svg" class="h-full cursor-pointer" alt="Mi carrito">
-                                                    </button>
-                                                    <button class="bg-gray-300 text-gray-800 p-2 h-full rounded-lg hover:bg-green-300">
-                                                        <img src="${pageContext.request.contextPath}/images/shopping-cart.svg" class="h-full cursor-pointer" alt="Mi carrito">
-                                                    </button>
-                                                </div>
+                                            </div>
+                                            <div class="h-8">
+                                                <button class="bg-gray-300 text-gray-800 p-2 h-full rounded-lg hover:bg-red-300">
+                                                    <img src="${pageContext.request.contextPath}/images/heart.svg" class="h-full cursor-pointer" alt="Mi carrito">
+                                                </button>
+                                                <button class="bg-gray-300 text-gray-800 p-2 h-full rounded-lg hover:bg-green-300">
+                                                    <img src="${pageContext.request.contextPath}/images/shopping-cart.svg" class="h-full cursor-pointer" alt="Mi carrito">
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
+                                </div>
                             </c:forEach>
                         </div>
                     </div>

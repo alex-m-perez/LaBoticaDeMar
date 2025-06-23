@@ -1,5 +1,7 @@
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <script src="${pageContext.request.contextPath}/js/navbar/navbar.js" defer></script>
 
 <nav id="navbar" class="bg-white shadow-md sticky top-0 w-full z-50 transition-all duration-300 ease-in-out">
@@ -41,74 +43,63 @@
                 </form>
             </div>
 
-
             <div class="flex-1 flex justify-end space-x-4 items-center">
                 <sec:authorize access="isAuthenticated()">
                     <p>Bienvenido, ${currentUserName}</p>
-                </sec:authorize>
-                <sec:authorize access="!isAuthenticated()">
-                    <div>
-                        <a href="${pageContext.request.contextPath}/login" 
-                            class="text-gray-800 hover:text-gray-600">
-                            Iniciar Sesión
-                        </a>
-                        <span class="mx-1 text-gray-500">|</span>
-                        <a href="${pageContext.request.contextPath}/register" 
-                            class="text-gray-800 hover:text-gray-600">
-                            Registrarse
-                        </a>
-                    </div>
-                </sec:authorize>
-                <div id="profileMenuContainer" class="relative flex items-center space-x-2">
-                    <sec:authorize access="isAuthenticated()">
+                    <!-- Contenedor sólo para el icono y su menú -->
+                    <div id="profileMenuContainer" class="relative flex-none inline-flex items-center">
                         <img
                             id="profileIcon"
                             src="${pageContext.request.contextPath}/images/user-circle.svg"
-                            class="h-6 cursor-pointer"
+                            class="h-6 flex-none cursor-pointer"
                             alt="Mi perfil"
                         />
-                        <div
-                            id="profileMenu"
-                            class="hidden absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md z-50"
-                        >
+                        <div id="profileMenu" class="hidden absolute top-full left-1/2 transform -translate-x-1/2 mt-1 w-48 bg-white shadow-lg rounded-md z-50">
                             <ul class="py-2">
-                                <li>
-                                    <a href="${pageContext.request.contextPath}/orders" class="block px-4 py-2 hover:bg-gray-100">Mis pedidos</a>
-                                </li>
-                                <li>
-                                    <a href="${pageContext.request.contextPath}/returns" class="block px-4 py-2 hover:bg-gray-100">Mis devoluciones</a>
-                                </li>
-                                <li>
-                                    <a href="${pageContext.request.contextPath}/profile" class="block px-4 py-2 hover:bg-gray-100">Mi perfil</a>
-                                </li>
+                                <li><a href="${pageContext.request.contextPath}/orders"   class="block px-4 py-2 hover:bg-gray-100">Mis pedidos</a></li>
+                                <li><a href="${pageContext.request.contextPath}/returns"  class="block px-4 py-2 hover:bg-gray-100">Mis devoluciones</a></li>
+                                <li><a href="${pageContext.request.contextPath}/profile"  class="block px-4 py-2 hover:bg-gray-100">Mi perfil</a></li>
                                 <li><hr class="my-2 border-gray-200"/></li>
-                                <li>
-                                    <a href="${pageContext.request.contextPath}/logout" class="block px-4 py-2 text-red-600 hover:bg-gray-100">Cerrar sesión</a>
-                                </li>
+                                <li><a href="${pageContext.request.contextPath}/auth/logout"  class="block px-4 py-2 text-red-600 hover:bg-gray-100">Cerrar sesión</a></li>
                             </ul>
                         </div>
-                    </sec:authorize>
-                    <sec:authorize access="!isAuthenticated()">
-                        <a href="${pageContext.request.contextPath}/login" class="px-3 py-1 bg-pistachio text-white rounded-md hover:bg-pistachio-dark">Iniciar Sesión</a>
-                        <a href="${pageContext.request.contextPath}/register" class="px-3 py-1 bg-white text-pistachio border border-pistachio rounded-md hover:bg-gray-100">Crear Cuenta</a>
+                    </div>
+
+                    <img
+                        src="${pageContext.request.contextPath}/images/heart.svg"
+                        class="h-6 cursor-pointer"
+                        alt="Artículos que me gustan"
+                        onclick="window.location.href='/wishlist'"
+                    />
+                    <img
+                        src="${pageContext.request.contextPath}/images/shopping-cart.svg"
+                        class="h-6 cursor-pointer"
+                        alt="Mi carrito"
+                        onclick="window.location.href='/cart'"
+                    />
+                    <sec:authorize access="hasRole('ROLE_ADMIN')">
                         <img
-                            id="profileIcon"
-                            src="${pageContext.request.contextPath}/images/user-circle.svg"
+                            src="${pageContext.request.contextPath}/images/settings.svg"
                             class="h-6 cursor-pointer"
-                            alt="Mi perfil"
+                            alt="Administracion"
+                            onclick="window.location.href='/admin/home'"
                         />
                     </sec:authorize>
-                </div>
-
-                <img src="${pageContext.request.contextPath}/images/heart.svg" class="h-6 cursor-pointer" alt="Artículos que me gustan"
-                    onclick="window.location.href='/wishlist'">
-                <img src="${pageContext.request.contextPath}/images/shopping-cart.svg" class="h-6 cursor-pointer" alt="Mi carrito"
-                    onclick="window.location.href='/cart'">
-                <sec:authorize access="hasRole('ROLE_ADMIN')">
-                    <img src="${pageContext.request.contextPath}/images/settings.svg" class="h-6 cursor-pointer" alt="Administracion"
-                        onclick="window.location.href='/admin/home'">
                 </sec:authorize>
-                
+
+                <sec:authorize access="!isAuthenticated()">
+                    <div>
+                        <a
+                            href="${pageContext.request.contextPath}/login"
+                            class="text-gray-800 hover:text-gray-600"
+                        >Iniciar Sesión</a>
+                        <span class="mx-1 text-gray-500">|</span>
+                        <a
+                            href="${pageContext.request.contextPath}/register"
+                            class="text-gray-800 hover:text-gray-600"
+                        >Registrarse</a>
+                    </div>
+                </sec:authorize>
             </div>
         </div>
 
@@ -129,70 +120,39 @@
             </div>
         </div>
 
-        <div id="categoriesList" class="hidden mt-4 border-t flex justify-start border-gray-200 pt-4">
-            <ul class="grid grid-cols-1 mx-6 gap-1 text-gray-600">
-                <li><a href="#" class="font-bold hover:text-gray-500">Piel</a></li>
-                <li><a href="#" class="hover:text-gray-400">Vitaminas y Suplementos</a></li>
-                <li><a href="#" class="hover:text-gray-400">Medicamentos</a></li>
+        <div id="categoriesList" class="flex hidden mt-4 border-t justify-start border-gray-200 pt-4">
+            <!-- Lista de Familias -->
+            <ul id="familiesList" class="w-1/4 list-none space-y-2 border-r border-gray-200 pr-4">
+                <c:forEach var="entry" items="${familiaCategorias}">
+                    <li class="family-item cursor-pointer p-2 rounded hover:bg-gray-100" data-familia-id="${entry.key.id}">
+                        ${entry.key.nombre}
+                        
+                        <ul class="hidden">
+                            <li>
+                                <a href="productos?familia=${entry.key.id}"
+                                    class="block py-1 hover:text-gray-700">
+                                    Ver todo
+                                </a>
+                            </li>
+                            <c:forEach var="catMap" items="${entry.value}">
+                                <c:forEach var="catEntry" items="${catMap}">
+                                    <li>
+                                        <a href="/product?familia=${entry.key.id}&categoria=${catEntry.key.id}" class="block py-1 hover:text-gray-700">
+                                            ${catEntry.key.nombre}
+                                        </a>
+                                    </li>
+                                </c:forEach>
+                            </c:forEach>
+                        </ul>
+                    </li>
+                </c:forEach>
             </ul>
-            <ul class="grid grid-cols-1 mx-6 gap-1 text-gray-600">
-                <li><a href="#" class="font-bold hover:text-gray-500">Suplementacion</a></li>
-                <li><a href="#" class="hover:text-gray-400">Vitaminas y Suplementos</a></li>
-                <li><a href="#" class="hover:text-gray-400">Medicamentos</a></li>
-            </ul>
-            <ul class="grid grid-cols-1 mx-6 gap-1 text-gray-600">
-                <li><a href="#" class="font-bold hover:text-gray-500">Mamas y bebes</a></li>
-                <li><a href="#" class="hover:text-gray-400">Vitaminas y Suplementos</a></li>
-                <li><a href="#" class="hover:text-gray-400">Medicamentos</a></li>
-            </ul>
-            <ul class="grid grid-cols-1 mx-6 gap-1 text-gray-600">
-                <li><a href="#" class="font-bold hover:text-gray-500">Medicamentos</a></li>
-                <li><a href="#" class="hover:text-gray-400">Vitaminas y Suplementos</a></li>
-                <li><a href="#" class="hover:text-gray-400">Medicamentos</a></li>
-            </ul>
+
+            <ul id="familyCategoriesList" class="w-3/4 list-none grid grid-flow-col grid-rows-6 gap-x-2 gap-y-1 pl-4"></ul>
         </div>
 
         <div id="brandsList" class="hidden mt-4 border-t flex-col justify-start border-gray-200 pt-4">
             <div id="alphabetButtons" class="flex justify-center mx-6 mb-4 space-x-2"></div>
-        </div>
-
-        <!-- Contenedor de la lista de categorías (oculto completamente inicialmente) -->
-        <div id="categoriesList" class="hidden mt-4 border-t flex justify-start border-gray-200 pt-4">
-            <ul class="grid grid-cols-1 mx-6 gap-1 text-gray-600">
-                <li><a href="#" class="font-bold hover:text-gray-500">Piel</a></li>
-                <li><a href="#" class="hover:text-gray-400">Vitaminas y Suplementos</a></li>
-                <li><a href="#" class="hover:text-gray-400">Medicamentos</a></li>
-            </ul>
-            <ul class="grid grid-cols-1 mx-6 gap-1 text-gray-600">
-                <li><a href="#" class="font-bold hover:text-gray-500">Suplementacion</a></li>
-                <li><a href="#" class="hover:text-gray-400">Vitaminas y Suplementos</a></li>
-                <li><a href="#" class="hover:text-gray-400">Medicamentos</a></li>
-            </ul>
-            <ul class="grid grid-cols-1 mx-6 gap-1 text-gray-600">
-                <li><a href="#" class="font-bold hover:text-gray-500">Mamas y bebes</a></li>
-                <li><a href="#" class="hover:text-gray-400">Vitaminas y Suplementos</a></li>
-                <li><a href="#" class="hover:text-gray-400">Medicamentos</a></li>
-            </ul>
-            <ul class="grid grid-cols-1 mx-6 gap-1 text-gray-600">
-                <li><a href="#" class="font-bold hover:text-gray-500">Medicamentos</a></li>
-                <li><a href="#" class="hover:text-gray-400">Vitaminas y Suplementos</a></li>
-                <li><a href="#" class="hover:text-gray-400">Medicamentos</a></li>
-            </ul>
-        </div>
-
-        <div id="brandsList" class="hidden mt-4 border-t flex-col justify-start border-gray-200 pt-4">
-            <!-- Contenedor para los botones del abecedario -->
-            <div id="alphabetButtons" class="flex justify-center mx-6 mb-4 space-x-2"></div>
-
-            <!-- Lista de marcas -->
-            <ul class="flex flex-wrap justify-between mx-6 w-auto text-gray-600">
-                <li><a href="#" class="hover:text-gray-600">Vitaminas</a></li>
-                <li><a href="#" class="hover:text-gray-600">Suplementos</a></li>
-                <li><a href="#" class="hover:text-gray-600">Cuidado de la piel</a></li>
-                <li><a href="#" class="hover:text-gray-600">Medicamentos</a></li>
-                <li><a href="#" class="hover:text-gray-600">Vitaminas y Suplementos</a></li>
-                <li><a href="#" class="hover:text-gray-600">Medicamentos</a></li>
-            </ul>
         </div>
 
     </div>

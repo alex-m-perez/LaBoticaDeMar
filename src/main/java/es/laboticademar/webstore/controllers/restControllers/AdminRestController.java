@@ -18,13 +18,13 @@ import es.laboticademar.webstore.services.interfaces.ProductService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/admin/api/products")
+@RequestMapping("/admin/api")
 @RequiredArgsConstructor
-public class ProductoRestController {
+public class AdminRestController {
 
     private final ProductService productService;
     
-    @GetMapping("/get_pagable_list")
+    @GetMapping("/products/get_pagable_list")
     public Page<ProductoDTO> list(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "25") int size,
@@ -59,7 +59,7 @@ public class ProductoRestController {
         );
     }
 
-    @PostMapping("/upload")
+    @PostMapping("/products/upload")
     public ResponseEntity<Void> uploadProducts(
             @RequestParam("file") MultipartFile file) throws Exception {
         try {

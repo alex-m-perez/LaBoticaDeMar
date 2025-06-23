@@ -37,7 +37,7 @@
             document.getElementById(scriptId)?.remove();
             // crear nuevo <script>
             const script = document.createElement('script');
-            script.src = `${window.contextPath}/js/admin/${section}.js`;
+            script.src = `${window.contextPath}/js/admin/${section}_dashboard.js`;
             script.id  = scriptId;
             script.defer = true;
             // cuando cargue, ejecutar el inicializador si existe
