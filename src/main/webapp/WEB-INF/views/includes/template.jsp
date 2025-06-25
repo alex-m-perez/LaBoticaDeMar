@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" language="java" %>
 <% String pageTitle = "La Botica de Mar";%>
 <!DOCTYPE html>
 <html lang="es">
@@ -21,6 +21,7 @@
         <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     </head>
 
+    <script> window.contextPath = '<%= request.getContextPath() %>'; </script>
     <%@ include file="../includes/navbar.jsp" %>
     
     <main class="flex-grow bg-white">

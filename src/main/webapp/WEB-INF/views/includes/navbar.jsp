@@ -115,7 +115,6 @@
                     <img id="brands_arrowDown" src="${pageContext.request.contextPath}/images/arrow-down.svg" class="ml-1 mt-1 h-4" alt="Flecha">
                     <img id="brands_arrowUp" src="${pageContext.request.contextPath}/images/arrow-up.svg" class="ml-1 mt-1 h-4 hidden" alt="Flecha">
                 </button>
-                <a href="${pageContext.request.contextPath}/" class="text-xl navbar-item text-gray-500 font-bold hover:text-gray-800 whitespace-nowrap">Packs Ahorro</a>
                 <a href="${pageContext.request.contextPath}/" class="text-xl navbar-item text-red-500 font-bold hover:text-red-800 whitespace-nowrap">Ofertas</a>
             </div>
         </div>

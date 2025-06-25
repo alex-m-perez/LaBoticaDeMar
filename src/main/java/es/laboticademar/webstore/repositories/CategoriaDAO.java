@@ -12,4 +12,5 @@ import es.laboticademar.webstore.entities.Familia;
 public interface CategoriaDAO extends JpaRepository<Categoria, Long> {
     Optional<Categoria> findByNombre(String name);
     List<Categoria> findByFamilia(Familia familia);
+    boolean existsByIdAndFamiliaId(Long categoriaId, Long familiaId);
 }

@@ -32,5 +32,13 @@ public class CategoriaServiceImpl implements CategoriaService {
         return categoriaDAO.findByFamilia(familia);
     }
 
-    
+    @Override
+    public Optional<Categoria> findById(Long id) {
+        return categoriaDAO.findById(id);
+    }
+
+    @Override
+    public boolean existsByIdAndFamiliaId(Long categoriaId, Long familiaId) {
+        return categoriaDAO.existsByIdAndFamiliaId(categoriaId, familiaId);
+    }
 }

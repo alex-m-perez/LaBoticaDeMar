@@ -30,8 +30,14 @@ public class Producto {
     @Column(name = "NOMBRE", nullable = false, length = 60)
     private String nombre;
 
-    @Column(name = "DESCRIPCION", nullable = true, length = 1250)
+    @Column(name = "DESCRIPCION", nullable = true)
     private String descripcion;
+
+    @Column(name = "COMPOSICION", nullable = true)
+    private String composition;
+
+    @Column(name = "USO", nullable = true)
+    private String use;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "FAMILIA", nullable = false)

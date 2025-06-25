@@ -11,17 +11,96 @@
 		<link href="https://fonts.googleapis.com/css2?family=Satisfy&display=swap" rel="stylesheet"/>
 	</head>
 
+    <style>
+        /* --- ESTILOS PARA EL SLIDER DE RANGO DOBLE --- */
+        /* Oculta los inputs de rango originales */
+        #slider-min,
+        #slider-max {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            width: 100%;
+            outline: none;
+            position: absolute;
+            background-color: transparent;
+            pointer-events: none; /* Los eventos de click pasan a través del input */
+        }
+
+        /* Estilo para los manejadores (thumbs) */
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            height: 18px;
+            width: 18px;
+            background-color: #6d9773; /* Color Pistacho */
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 0 0 1px rgba(0,0,0,0.1);
+            cursor: pointer;
+            pointer-events: auto; /* El manejador sí es clickeable */
+            margin-top: 4px; /* Ajuste para webkit */
+        }
+
+        .relative.z-30 > input[type="range"] {
+          top: 50%;
+          transform: translateY(-50%);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            -moz-appearance: none;
+            appearance: none;
+            height: 18px;
+            width: 18px;
+            background-color: #6d9773; /* Color Pistacho */
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 0 0 1px rgba(0,0,0,0.1);
+            cursor: pointer;
+            pointer-events: auto;
+        }
+    </style>
+    
     <script> window.contextPath = '<%= request.getContextPath() %>'; </script>
     <script src="${pageContext.request.contextPath}/js/products/productos.js" defer></script>
 
-	<body class="flex flex-col min-h-screen bg-gray-50">
+	<body class="flex flex-col min-h-screen bg-white">
 		<%@ include file="/WEB-INF/views/includes/navbar.jsp" %>
 
 		<main class="flex-grow container mx-auto px-4 py-8">
-			<h1 class="text-3xl font-bold text-center text-gray-800 mb-8">Nuestros Productos</h1>
+            <div class="flex justify-between items-center mb-4">
+              <!-- migas -->
+              <nav class="text-sm text-gray-600" aria-label="Breadcrumb">
+                <ol class="list-reset flex">
+                  <c:forEach var="crumb" items="${breadcrumbs}" varStatus="st">
+                    <li>
+                      <a href="${crumb.href}" class="hover:underline">${crumb.label}</a>
+                    </li>
+                    <c:if test="${!st.last}">
+                      <li class="mx-2">/</li>
+                    </c:if>
+                  </c:forEach>
+                </ol>
+              </nav>
+
+              <!-- total dinámico -->
+              <span id="totalCount" class="text-gray-700 text-sm">
+                ${totalElements} productos encontrados
+              </span>
+            </div>
+
 			<div class="flex flex-col lg:flex-row gap-8 items-start">
 				<!-- SIDEBAR -->
-				<aside class="lg:w-1/4 self-start bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+				<aside class="lg:w-1/4 self-start bg-white border rounded-lg p-6 mt-6 shadow-sm">
+                    <div class="flex justify-center items-baseline gap-2 mb-3">
+                        <img
+                            src="${pageContext.request.contextPath}/images/filters.svg"
+                            class="h-4 cursor-pointer"
+                            alt="Mi carrito"
+                            onclick="window.location.href='/cart'"
+                        />
+                        <span class="text-2xl font-bold">Filtros</span>
+                    </div>
+                    
 					<form id="filterForm" class="space-y-6">
 						<!-- FAMILIA -->
 						<div>
@@ -122,14 +201,28 @@
 						<!-- PRECIO -->
 						<div>
 							<h2 class="font-semibold mb-2">Precio (€)</h2>
-							<div class="flex space-x-2">
-								<input type="number" name="precioMin" placeholder="Mín" min="0"
-								       value="${filtroPrecioMin}"
-								       class="w-1/2 border rounded p-2 focus:ring-pistachio focus:outline-none"/>
-								<input type="number" name="precioMax" placeholder="Máx" min="0"
-								       value="${filtroPrecioMax}"
-								       class="w-1/2 border rounded p-2 focus:ring-pistachio focus:outline-none"/>
-							</div>
+                            <div class="flex space-x-2">
+                                <input type="number" name="precioMin" placeholder="Mín" min="0" max="1000"
+                                        value="${not empty filtroPrecioMin ? filtroPrecioMin : 0}"
+                                        class="w-1/2 border rounded p-2 focus:ring-pistachio focus:outline-none"/>
+                                <input type="number" name="precioMax" placeholder="Máx" min="0" max="1000"
+                                        value="${not empty filtroPrecioMax ? filtroPrecioMax : 1000}"
+                                        class="w-1/2 border rounded p-2 focus:ring-pistachio focus:outline-none"/>
+                            </div>
+
+                            <div class="mt-4 relative h-8 flex items-center">
+                                <div class="relative w-full h-1.5">
+                                    <div class="absolute bg-gray-200 h-1.5 rounded w-full z-10"></div>
+                                    <div class="slider-progress absolute bg-pistachio h-1.5 rounded z-20"></div>
+
+                                    <div class="relative z-30">
+                                        <input type="range" id="slider-min"
+                                                min="0" max="1000" value="${not empty filtroPrecioMin ? filtroPrecioMin : 0}">
+                                        <input type="range" id="slider-max"
+                                                min="0" max="1000" value="${not empty filtroPrecioMax ? filtroPrecioMax : 1000}">
+                                    </div>
+                                </div>
+                            </div>
 						</div>
 
 						<button type="submit"

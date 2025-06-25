@@ -10,4 +10,6 @@ public interface CategoriaService {
     List<Categoria> findAll();
     Optional<Categoria> findByNombre(String name);
     List<Categoria> findByFamilia(Familia familia);
+    Optional<Categoria> findById(Long id);
+    boolean existsByIdAndFamiliaId(Long categoriaId, Long familiaId); 
 }

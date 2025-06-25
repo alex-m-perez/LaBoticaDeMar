@@ -16,6 +16,9 @@ module.exports = {
                 'finn': '#6b436eff',
                 'logo-purple': '#86207e',
             },
+            height: {
+                '128': '30rem',
+            }
         },
     },
     safelist: [

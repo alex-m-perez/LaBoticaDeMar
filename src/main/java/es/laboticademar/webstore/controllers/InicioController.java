@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import es.laboticademar.webstore.enumerations.PreferenciaEnum;
+import es.laboticademar.webstore.services.interfaces.DestacadoService;
 import lombok.RequiredArgsConstructor;
 
 
@@ -16,10 +17,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class InicioController {
 
-    
+    private final DestacadoService destacadoService;
 
     @GetMapping("/")
     public String accessWelcomePage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        model.addAttribute("destacados", destacadoService.getAllDestacados());
         return "main/welcome";
     }
 

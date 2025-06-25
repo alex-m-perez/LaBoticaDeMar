@@ -8,4 +8,5 @@ import es.laboticademar.webstore.entities.Familia;
 public interface FamiliaService {
     List<Familia> findAll();
     Optional<Familia> findByNombre(String name);
+    Optional<Familia> findById(Long id);
 }
