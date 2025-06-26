@@ -29,7 +29,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(requests -> requests
                 // Recursos públicos
                 .requestMatchers("/WEB-INF/views/**", "/css/**", "/images/**", "/js/**", "/public/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/", "/login", "/register", "/product/**", "/auth/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/", "/login", "/register", "/cart", "/product/**", "/auth/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/auth/authenticate", "/auth/register", "/auth/logout").permitAll()
                 
                 // Endpoints protegidos:
@@ -37,7 +37,7 @@ public class SecurityConfig {
                     .hasRole("ADMIN")
                 .requestMatchers("/employee/**")
                     .hasAnyRole("EMPLOYEE", "ADMIN")
-                .requestMatchers("/cart/**", "/wishlist/**", "/profile/**")
+                .requestMatchers("/profile/**")
                     .hasAnyRole("USUARIO", "ADMIN")
                 
                 // El resto requiere autenticación

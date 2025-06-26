@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "ra")
+@Table(name = "wishlist")
 public class Wishlist {
 
     @Id
@@ -39,5 +39,4 @@ public class Wishlist {
         inverseJoinColumns = @JoinColumn(name = "producto_id")
     )
     private List<Producto> productos;
-
 }

@@ -64,27 +64,6 @@
                             </ul>
                         </div>
                     </div>
-
-                    <img
-                        src="${pageContext.request.contextPath}/images/heart.svg"
-                        class="h-6 cursor-pointer"
-                        alt="Artículos que me gustan"
-                        onclick="window.location.href='/wishlist'"
-                    />
-                    <img
-                        src="${pageContext.request.contextPath}/images/shopping-cart.svg"
-                        class="h-6 cursor-pointer"
-                        alt="Mi carrito"
-                        onclick="window.location.href='/cart'"
-                    />
-                    <sec:authorize access="hasRole('ROLE_ADMIN')">
-                        <img
-                            src="${pageContext.request.contextPath}/images/settings.svg"
-                            class="h-6 cursor-pointer"
-                            alt="Administracion"
-                            onclick="window.location.href='/admin/home'"
-                        />
-                    </sec:authorize>
                 </sec:authorize>
 
                 <sec:authorize access="!isAuthenticated()">
@@ -99,6 +78,27 @@
                             class="text-gray-800 hover:text-gray-600"
                         >Registrarse</a>
                     </div>
+                </sec:authorize>
+
+                <img
+                    src="${pageContext.request.contextPath}/images/heart.svg"
+                    class="h-6 cursor-pointer"
+                    alt="Artículos que me gustan"
+                    onclick="window.location.href='/wishlist'"
+                />
+                <img
+                    src="${pageContext.request.contextPath}/images/shopping-cart.svg"
+                    class="h-6 cursor-pointer"
+                    alt="Mi carrito"
+                    onclick="window.location.href='/cart'"
+                />
+                <sec:authorize access="hasRole('ROLE_ADMIN')">
+                    <img
+                        src="${pageContext.request.contextPath}/images/settings.svg"
+                        class="h-6 cursor-pointer"
+                        alt="Administracion"
+                        onclick="window.location.href='/admin/home'"
+                    />
                 </sec:authorize>
             </div>
         </div>

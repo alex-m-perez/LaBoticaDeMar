@@ -68,7 +68,7 @@
             <div class="flex gap-8 h-min-96">
                 <!-- Imágen del producto (placeholder si no hay imagen) -->
                 <div class="w-full lg:w-2/5 p-2">
-                    <div class="h-128 w-full bg-gray-200 flex items-center justify-center rounded-lg">
+                    <div class="h-128 w-128 w-full bg-gray-200 flex items-center justify-center rounded-lg">
                         <c:choose>
                             <c:when test="${not empty producto.imagenPath}"><img src="${pageContext.request.contextPath}${producto.imagenPath}" alt="${producto.nombre}" class="w-full h-full object-cover rounded-lg"/></c:when>
                             <c:otherwise><svg class="w-16 h-16 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h4l2-3h6l2 3h4v13H3V7z"/><circle cx="12" cy="13" r="4" stroke="currentColor" stroke-width="2"/></svg></c:otherwise>
