@@ -1,14 +1,13 @@
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<% String pageTitle = "La Botica de Mar"; %>
 
 <!DOCTYPE html>
 <html>
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title><%= pageTitle != null ? pageTitle : "Tienda Online" %></title>
+        <title>La Botica de Mar</title>
         <link rel="icon" href="/images/icono_tab2.png" type="image/png">
 
         <link rel="stylesheet" href="/css/output.css"/>
@@ -17,15 +16,21 @@
         <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
         <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+        <%-- Colocamos los scripts de estado aquí, dentro del head --%>
+        <script>
+            const userCartState = JSON.parse('${not empty userCartJson ? userCartJson : "{}"}');
+            const userWishlistState = JSON.parse('${not empty userWishlistJson ? userWishlistJson : "[]"}');
+            const laboratoriosAgrupados = JSON.parse('${not empty laboratoriosAgrupadosJson ? laboratoriosAgrupadosJson : "{}"}');
+        </script>
     </head>
 
-    <script>
-        const userCartState = JSON.parse('${not empty userCartJson ? userCartJson : "{}"}');
-        const userWishlistState = JSON.parse('${not empty userWishlistJson ? userWishlistJson : "[]"}');
-    </script>
-
+    <%-- El body ya tenía las clases correctas, lo cual es perfecto --%>
     <body class="bg-gray-100 min-h-screen flex flex-col" data-authenticated="${not empty pageContext.request.userPrincipal}">
-        <%@ include file="../includes/navbar.jsp" %>
+
+        <header>
+            <%@ include file="../includes/navbar.jsp" %>
+        </header>
 
         <main class="flex-grow bg-white">
             <section id="carouselHero" class="relative bg-cover bg-center h-72">
@@ -110,8 +115,11 @@
             </section>
         </main>
 
-        <%@ include file="/WEB-INF/views/includes/footer.jsp" %>
-        
+        <footer class="bg-gray-800 text-white py-4">
+             <div class="container mx-auto text-center">
+                <%@ include file="/WEB-INF/views/includes/footer.jsp" %>
+             </div>
+        </footer>
         
         <script>
             new Swiper('.multiple-slide-carousel', {

@@ -7,10 +7,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import es.laboticademar.webstore.enumerations.PreferenciaEnum;
 import es.laboticademar.webstore.services.interfaces.DestacadoService;
-import es.laboticademar.webstore.services.interfaces.ShoppingCartService;
-import es.laboticademar.webstore.services.interfaces.WishlistService;
+import es.laboticademar.webstore.services.interfaces.LaboratorioService;
 import lombok.RequiredArgsConstructor;
 
 
@@ -20,11 +22,21 @@ import lombok.RequiredArgsConstructor;
 public class InicioController {
 
     private final DestacadoService destacadoService;
-    private final ShoppingCartService shoppingCartService;
-    private final WishlistService wishlistService;
+    private final LaboratorioService laboratorioService;
+    private final ObjectMapper objectMapper;
     
     @GetMapping("/")
     public String goWelcomePage(Model model, Principal principal) {
+        String test = "";
+        try {
+            test = objectMapper.writeValueAsString(laboratorioService.getLaboratoriosAgrupadosPorLetra());
+        } catch (JsonProcessingException e) {
+            // Log the exception for debugging purposes
+            // You can use a logger like SLF4J
+            // log.error("Error serializing laboratorios to JSON", e);
+            // Optionally, you can add an error message to the model
+            model.addAttribute("jsonError", "Could not load laboratory data.");
+        }
         model.addAttribute("destacados", destacadoService.getAllDestacados());
         return "main/welcome";
     }

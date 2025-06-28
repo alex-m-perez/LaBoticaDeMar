@@ -1,7 +1,6 @@
 <%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<% String pageTitle = "La Botica de Mar"; %>
 
 <!DOCTYPE html>
 <html>
@@ -14,20 +13,19 @@
         <link rel="stylesheet" href="/css/output.css"/>
         <link href="https://fonts.googleapis.com/css2?family=Satisfy&display=swap" rel="stylesheet"/>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-</head>
-
-<script src="${pageContext.request.contextPath}/js/purchases/shopping_cart.js" defer></script>
+    </head>
 
 <body class="flex flex-col min-h-screen">
 
-    <%@ include file="../includes/navbar.jsp" %>
+    <header>
+        <%@ include file="../includes/navbar.jsp" %>
+    </header>
 
     <main class="flex-grow bg-gray-50 py-10">
         <div class="container mx-auto px-4">
-        <h1 class="text-3xl font-bold mb-6 text-left text-gray-800">Cesta de la Compra</h1>  
+        <h1 class="text-3xl font-bold mb-6 text-left text-gray-800">Cesta de la Compra</h1> 
             <div class="flex flex-col lg:flex-row gap-8">
                 
-
                 <div class="lg:w-2/3 bg-white border border-gray-200 rounded-lg overflow-hidden">
                     <table class="min-w-full text-gray-700 text-sm">
                         <c:if test="${not empty shoppingCart.items}">
@@ -46,7 +44,6 @@
                                 <%-- CASO 1: El carrito tiene productos --%>
                                 <c:when test="${not empty shoppingCart.items}">
                                     <c:forEach var="item" items="${shoppingCart.items}">
-                                        <%-- CAMBIO: Añadimos data-discount y data-stock para que JS los use --%>
                                         <tr class="cart-item-row" 
                                             data-price="${item.producto.price}" 
                                             data-product-id="${item.producto.id}"
@@ -67,14 +64,12 @@
                                             </td>
                                             <td class="py-4 px-4 text-center">
                                                 <div class="quantity-control inline-flex border border-gray-200 rounded overflow-hidden">
-                                                    <%-- CAMBIO: La función ahora solo necesita 'this' y el delta (-1 o 1) --%>
                                                     <button type="button" class="minus-btn px-3 py-1 bg-gray-100 hover:bg-gray-200" onclick="updateQuantity(this, -1)">−</button>
                                                     <input type="number" min="1" value="${item.cantidad}" class="qty-input w-12 text-center no-spinner focus:outline-none" readonly/>
                                                     <button type="button" class="plus-btn px-3 py-1 bg-gray-100 hover:bg-gray-200" onclick="updateQuantity(this, 1)">+</button>
                                                 </div>
                                             </td>
                                             <td class="py-4 px-4 text-center">
-                                                <%-- CAMBIO: Lógica para mostrar precio con descuento --%>
                                                 <c:choose>
                                                     <c:when test="${item.producto.discount > 0}">
                                                         <div class="flex flex-col items-center">
@@ -92,14 +87,13 @@
                                                 </c:choose>
                                             </td>
                                             <td class="py-4 px-4 font-semibold text-center line-total">
-                                                 <%-- CAMBIO: El total de línea también considera el descuento --%>
                                                 <c:set var="effectivePrice" value="${item.producto.price * (1 - item.producto.discount / 100)}" />
                                                 <fmt:formatNumber value="${effectivePrice * item.cantidad}" type="currency" currencySymbol="€" />
                                             </td>
                                         </tr>
                                     </c:forEach>
                                 </c:when>
-                                <%-- CASO 2: El carrito está vacío (sin cambios) --%>
+                                <%-- CASO 2: El carrito está vacío --%>
                                 <c:otherwise>
                                     <tr>
                                         <td colspan="4" class="text-center p-12">
@@ -115,7 +109,7 @@
                     </table>
                 </div>
 
-                <%-- El resto del JSP (Resumen del Pedido y Footer) permanece igual --%>
+                <%-- Resumen del Pedido --%>
                 <div class="lg:w-1/3">
                     <div class="bg-white border border-gray-200 rounded-lg p-6 flex flex-col">
                         <h2 class="text-2xl font-semibold text-gray-800 mb-4">Resumen del Pedido</h2>
@@ -155,6 +149,12 @@
         </div>
     </main>
 
-    <%@ include file="../includes/footer.jsp" %>
+    <footer class="bg-gray-800 text-white py-4">
+        <div class="container mx-auto text-center">
+            <%@ include file="../includes/footer.jsp" %>
+        </div>
+    </footer>
+
+    <script src="${pageContext.request.contextPath}/js/purchases/shopping_cart.js" defer></script>
 </body>
 </html>

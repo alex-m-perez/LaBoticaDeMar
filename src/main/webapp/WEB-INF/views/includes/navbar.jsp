@@ -2,6 +2,8 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+
+
 <script src="${pageContext.request.contextPath}/js/navbar/navbar.js" defer></script>
 
 <nav id="navbar" class="bg-white shadow-md sticky top-0 w-full z-50 transition-all duration-300 ease-in-out">
@@ -151,7 +153,11 @@
         </div>
 
         <div id="brandsList" class="hidden mt-4 border-t flex-col justify-start border-gray-200 pt-4">
-            <div id="alphabetButtons" class="flex justify-center mx-6 mb-4 space-x-2"></div>
+            <div id="alphabetButtons" class="flex justify-center flex-wrap mx-6 mb-4 gap-2"></div>
+
+            <div id="brandsByLetterContainer"
+                 class="w-full mt-4 p-4 border-t border-gray-100 flex justify-center flex-wrap gap-x-8 gap-y-2">
+            </div>
         </div>
 
     </div>

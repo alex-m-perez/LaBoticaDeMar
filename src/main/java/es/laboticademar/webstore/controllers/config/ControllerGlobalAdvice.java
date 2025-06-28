@@ -20,6 +20,7 @@ import es.laboticademar.webstore.entities.Subcategoria;
 import es.laboticademar.webstore.entities.UsuarioPrincipal;
 import es.laboticademar.webstore.services.interfaces.CategoriaService;
 import es.laboticademar.webstore.services.interfaces.FamiliaService;
+import es.laboticademar.webstore.services.interfaces.LaboratorioService;
 import es.laboticademar.webstore.services.interfaces.ShoppingCartService;
 import es.laboticademar.webstore.services.interfaces.SubcategoriaService;
 import es.laboticademar.webstore.services.interfaces.WishlistService; // <-- 1. IMPORTAR
@@ -32,6 +33,7 @@ public class ControllerGlobalAdvice {
     private final FamiliaService familiaService;
     private final CategoriaService categoriaService;
     private final SubcategoriaService subcategoriaService;
+    private final LaboratorioService laboratorioService;
     private final ShoppingCartService shoppingCartService;
     private final WishlistService wishlistService;
     private final ObjectMapper objectMapper;
@@ -73,6 +75,17 @@ public class ControllerGlobalAdvice {
         return result;
     }
 
+    @ModelAttribute("laboratoriosAgrupadosJson")
+    public String addLaboratoriosAgrupados() {
+        try {
+            String test = objectMapper.writeValueAsString(laboratorioService.getLaboratoriosAgrupadosPorLetra());
+            return test;
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return "{}";
+        }
+    }
+
     @ModelAttribute("userCartJson")
     public String addUserCartStateToJson(Principal principal) {
         if (principal == null)  return "{}";
@@ -96,4 +109,6 @@ public class ControllerGlobalAdvice {
             return "[]";
         }
     }
+
+    
 }
