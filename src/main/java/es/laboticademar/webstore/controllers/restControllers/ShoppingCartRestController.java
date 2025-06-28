@@ -1,17 +1,15 @@
 package es.laboticademar.webstore.controllers.restControllers;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.math.BigDecimal;
+import java.security.Principal;
 
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import es.laboticademar.webstore.dto.CategoriaDTO;
-import es.laboticademar.webstore.dto.FamiliaDTO;
-import es.laboticademar.webstore.dto.ProductoDTO;
-import es.laboticademar.webstore.services.interfaces.CategoriaService;
+import es.laboticademar.webstore.services.interfaces.ShoppingCartService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -19,11 +17,31 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ShoppingCartRestController {
 
-    private final CategoriaService categoriaService;
+    private final ShoppingCartService shoppingCartService;
 
-    @GetMapping(path = "/get_products", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<ProductoDTO> getCartProducts() {
-        return null;
+    @PostMapping(path = "/add_item")
+    public ResponseEntity<Void> addItem(Principal principal, @RequestParam("itemId") BigDecimal itemId, @RequestParam("add") Boolean add) {
+
+        boolean isSuccess = shoppingCartService.addItemT(principal, itemId, add);
+
+        if (isSuccess) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PostMapping("/delete_item")
+    public ResponseEntity<Void> deleteItem(Principal principal, @RequestParam("itemId") BigDecimal itemId) {
+
+        // Ahora llamas al service con el tipo correcto
+        boolean isSuccess = shoppingCartService.deleteItem(principal, itemId);
+
+        if (isSuccess) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.badRequest().build();
+    }
     }
 
 }

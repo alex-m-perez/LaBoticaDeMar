@@ -4,6 +4,7 @@ package es.laboticademar.webstore.services.impl;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
@@ -39,9 +40,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Producto getProductoById(BigDecimal id) {
-        return productDAO.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado con ID: " + id));
+    public Optional<Producto> findById(BigDecimal id) {
+        return productDAO.findById(id);
     }
 
     @Override

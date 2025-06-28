@@ -19,7 +19,7 @@
         <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     </head>
 
-    <body class="bg-gray-100 min-h-screen flex flex-col">
+    <body class="bg-gray-100 min-h-screen flex flex-col" data-authenticated="${not empty pageContext.request.userPrincipal}">
         <%@ include file="../includes/navbar.jsp" %>
 
         <main class="flex-grow bg-white">
@@ -106,6 +106,9 @@
         </main>
 
         <%@ include file="/WEB-INF/views/includes/footer.jsp" %>
+        <script>
+            const userCartState = JSON.parse('${not empty userCartJson ? userCartJson : "{}"}');
+        </script>
         
         <script>
             new Swiper('.multiple-slide-carousel', {

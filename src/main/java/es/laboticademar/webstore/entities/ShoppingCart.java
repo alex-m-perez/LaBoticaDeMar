@@ -19,6 +19,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
  * Representa el carrito de la compra de un usuario.
@@ -47,6 +48,7 @@ public class ShoppingCart {
         orphanRemoval = true,
         fetch = FetchType.LAZY
     )
+    @ToString.Exclude
     private List<CartItem> items = new ArrayList<>();
 
     @Column(name = "ULTIMA_MODIFICACION", nullable = false)

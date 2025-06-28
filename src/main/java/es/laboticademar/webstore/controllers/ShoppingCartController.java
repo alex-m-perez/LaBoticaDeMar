@@ -7,35 +7,24 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import es.laboticademar.webstore.enumerations.PreferenciaEnum;
 import es.laboticademar.webstore.services.interfaces.DestacadoService;
 import es.laboticademar.webstore.services.interfaces.ShoppingCartService;
 import lombok.RequiredArgsConstructor;
 
-
 @Controller
-@RequestMapping("")
+@RequestMapping("/cart")
 @RequiredArgsConstructor
-public class InicioController {
+public class ShoppingCartController {
 
-    private final DestacadoService destacadoService;
     private final ShoppingCartService shoppingCartService;
-    
-    @GetMapping("/")
-    public String goWelcomePage(Model model, Principal principal) {
+    private final DestacadoService destacadoService;
+
+    @GetMapping({"/", ""})
+    public String goShoppingCart(Principal principal, Model model) {
+        
         model.addAttribute("shoppingCart", shoppingCartService.getOrCreateShoppingCartFromPrincipal(principal));
         model.addAttribute("destacados", destacadoService.getAllDestacados());
-        return "main/welcome";
-    }
 
-    @GetMapping("/login")
-    public String goLoginPage() {
-        return "main/login";
-    }
-
-    @GetMapping("/register")
-    public String goRegisterPage(Model model) {
-        model.addAttribute("preferenciasEnumList", PreferenciaEnum.values());
-        return "main/registro";
+        return "purchases/shopping_cart";
     }
 }

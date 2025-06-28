@@ -2,63 +2,77 @@ package es.laboticademar.webstore.security.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.stereotype.Component;
 
+import jakarta.servlet.DispatcherType;
 import lombok.RequiredArgsConstructor;
 
-@Component
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
+@RequiredArgsConstructor // Usamos esto en lugar de @Autowired para inyecciones finales
 public class SecurityConfig {
 
     private final JwtAuthentication jwtAuthFilter;
-    private final AuthenticationProvider authenticationProvider;    
+    private final AuthenticationProvider authenticationProvider;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .csrf(csrf -> csrf.disable())
+            .sessionManagement(management -> management
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            )
+            .authenticationProvider(authenticationProvider)
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+
             .authorizeHttpRequests(requests -> requests
-                // Recursos públicos
-                .requestMatchers("/WEB-INF/views/**", "/css/**", "/images/**", "/js/**", "/public/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/", "/login", "/register", "/cart", "/product/**", "/auth/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/auth/authenticate", "/auth/register", "/auth/logout").permitAll()
-                
-                // Endpoints protegidos:
-                .requestMatchers("/admin/**")
-                    .hasRole("ADMIN")
-                .requestMatchers("/employee/**")
-                    .hasAnyRole("EMPLOYEE", "ADMIN")
-                .requestMatchers("/profile/**")
-                    .hasAnyRole("USUARIO", "ADMIN")
-                
-                // El resto requiere autenticación
+                .dispatcherTypeMatchers(DispatcherType.ERROR, DispatcherType.FORWARD).permitAll()
+
+                // --- ENDPOINTS PÚBLICOS ---
+                .requestMatchers(
+                    // Recursos estáticos
+                    "/css/**", 
+                    "/images/**", 
+                    "/js/**",
+                    "/public/**",
+                    // Páginas y APIs públicas
+                    "/",
+                    "/login",
+                    "/register",
+                    "/cart",
+                    "/product/**",
+                    "/auth/**" 
+                ).permitAll()
+
+                // --- ENDPOINTS PROTEGIDOS ---
+                .requestMatchers("/profile/**").hasAnyRole("USUARIO", "ADMIN")
+                .requestMatchers("/employee/**").hasAnyRole("EMPLOYEE", "ADMIN")
+                .requestMatchers("/admin/**").hasRole("ADMIN")
+
+                // --- REGLA FINAL ---
+                // Cualquier otra petición que no coincida con las anteriores debe estar autenticada.
                 .anyRequest().authenticated()
             )
+
             .logout(logout -> logout
                 .logoutUrl("/auth/logout")
                 .deleteCookies("jwtToken")
                 .logoutSuccessUrl("/")
                 .permitAll()
             )
+
             .exceptionHandling(handling -> handling
-                .authenticationEntryPoint((request, response, authException) -> response.sendRedirect("/login"))
-            )
-            .sessionManagement(management -> management
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            )
-            .authenticationProvider(authenticationProvider)
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-        
+                // Esto se activa cuando un usuario NO logueado intenta acceder a una ruta protegida.
+                .authenticationEntryPoint((request, response, authException) -> 
+                    response.sendRedirect("/login")
+                )
+            );
+
         return http.build();
     }
 }
-

@@ -45,7 +45,7 @@ public class ProductController {
     @GetMapping("/{id}")
     public String goProductInfo(@PathVariable("id") BigDecimal id,Model model) {
         // 1) Carga el producto y destacados
-        Producto producto = productService.getProductoById(id);
+        Producto producto = productService.findById(id);
         model.addAttribute("producto", producto);
         model.addAttribute("destacados", destacadoService.getAllDestacados());
 

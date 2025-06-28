@@ -1,10 +1,12 @@
 package es.laboticademar.webstore.services.impl;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import es.laboticademar.webstore.entities.Usuario;
 import es.laboticademar.webstore.repositories.UsuarioDAO;
@@ -20,6 +22,11 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     public List<Usuario> getAllUsers() {
         return UsuarioDAO.findAll();
+    }
+
+    @Override
+    public Optional<Usuario> findById(Long id) {
+        return UsuarioDAO.findById(id);
     }
 
     @Override
@@ -52,5 +59,16 @@ public class UsuarioServiceImpl implements UsuarioService {
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado: " + correo));
         usuario.getRoles().remove(role);
         return UsuarioDAO.save(usuario);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Long getIdFromPrincipal(Principal principal) {
+        if (principal == null)  throw new IllegalArgumentException("El objeto Principal no puede ser nulo.");
+
+        String email = principal.getName();
+        return UsuarioDAO.getByCorreo(email)
+                .map(Usuario::getId)
+                .orElseThrow(() -> new UsernameNotFoundException("No se encontró un usuario para el correo asociado al Principal: " + email));
     }
 }

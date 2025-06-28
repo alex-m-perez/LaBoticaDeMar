@@ -1,5 +1,6 @@
 package es.laboticademar.webstore.controllers.config;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -10,12 +11,16 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import es.laboticademar.webstore.entities.Categoria;
 import es.laboticademar.webstore.entities.Familia;
 import es.laboticademar.webstore.entities.Subcategoria;
 import es.laboticademar.webstore.entities.UsuarioPrincipal;
 import es.laboticademar.webstore.services.interfaces.CategoriaService;
 import es.laboticademar.webstore.services.interfaces.FamiliaService;
+import es.laboticademar.webstore.services.interfaces.ShoppingCartService;
 import es.laboticademar.webstore.services.interfaces.SubcategoriaService;
 import lombok.RequiredArgsConstructor;
 
@@ -29,6 +34,8 @@ public class ControllerGlobalAdvice {
     private final FamiliaService familiaService;
     private final CategoriaService categoriaService;
     private final SubcategoriaService subcategoriaService;
+    private final ShoppingCartService shoppingCartService;
+    private final ObjectMapper objectMapper;
 
     @ModelAttribute("currentUserName")
     public String addLoggedUserName() {
@@ -71,5 +78,21 @@ public class ControllerGlobalAdvice {
         }
 
         return result;
+    }
+
+    @ModelAttribute("userCartJson")
+    public String addUserCartStateToJson(Principal principal) {
+        if (principal == null) {
+            return "{}";
+        }
+
+        try {
+            Map<String, Integer> cartState = shoppingCartService.getCartStateForUser(principal);
+
+            return objectMapper.writeValueAsString(cartState);
+
+        } catch (JsonProcessingException e) {
+            return "{}";
+        }
     }
 }

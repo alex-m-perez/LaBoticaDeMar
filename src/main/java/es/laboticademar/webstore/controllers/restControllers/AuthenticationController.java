@@ -1,4 +1,4 @@
-package es.laboticademar.webstore.controllers;
+package es.laboticademar.webstore.controllers.restControllers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
  * Representa una línea de producto dentro de un ShoppingCart.
@@ -34,6 +35,7 @@ public class CartItem {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "SHOPPING_CART_ID", nullable = false)
+    @ToString.Exclude
     private ShoppingCart shoppingCart;
 
     @ManyToOne(fetch = FetchType.LAZY)
