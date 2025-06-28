@@ -39,7 +39,7 @@
                 </c:choose>
             </h2>
             
-            <a href="${pageContext.request.contextPath}/" class="text-xl mt-20 inline-block bg-pistachio text-white font-bold py-4 px-6 rounded-xl hover:bg-pistachio-dark transition">
+            <a href="${pageContext.request.contextPath}/" class="text-xl mt-20 inline-block bg-pistachio text-white font-bold py-4 px-6 rounded-xl hover:bg-dark-pistachio transition">
                 Volver al inicio
             </a>
         </div>

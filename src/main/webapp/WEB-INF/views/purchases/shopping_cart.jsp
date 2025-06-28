@@ -16,15 +16,17 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 
-<%-- El script ahora se carga con 'defer' para asegurar que el DOM esté listo --%>
 <script src="${pageContext.request.contextPath}/js/purchases/shopping_cart.js" defer></script>
 
 <body class="flex flex-col min-h-screen">
+
     <%@ include file="../includes/navbar.jsp" %>
 
     <main class="flex-grow bg-gray-50 py-10">
         <div class="container mx-auto px-4">
+        <h1 class="text-3xl font-bold mb-6 text-left text-gray-800">Cesta de la Compra</h1>  
             <div class="flex flex-col lg:flex-row gap-8">
+                
 
                 <div class="lg:w-2/3 bg-white border border-gray-200 rounded-lg overflow-hidden">
                     <table class="min-w-full text-gray-700 text-sm">

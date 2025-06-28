@@ -281,7 +281,7 @@
                     <button
                         type="button"
                         id="next-btn"
-                        class="px-6 py-3 bg-pistachio text-white rounded-lg hover:bg-pistachio-dark"
+                        class="px-6 py-3 bg-pistachio text-white rounded-lg hover:bg-dark-pistachio"
                     >
                         Siguiente
                     </button>

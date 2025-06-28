@@ -38,20 +38,24 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private final ProductService productService;
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public ShoppingCart getOrCreateShoppingCartByUsuarioId(Long usuarioId) {
         return shoppingCartDAO.findByUsuarioId(usuarioId)
                 .orElseGet(() -> {
                     Usuario usuario = usuarioService.findById(usuarioId)
-                            .orElseThrow(() -> new EntityNotFoundException("No se puede crear un carrito para un usuario inexistente. Usuario no encontrado con ID: " + usuarioId));
+                            .orElseThrow(() -> new EntityNotFoundException(
+                                    "No se puede crear un carrito para un usuario inexistente. Usuario no encontrado con ID: " + usuarioId));
 
-                    return ShoppingCart.builder()
+                    ShoppingCart nuevoCarrito = ShoppingCart.builder()
                             .usuario(usuario)
                             .items(new ArrayList<>())
                             .ultimaModificacion(LocalDateTime.now())
                             .build();
+
+                    return shoppingCartDAO.save(nuevoCarrito);
                 });
     }
+
 
     @Override
     public ShoppingCart getOrCreateShoppingCartFromPrincipal(Principal principal) {

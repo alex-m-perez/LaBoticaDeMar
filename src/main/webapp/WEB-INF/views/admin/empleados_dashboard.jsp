@@ -100,7 +100,7 @@
         <div class="flex items-center justify-between mb-4">
             <h2 class="text-lg font-semibold mb-0">Listado de Empleados</h2>
             <button id="nuevoEmpBtn"
-                    class="flex items-center bg-pistachio text-white font-medium px-4 py-1.5 rounded-md hover:bg-pistachio-dark transition">
+                    class="flex items-center bg-pistachio text-white font-medium px-4 py-1.5 rounded-md hover:bg-dark-pistachio transition">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" clip-rule="evenodd"
                           d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" />
@@ -173,7 +173,7 @@
                     </div>
                 </div>
                 <div class="text-center">
-                    <button type="submit" class="bg-pistachio text-white font-medium px-6 py-2 rounded-md hover:bg-pistachio-dark transition">Guardar</button>
+                    <button type="submit" class="bg-pistachio text-white font-medium px-6 py-2 rounded-md hover:bg-dark-pistachio transition">Guardar</button>
                 </div>
             </form>
         </div>

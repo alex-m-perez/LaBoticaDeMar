@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import es.laboticademar.webstore.enumerations.PreferenciaEnum;
 import es.laboticademar.webstore.services.interfaces.DestacadoService;
 import es.laboticademar.webstore.services.interfaces.ShoppingCartService;
+import es.laboticademar.webstore.services.interfaces.WishlistService;
 import lombok.RequiredArgsConstructor;
 
 
@@ -20,10 +21,10 @@ public class InicioController {
 
     private final DestacadoService destacadoService;
     private final ShoppingCartService shoppingCartService;
+    private final WishlistService wishlistService;
     
     @GetMapping("/")
     public String goWelcomePage(Model model, Principal principal) {
-        model.addAttribute("shoppingCart", shoppingCartService.getOrCreateShoppingCartFromPrincipal(principal));
         model.addAttribute("destacados", destacadoService.getAllDestacados());
         return "main/welcome";
     }

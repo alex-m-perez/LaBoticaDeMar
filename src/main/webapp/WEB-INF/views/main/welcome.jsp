@@ -21,6 +21,7 @@
 
     <script>
         const userCartState = JSON.parse('${not empty userCartJson ? userCartJson : "{}"}');
+        const userWishlistState = JSON.parse('${not empty userWishlistJson ? userWishlistJson : "[]"}');
     </script>
 
     <body class="bg-gray-100 min-h-screen flex flex-col" data-authenticated="${not empty pageContext.request.userPrincipal}">

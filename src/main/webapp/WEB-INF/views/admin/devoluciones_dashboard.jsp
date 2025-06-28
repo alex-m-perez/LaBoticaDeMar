@@ -62,7 +62,7 @@
 				<!-- Botones -->
 				<div class="flex gap-2 self-end">
 					<button type="submit"
-						class="bg-pistachio text-white font-medium px-4 py-1.5 rounded-md hover:bg-pistachio-dark transition">
+						class="bg-pistachio text-white font-medium px-4 py-1.5 rounded-md hover:bg-dark-pistachio transition">
 						Buscar
 					</button>
 					<button type="reset"

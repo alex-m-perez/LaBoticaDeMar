@@ -22,11 +22,9 @@ import es.laboticademar.webstore.services.interfaces.CategoriaService;
 import es.laboticademar.webstore.services.interfaces.FamiliaService;
 import es.laboticademar.webstore.services.interfaces.ShoppingCartService;
 import es.laboticademar.webstore.services.interfaces.SubcategoriaService;
+import es.laboticademar.webstore.services.interfaces.WishlistService; // <-- 1. IMPORTAR
 import lombok.RequiredArgsConstructor;
 
-/**
- * Añade al modelo el nombre completo del usuario autenticado en cada vista JSP.
- */
 @ControllerAdvice
 @RequiredArgsConstructor
 public class ControllerGlobalAdvice {
@@ -35,14 +33,15 @@ public class ControllerGlobalAdvice {
     private final CategoriaService categoriaService;
     private final SubcategoriaService subcategoriaService;
     private final ShoppingCartService shoppingCartService;
+    private final WishlistService wishlistService;
     private final ObjectMapper objectMapper;
 
     @ModelAttribute("currentUserName")
     public String addLoggedUserName() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null
-            && auth.isAuthenticated()
-            && auth.getPrincipal() instanceof UsuarioPrincipal principal) {
+                && auth.isAuthenticated()
+                && auth.getPrincipal() instanceof UsuarioPrincipal principal) {
 
             var usuario = principal.getUsuario();
             String nombre = usuario.getNombre();
@@ -60,39 +59,41 @@ public class ControllerGlobalAdvice {
     public Map<Familia, List<Map<Categoria, List<Subcategoria>>>> addCategorias() {
         List<Familia> familias = familiaService.findAll();
         Map<Familia, List<Map<Categoria, List<Subcategoria>>>> result = new LinkedHashMap<>();
-
         for (Familia fam : familias) {
-            // 1) obtengo todas las categorías de esta familia
             List<Categoria> cats = categoriaService.findByFamilia(fam);
             List<Map<Categoria, List<Subcategoria>>> listCatConSubs = new ArrayList<>();
-
             for (Categoria cat : cats) {
-                // 2) para cada categoría, cargar sus subcategorías
                 List<Subcategoria> subs = subcategoriaService.findByCategoria(cat);
                 Map<Categoria, List<Subcategoria>> m = new LinkedHashMap<>();
                 m.put(cat, subs);
                 listCatConSubs.add(m);
             }
-
             result.put(fam, listCatConSubs);
         }
-
         return result;
     }
 
     @ModelAttribute("userCartJson")
     public String addUserCartStateToJson(Principal principal) {
-        if (principal == null) {
-            return "{}";
-        }
+        if (principal == null)  return "{}";
 
         try {
             Map<String, Integer> cartState = shoppingCartService.getCartStateForUser(principal);
-
             return objectMapper.writeValueAsString(cartState);
-
         } catch (JsonProcessingException e) {
             return "{}";
+        }
+    }
+    
+    @ModelAttribute("userWishlistJson")
+    public String addUserWishlistStateToJson(Principal principal) {
+        if (principal == null)  return "[]";
+
+        try {
+            List<String> wishlistIds = wishlistService.getWishlistProductIdsForUser(principal);
+            return objectMapper.writeValueAsString(wishlistIds);
+        } catch (JsonProcessingException e) {
+            return "[]";
         }
     }
 }

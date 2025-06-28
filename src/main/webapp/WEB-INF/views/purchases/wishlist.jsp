@@ -1,71 +1,108 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%
-    String pageTitle = "La Botica de Mar";
-%>
+<%@ page pageEncoding="UTF-8" contentType="text/html; charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<% String pageTitle = "Mi Lista de Deseos"; %>
+
 <!DOCTYPE html>
-<html lang="es">
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title><%= pageTitle %></title>
+        <link rel="icon" href="/images/icono_tab2.png" type="image/png">
 
-    <%@ include file="../includes/head.jsp" %>
-    <%@ include file="../includes/navbar.jsp" %>
+        <link rel="stylesheet" href="/css/output.css"/>
+        <link href="https://fonts.googleapis.com/css2?family=Satisfy&display=swap" rel="stylesheet"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        
+        <script>
+            window.contextPath = '<%= request.getContextPath() %>';
+            const userCartState = JSON.parse('${not empty userCartJson ? userCartJson : "{}"}');
+            const userWishlistState = JSON.parse('${not empty userWishlistJson ? userWishlistJson : "[]"}');
+        </script>
+    </head>
     
-    <div class="flex-grow">
-        <div class="container mx-auto my-10 flex-grow">
-            <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Tus Artículos Favoritos</h1>
+<body class="flex flex-col min-h-screen bg-gray-50" data-authenticated="${not empty pageContext.request.userPrincipal}">
+    <header>
+        <%@ include file="../includes/navbar.jsp" %>
+    </header>
 
-            <!-- Lista de artículos que te gustan -->
-            <div class="bg-white shadow-md rounded-lg p-6">
-                <c:if test="${not empty likedProducts}">
-                    <table class="min-w-full bg-white">
-                        <thead>
-                            <tr>
-                                <th class="py-2 px-4 text-left">Producto</th>
-                                <th class="py-2 px-4 text-left">Precio</th>
-                                <th class="py-2 px-4 text-left"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Repite este bloque por cada producto en la lista de productos que te gustan -->
-                            <c:forEach var="producto" items="${likedProducts}">
-                                <tr>
-                                    <td class="py-4 px-4 border-b">
-                                        <div class="flex items-center">
-                                            <img src="${producto.imagen}" alt="${producto.nombre}" class="h-12 w-12 mr-4">
-                                            <span>${producto.nombre}</span>
-                                        </div>
-                                    </td>
-                                    <td class="py-4 px-4 border-b">${producto.precio} €</td>
-                                    <td class="py-4 px-4 border-b flex space-x-4">
-                                        <!-- Añadir al carrito -->
-                                        <form action="addToCart" method="post">
-                                            <input type="hidden" name="productoId" value="${producto.id}">
-                                            <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-700">
-                                                Añadir al Carrito
-                                            </button>
-                                        </form>
-
-                                        <!-- Eliminar de favoritos -->
-                                        <form action="removeFromLiked" method="post">
-                                            <input type="hidden" name="productoId" value="${producto.id}">
-                                            <button type="submit" class="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-700">
-                                                Eliminar
-                                            </button>
-                                        </form>
-                                    </td>
+    <main class="flex-grow py-10">
+        <div class="container mx-auto px-4">
+            <h1 class="text-3xl font-bold mb-6 text-left text-gray-800">Mi Lista de Deseos</h1>
+            <div class="flex">
+                <div class="w-full bg-white border border-gray-200 rounded-lg overflow-hidden">
+                    <table class="min-w-full text-gray-700 text-sm">
+                        <c:if test="${not empty likedProducts}">
+                            <thead class="bg-white">
+                                <tr class="border-b border-gray-200">
+                                    <th class="py-3 px-4 text-left">Producto</th>
+                                    <th class="py-3 px-4 text-center">Precio</th>
+                                    <th class="py-3 px-4 text-center">Acciones</th>
                                 </tr>
-                            </c:forEach>
+                            </thead>
+                        </c:if>
+
+                        <tbody class="divide-y divide-gray-100">
+                            <c:choose>
+                                <c:when test="${not empty likedProducts}">
+                                    <c:forEach var="producto" items="${likedProducts}">
+                                        <tr class="wishlist-item-row" data-product-id="${producto.id}">
+                                            <td class="py-4 px-4">
+                                                <div class="flex items-center">
+                                                    <img src="${pageContext.request.contextPath}${producto.imagenPath}" alt="${producto.nombre}" class="h-16 w-16 object-cover rounded mr-4" />
+                                                    <div>
+                                                        <p class="font-semibold">${producto.nombre}</p>
+                                                        <c:if test="${not empty producto.laboratorio}">
+                                                          <p class="text-xs text-gray-500">${producto.laboratorio.nombre}</p>
+                                                        </c:if>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            
+                                            <td class="py-4 px-4 text-center font-semibold">
+                                                 <c:choose>
+                                                    <c:when test="${producto.discount > 0}">
+                                                        <div class="flex flex-col items-center">
+                                                            <span class="text-xs text-gray-400 line-through"><fmt:formatNumber value="${producto.price}" type="currency" currencySymbol="€"/></span>
+                                                            <span class="text-red-600"><fmt:formatNumber value="${producto.price * (1 - producto.discount / 100)}" type="currency" currencySymbol="€"/></span>
+                                                        </div>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <fmt:formatNumber value="${producto.price}" type="currency" currencySymbol="€"/>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </td>
+                                            
+                                            <td class="py-4 px-4 text-center">
+                                                <div class="flex justify-center items-center gap-3">
+                                                    <div class="cart-button-container"></div>
+                                                    <div class="wishlist-button-container"></div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
+                                </c:when>
+                                <c:otherwise>
+                                    <tr>
+                                        <td colspan="3" class="text-center p-12">
+                                            <p class="text-gray-600 text-2xl font-bold mb-4">Tu lista de deseos está vacía.</p>
+                                            <a href="${pageContext.request.contextPath}/" class="inline-block bg-pistachio text-white px-6 py-2 rounded hover:bg-dark-pistachio">
+                                                Descubrir Productos
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </c:otherwise>
+                            </c:choose>
                         </tbody>
                     </table>
-                </c:if>
-
-                <!-- Mensaje si no hay productos en la lista de favoritos -->
-                <c:if test="${empty likedProducts}">
-                    <p class="text-center text-gray-600">No tienes artículos en tu lista de favoritos.</p>
-                </c:if>
+                </div>
             </div>
         </div>
-    </div>
+    </main>
     
-    <!-- Incluir el footer -->
     <%@ include file="../includes/footer.jsp" %>
-
+    
+    <script src="${pageContext.request.contextPath}/js/purchases/wishlist.js" defer></script>
+</body>
 </html>
