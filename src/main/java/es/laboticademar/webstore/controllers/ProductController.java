@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -45,14 +46,15 @@ public class ProductController {
     @GetMapping("/{id}")
     public String goProductInfo(@PathVariable("id") BigDecimal id,Model model) {
         // 1) Carga el producto y destacados
-        Producto producto = productService.findById(id);
-        model.addAttribute("producto", producto);
+        Optional<Producto> productoOptional = productService.findById(id);
+        if (!productoOptional.isPresent()) return "errro/500";
+        model.addAttribute("producto", productoOptional.get());
         model.addAttribute("destacados", destacadoService.getAllDestacados());
 
         // 2) Genera migas con el nuevo método
         List<Breadcrumb> crumbs = BreadcrumbUtils.generarParaProducto(
             request,
-            producto,
+            productoOptional.get(),
             familiaService,
             categoriaService,
             subcategoriaService

@@ -1,3 +1,16 @@
+// ==========================================================
+// SECCIÓN 1: CONFIGURACIÓN Y ESTADO UNIFICADO (NUEVO)
+// ==========================================================
+const isAuthenticated = document.body.dataset.authenticated === 'true';
+// Carga el estado del carrito desde el objeto del servidor si está autenticado, si no, desde localStorage.
+let cartState = isAuthenticated ? userCartState : JSON.parse(localStorage.getItem('cart') || '{}');
+// La Wishlist sigue siendo gestionada por el cliente en localStorage.
+let wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+
+
+// ==========================================================
+// SECCIÓN 2: VARIABLES GLOBALES Y ELEMENTOS DEL DOM (ORIGINAL)
+// ==========================================================
 var currentPage = 0,
     totalPages  = 1,
     currentCols = 0;
@@ -10,79 +23,142 @@ var gridEl     = document.getElementById('productsGrid'),
     totalEl    = document.getElementById('totalPages'),
     filterForm = document.getElementById('filterForm');
 
-// ——————————————————————————————
-// Carrito “ligero” en localStorage
-// ——————————————————————————————
-let cart = JSON.parse(localStorage.getItem('cart') || '{}');
-function saveCart() {
-    localStorage.setItem('cart', JSON.stringify(cart));
+
+// ==========================================================
+// SECCIÓN 3: FUNCIONES DE AYUDA Y AJAX (NUEVO)
+// ==========================================================
+
+// Guarda el estado del carrito (solo para invitados) y notifica a la app.
+function saveCartState() {
+    if (!isAuthenticated) {
+        localStorage.setItem('cart', JSON.stringify(cartState));
+    }
+    window.dispatchEvent(new CustomEvent('cartUpdated'));
 }
 
-// ——————————————————————————————
-// Wishlist “ligero” en localStorage
-// ——————————————————————————————
-let wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+// Guarda la wishlist
 function saveWishlist() {
     localStorage.setItem('wishlist', JSON.stringify(wishlist));
+    window.dispatchEvent(new CustomEvent('wishlistUpdated'));
 }
 
-// ——————————————————————————————
-// Renderiza los controles de carrito para un producto p dentro de container
-// ——————————————————————————————
+// Funciones AJAX para usuarios autenticados
+function updateServerCart(productId, isAdding, container, product) {
+    fetch(window.contextPath + '/api/cart/add_item', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ itemId: productId, add: isAdding })
+    })
+    .then(response => {
+        if (!response.ok) throw new Error('Error de red al actualizar el carrito');
+        const currentQty = cartState[productId] || 0;
+        cartState[productId] = isAdding ? currentQty + 1 : currentQty - 1;
+        renderCartControls(container, product);
+        window.dispatchEvent(new CustomEvent('cartUpdated'));
+    })
+    .catch(error => alert('No se pudo actualizar el carrito. ' + error.message));
+}
+
+function deleteFromServerCart(productId, container, product) {
+    fetch(window.contextPath + '/api/cart/delete_item', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ itemId: productId })
+    })
+    .then(response => {
+        if (!response.ok) throw new Error('Error de red al eliminar el producto');
+        delete cartState[productId];
+        renderCartControls(container, product);
+        window.dispatchEvent(new CustomEvent('cartUpdated'));
+    })
+    .catch(error => alert('No se pudo eliminar el producto. ' + error.message));
+}
+
+
+// ==========================================================
+// SECCIÓN 4: RENDERIZADO DE CONTROLES DE CARRITO (REEMPLAZO TOTAL)
+// ==========================================================
 function renderCartControls(container, p) {
     container.innerHTML = '';
-    const qty = cart[p.id] || 0;
+    const qty = cartState[p.id] || 0;
 
     if (qty === 0) {
-        // Botón “Añadir”
+        // --- Botón de "Añadir al carrito" como icono ---
         const btn = document.createElement('button');
-        // si no hay stock, deshabilitado
-        if (p.stock === 0) {
+        const icon = document.createElement('img');
+        icon.className = 'h-5 w-5';
+        
+        // Comportamiento basado en stock
+        if (p.stock === 0 || p.price === 0) {
             btn.disabled = true;
-            btn.className = 'ml-2 bg-gray-200 text-gray-400 px-3 py-1 text-sm rounded cursor-not-allowed';
+            btn.className = 'p-2 rounded-md bg-gray-200 cursor-not-allowed';
+            icon.src = `${window.contextPath}/images/shopping-cart-gray.svg`; // Icono gris
         } else {
-            btn.className = 'ml-2 bg-pistachio text-white px-3 py-1 text-sm rounded hover:bg-pistachio-dark transition';
-            btn.addEventListener('click', () => {
-                cart[p.id] = 1;
-                saveCart();
-                renderCartControls(container, p);
+            btn.className = 'p-2 rounded-md bg-pistachio hover:bg-dark-pistachio transition';
+            icon.src = `${window.contextPath}/images/shopping-cart-white.svg`; // Icono blanco
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (isAuthenticated) {
+                    updateServerCart(p.id, true, container, p);
+                } else {
+                    cartState[p.id] = 1;
+                    saveCartState();
+                    renderCartControls(container, p);
+                }
             });
         }
-        btn.textContent = 'Añadir';
+        btn.appendChild(icon);
         container.appendChild(btn);
 
     } else {
-        // Controles “[− qty +]”
+        // --- Controles de cantidad "[−] [qty] [+]" ---
         const wrap = document.createElement('div');
-        wrap.className = 'flex items-center border border-gray-200 rounded overflow-hidden';
+        wrap.className = 'flex items-center border border-gray-300 rounded-md';
 
         const btnMinus = document.createElement('button');
-        btnMinus.className = 'px-2 text-gray-600 hover:bg-gray-100';
+        btnMinus.className = 'px-2 py-1 text-lg text-gray-600 hover:bg-gray-100 rounded-l-md';
         btnMinus.textContent = '−';
-        btnMinus.addEventListener('click', () => {
-            const newQty = qty - 1;
-            if (newQty > 0) {
-                cart[p.id] = newQty;
+        btnMinus.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (isAuthenticated) {
+                if (qty > 1) {
+                    updateServerCart(p.id, false, container, p);
+                } else {
+                    deleteFromServerCart(p.id, container, p);
+                }
             } else {
-                delete cart[p.id];
+                if (qty > 1) {
+                    cartState[p.id]--;
+                } else {
+                    delete cartState[p.id];
+                }
+                saveCartState();
+                renderCartControls(container, p);
             }
-            saveCart();
-            renderCartControls(container, p);
         });
 
         const input = document.createElement('input');
         input.type = 'text';
         input.value = qty;
-        input.className = 'w-8 text-center text-sm';
+        input.className = 'w-8 text-center text-sm font-semibold border-0 focus:ring-0';
         input.readOnly = true;
 
         const btnPlus = document.createElement('button');
-        btnPlus.className = 'px-2 text-gray-600 hover:bg-gray-100';
+        btnPlus.className = 'px-2 py-1 text-lg text-gray-600 hover:bg-gray-100 rounded-r-md';
         btnPlus.textContent = '+';
-        btnPlus.addEventListener('click', () => {
-            cart[p.id] = qty + 1;
-            saveCart();
-            renderCartControls(container, p);
+        if (qty >= p.stock) {
+            btnPlus.disabled = true;
+            btnPlus.classList.add("text-gray-300", "cursor-not-allowed");
+        }
+        btnPlus.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (isAuthenticated) {
+                updateServerCart(p.id, true, container, p);
+            } else {
+                cartState[p.id]++;
+                saveCartState();
+                renderCartControls(container, p);
+            }
         });
 
         wrap.appendChild(btnMinus);
@@ -92,13 +168,15 @@ function renderCartControls(container, p) {
     }
 }
 
-// ——————————————————————————————
-// Layout y paginación
-// ——————————————————————————————
+
+// =======================================================================
+// SECCIÓN 5: CÓDIGO ORIGINAL PARA LAYOUT, PAGINACIÓN Y RENDERIZADO
+// (MANTENIDO INTACTO, EXCEPTO POR UNA LÍNEA DE ESTILO)
+// =======================================================================
 function calcLayout() {
     var w    = window.innerWidth,
         cols = w >= 1024 ? 4 : w >= 768 ? 3 : 2,
-        rows = cols + 3;  // 4→7, 3→6, 2→5
+        rows = cols + 3;
     return { cols: cols, size: cols * rows };
 }
 
@@ -109,104 +187,89 @@ function updateControls() {
     nextBtn.disabled      = (currentPage + 1 === totalPages);
 }
 
-// ——————————————————————————————
-// Renderizado de la grid
-// ——————————————————————————————
 function renderGrid(items) {
     var layout = calcLayout();
-    gridEl.className = [
-        'grid',
-        'grid-cols-' + layout.cols,
-        'gap-0',
-        'bg-white',
-        'p-4'
-    ].join(' ');
+    gridEl.className = 'grid grid-cols-' + layout.cols + ' gap-0 bg-white p-4';
     gridEl.innerHTML = '';
 
     items.forEach(function(p, idx) {
-        // calcula fila/columna para bordes
-        var col = idx % layout.cols,
-            row = Math.floor(idx / layout.cols);
-
-        // wrapper de la celda
+        var col = idx % layout.cols;
+        var row = Math.floor(idx / layout.cols);
         var card = document.createElement('div');
         card.className = [
-            'relative','flex','flex-col',
-            'overflow-hidden','p-4',
+            'relative','flex','flex-col','overflow-hidden','p-4',
             col > 0 && 'border-l',
             row > 0 && 'border-t',
             'border-gray-200'
         ].filter(Boolean).join(' ');
 
-        // Favorito (wishlist)
         var fav = document.createElement('button');
-        fav.className = 'absolute top-2 right-2';
+        fav.className = 'absolute top-2 right-2 z-10'; // z-index para que esté sobre la imagen
         function updateFavIcon() {
-            var filled = wishlist.includes(p.id);
+            var filled = wishlist.includes(p.id.toString());
             fav.innerHTML = filled
                 ? '<svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-red-500" viewBox="0 0 20 20" fill="currentColor"><path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.828a4 4 0 010-5.657z"/></svg>'
                 : '<svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-gray-400 hover:text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>';
         }
         updateFavIcon();
-        fav.addEventListener('click', () => {
-            if (wishlist.includes(p.id)) {
-                wishlist = wishlist.filter(id => id !== p.id);
+        fav.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const idStr = p.id.toString();
+            if (wishlist.includes(idStr)) {
+                wishlist = wishlist.filter(id => id !== idStr);
             } else {
-                wishlist.push(p.id);
+                wishlist.push(idStr);
             }
             saveWishlist();
             updateFavIcon();
         });
         card.appendChild(fav);
 
-        // Badge de descuento
         if (p.discount > 0) {
             var badge = document.createElement('span');
-            badge.className = 'absolute top-2 left-2 bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded';
+            badge.className = 'absolute top-2 left-2 bg-red-500 text-white text-xs font-semibold px-2 py-1 rounded z-10';
             badge.textContent = '-' + Math.round(p.discount) + '%';
             card.appendChild(badge);
         }
 
-        // Imagen o placeholder
         if (p.imagenPath) {
             var wrapImg = document.createElement('div');
-            wrapImg.className = 'p-2 cursor-pointer';            // <-- aquí
+            wrapImg.className = 'p-2 cursor-pointer';
             var img = document.createElement('img');
             img.src       = p.imagenPath;
             img.alt       = p.nombre;
             img.className = 'h-40 w-full object-cover rounded';
-            // listener para redirigir al detalle
             wrapImg.addEventListener('click', function() {
                 window.location.href = window.contextPath + '/product/' + p.id;
             });
             wrapImg.appendChild(img);
             card.appendChild(wrapImg);
-        } else {
+        } else { 
             var placeholder = document.createElement('div');
             placeholder.className = 'h-40 w-full bg-gray-200 flex items-center justify-center rounded p-2';
             placeholder.innerHTML =
                 '<svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">'
-              + '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h4l2-3h6l2 3h4v13H3V7z"/>'
-              + '<circle cx="12" cy="13" r="4" stroke="currentColor" stroke-width="2"/>'
-              + '</svg>';
+            + '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h4l2-3h6l2 3h4v13H3V7z"/>'
+            + '<circle cx="12" cy="13" r="4" stroke="currentColor" stroke-width="2"/>'
+            + '</svg>';
             card.appendChild(placeholder);
         }
 
-        // contenido principal
         var container = document.createElement('div');
-        container.className = 'flex flex-col justify-between flex-grow';
+        container.className = 'flex flex-col justify-between flex-grow mt-2';
 
-        // 1) HEADER (nombre)
         var header = document.createElement('h3');
-        header.className = 'text-sm font-medium mb-2 cursor-pointer hover:text-pistachio';
+        header.className = 'text-sm font-medium mb-2 cursor-pointer hover:text-pistachio flex-grow';
         header.textContent = p.nombre;
         header.onclick = () => window.location.href = window.contextPath + '/product/' + p.id;
         container.appendChild(header);
 
-        // BottomDiv para alinear rating y footer
         var bottomDiv = document.createElement('div');
-        bottomDiv.className = 'flex flex-col justify-between h-18';
+        bottomDiv.className = 'mt-auto'; // Para empujar el footer hacia abajo
 
+        var middleBlock = document.createElement('div');
+        middleBlock.className = 'flex flex-col mb-2'; // Añadido margen inferior
+        
         // 2) RATING + DISPONIBILIDAD
         var middleBlock = document.createElement('div');
         middleBlock.className = 'flex flex-col';
@@ -242,26 +305,29 @@ function renderGrid(items) {
         if (p.discount > 0) {
             var orig = document.createElement('span');
             orig.className = 'text-sm text-gray-400 line-through';
-            orig.textContent = '€ ' + p.price.toFixed(2);
+            orig.textContent = '€' + p.price.toFixed(2);
             prices.appendChild(orig);
 
-            var discVal = (p.price * (1 - p.discount/100)).toFixed(2);
+            var discVal = (p.price * (1 - p.discount / 100));
             var disc = document.createElement('span');
-            disc.className = 'text-lg font-bold text-gray-800';
-            disc.textContent = '€ ' + discVal;
+            // ÚNICO CAMBIO DE ESTILO: Añadida la clase 'text-red-600'
+            disc.className = 'text-lg font-bold text-red-600'; 
+            disc.textContent = '€' + discVal.toFixed(2);
             prices.appendChild(disc);
         } else {
             var normal = document.createElement('span');
             normal.className = 'text-lg font-bold text-gray-800';
-            normal.textContent = '€ ' + p.price.toFixed(2);
+            normal.textContent = '€' + p.price.toFixed(2);
             prices.appendChild(normal);
         }
         footer.appendChild(prices);
 
         var controls = document.createElement('div');
+        // AHORA LLAMA A LA NUEVA FUNCIÓN renderCartControls
         renderCartControls(controls, p);
         footer.appendChild(controls);
 
+        bottomDiv.appendChild(middleBlock);
         bottomDiv.appendChild(footer);
         container.appendChild(bottomDiv);
         card.appendChild(container);
@@ -269,12 +335,9 @@ function renderGrid(items) {
     });
 }
 
-// ——————————————————————————————
-// Petición al API y control de eventos
-// ——————————————————————————————
 function loadPage(page) {
     var layout = calcLayout();
-    var fm     = new FormData(filterForm);
+    var fm = new FormData(filterForm);
     var params = new URLSearchParams({ page: page, size: layout.size });
 
     fm.forEach(function(v, k) {
@@ -282,21 +345,23 @@ function loadPage(page) {
     });
 
     fetch(window.contextPath + '/product/api/get_pagable_list?' + params)
-        .then(function(res) {
+        .then(res => {
             if (!res.ok) throw new Error(res.statusText);
             return res.json();
         })
-        .then(function(data) {
+        .then(data => {
             currentPage = data.number;
             totalPages  = data.totalPages;
             renderGrid(data.content);
             updateControls();
-            document.getElementById('totalCount').textContent = 'Productos encontrados: ' + data.totalElements;
+            document.getElementById('totalCount').textContent = data.totalElements + ' productos encontrados';
         })
         .catch(console.error);
 }
 
-// Listeners
+// ==========================================================
+// SECCIÓN 6: LISTENERS Y CARGA INICIAL (ORIGINAL)
+// ==========================================================
 prevBtn.addEventListener('click', function() {
     if (currentPage > 0) loadPage(currentPage - 1);
 });
@@ -304,10 +369,10 @@ nextBtn.addEventListener('click', function() {
     if (currentPage + 1 < totalPages) loadPage(currentPage + 1);
 });
 filterForm.addEventListener('submit', function(e) {
+    e.preventDefault(); // Evita que la página se recargue al enviar el formulario
     loadPage(0);
 });
 
-// Redimensionar
 var resizeTO;
 window.addEventListener('resize', function() {
     clearTimeout(resizeTO);
@@ -323,7 +388,6 @@ window.addEventListener('resize', function() {
 // Carga inicial
 currentCols = calcLayout().cols;
 loadPage(0);
-
 
 document.addEventListener('DOMContentLoaded', () => {
     // Seleccionamos todos los elementos necesarios

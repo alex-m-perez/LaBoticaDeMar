@@ -16,27 +16,30 @@
     <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <script> window.contextPath = '<%= request.getContextPath() %>'; </script>
+    <script>const userCartState = JSON.parse('${not empty userCartJson ? userCartJson : "{}"}');</script>
+    <script src="${pageContext.request.contextPath}/js/products/producto_info.js" defer></script>
 </head>
 
-	<script src="${pageContext.request.contextPath}/js/products/producto_info.js" defer></script>
+<style>
+    .swiper-slide { flex-shrink: 0; margin-right: 10px !important; height: auto !important; }
+    #accordion-product-details .accordion-content { max-height: 12rem; /* equivale a max-h-48 */ overflow-y: auto; }
+    .scrollbar-invisible::-webkit-scrollbar {
+        display: none; /* Oculta la barra de scroll */
+        width: 0px; /* Asegura que no ocupe espacio */
+    }
 
-	<style>
-        .swiper-slide { flex-shrink: 0; margin-right: 10px !important; height: auto !important; }
-        #accordion-product-details .accordion-content { max-height: 12rem; /* equivale a max-h-48 */ overflow-y: auto; }
-        .scrollbar-invisible::-webkit-scrollbar {
-            display: none; /* Oculta la barra de scroll */
-            width: 0px; /* Asegura que no ocupe espacio */
-        }
+    /* Para Firefox */
+    .scrollbar-invisible {
+        scrollbar-width: none; /* Oculta la barra de scroll */
+        -ms-overflow-style: none;  /* Para IE/Edge */
+    }
+</style>
 
-        /* Para Firefox */
-        .scrollbar-invisible {
-            scrollbar-width: none; /* Oculta la barra de scroll */
-            -ms-overflow-style: none;  /* Para IE/Edge */
-        }
-    </style>
+<body data-authenticated="${not empty pageContext.request.userPrincipal}">
 
-	<script> window.contextPath = '<%= request.getContextPath() %>'; </script>
-	<%@ include file="../includes/navbar.jsp" %>
+    <%@ include file="../includes/navbar.jsp" %>
 
 	<main class="flex-grow bg-white py-8">
 		<div class="container mx-auto px-4">
@@ -174,24 +177,11 @@
                         </div>
 
                         <div class="flex items-center space-x-3">
-                            <div class="flex items-center border border-gray-200 rounded">
-                                <button id="qty-minus" class="px-3 py-1 text-lg text-gray-600 hover:bg-gray-100 rounded-l transition">
-                                    −
-                                </button>
-                                <input id="qty-input" type="text" value="1" class="w-12 text-center text-md font-bold border-0 focus:ring-0" readonly>
-                                <button id="qty-plus" class="px-3 py-1 text-lg text-gray-600 hover:bg-gray-100 rounded-r transition">
-                                    +
-                                </button>
-                            </div>
-                            <button class="ml-4 px-4 py-2 flex gap-2 items-center bg-pistachio text-white font-semibold rounded hover:bg-pistachio-dark transition">
-                                <span>AÑADIR</span>
-                                <img
-                                    src="${pageContext.request.contextPath}/images/shopping-cart-white.svg"
-                                    class="h-5"
-                                    alt="Administracion"
-                                    onclick="window.location.href='/admin/home'"
-                                />
-                            </button>
+                            <div id="main-product-qty-container"></div>
+
+                            <div id="main-product-cart-container"></div>
+
+                            <div id="main-product-wishlist-container"></div>
                         </div>
                     </div>
                 </div>
@@ -429,4 +419,5 @@
 			},
 		});
 	</script>
+</body>
 </html>

@@ -16,6 +16,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 
+<%-- El script ahora se carga con 'defer' para asegurar que el DOM esté listo --%>
 <script src="${pageContext.request.contextPath}/js/purchases/shopping_cart.js" defer></script>
 
 <body class="flex flex-col min-h-screen">
@@ -39,12 +40,17 @@
                         </c:if>
 
                         <tbody id="cart-items-body" class="divide-y divide-gray-100">
-
                             <c:choose>
                                 <%-- CASO 1: El carrito tiene productos --%>
                                 <c:when test="${not empty shoppingCart.items}">
                                     <c:forEach var="item" items="${shoppingCart.items}">
-                                        <tr class="cart-item-row" data-price="${item.producto.price}" data-product-id="${item.producto.id}">
+                                        <%-- CAMBIO: Añadimos data-discount y data-stock para que JS los use --%>
+                                        <tr class="cart-item-row" 
+                                            data-price="${item.producto.price}" 
+                                            data-product-id="${item.producto.id}"
+                                            data-discount="${item.producto.discount}"
+                                            data-stock="${item.producto.stock}">
+
                                             <td class="py-4 px-4">
                                                 <div class="flex items-center">
                                                     <img src="${pageContext.request.contextPath}${item.producto.imagenPath}" alt="${item.producto.nombre}" class="h-16 w-16 object-cover rounded mr-4" />
@@ -59,21 +65,41 @@
                                             </td>
                                             <td class="py-4 px-4 text-center">
                                                 <div class="quantity-control inline-flex border border-gray-200 rounded overflow-hidden">
-                                                    <button type="button" class="px-3 py-1 bg-gray-100 hover:bg-gray-200" onclick="updateQuantity(this, -1, '${item.producto.id}')">−</button>
+                                                    <%-- CAMBIO: La función ahora solo necesita 'this' y el delta (-1 o 1) --%>
+                                                    <button type="button" class="minus-btn px-3 py-1 bg-gray-100 hover:bg-gray-200" onclick="updateQuantity(this, -1)">−</button>
                                                     <input type="number" min="1" value="${item.cantidad}" class="qty-input w-12 text-center no-spinner focus:outline-none" readonly/>
-                                                    <button type="button" class="px-3 py-1 bg-gray-100 hover:bg-gray-200" onclick="updateQuantity(this, 1, '${item.producto.id}')">+</button>
+                                                    <button type="button" class="plus-btn px-3 py-1 bg-gray-100 hover:bg-gray-200" onclick="updateQuantity(this, 1)">+</button>
                                                 </div>
                                             </td>
-                                            <td class="py-4 px-4 text-center"><fmt:formatNumber value="${item.producto.price}" type="currency" currencySymbol="€" /></td>
-                                            <td class="py-4 px-4 font-semibold text-center line-total"><fmt:formatNumber value="${item.producto.price * item.cantidad}" type="currency" currencySymbol="€" /></td>
+                                            <td class="py-4 px-4 text-center">
+                                                <%-- CAMBIO: Lógica para mostrar precio con descuento --%>
+                                                <c:choose>
+                                                    <c:when test="${item.producto.discount > 0}">
+                                                        <div class="flex flex-col items-center">
+                                                            <span class="text-xs text-gray-400 line-through">
+                                                                <fmt:formatNumber value="${item.producto.price}" type="currency" currencySymbol="€" />
+                                                            </span>
+                                                            <span class="text-red-600 font-semibold">
+                                                                <fmt:formatNumber value="${item.producto.price * (1 - item.producto.discount / 100)}" type="currency" currencySymbol="€" />
+                                                            </span>
+                                                        </div>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <fmt:formatNumber value="${item.producto.price}" type="currency" currencySymbol="€" />
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </td>
+                                            <td class="py-4 px-4 font-semibold text-center line-total">
+                                                 <%-- CAMBIO: El total de línea también considera el descuento --%>
+                                                <c:set var="effectivePrice" value="${item.producto.price * (1 - item.producto.discount / 100)}" />
+                                                <fmt:formatNumber value="${effectivePrice * item.cantidad}" type="currency" currencySymbol="€" />
+                                            </td>
                                         </tr>
                                     </c:forEach>
                                 </c:when>
-
-                                <%-- CASO 2: El carrito está vacío --%>
+                                <%-- CASO 2: El carrito está vacío (sin cambios) --%>
                                 <c:otherwise>
                                     <tr>
-                                        <%-- Esta celda ocupa todo el ancho de la tabla gracias a colspan="4" --%>
                                         <td colspan="4" class="text-center p-12">
                                             <p class="text-gray-600 text-2xl font-bold mb-4">Tu carrito está vacío.</p>
                                             <a href="${pageContext.request.contextPath}/" class="inline-block bg-pistachio text-white px-6 py-2 rounded hover:bg-dark-pistachio">
@@ -83,15 +109,14 @@
                                     </tr>
                                 </c:otherwise>
                             </c:choose>
-
                         </tbody>
                     </table>
                 </div>
 
+                <%-- El resto del JSP (Resumen del Pedido y Footer) permanece igual --%>
                 <div class="lg:w-1/3">
                     <div class="bg-white border border-gray-200 rounded-lg p-6 flex flex-col">
                         <h2 class="text-2xl font-semibold text-gray-800 mb-4">Resumen del Pedido</h2>
-
                         <div class="space-y-2 mb-6 text-gray-600 text-sm">
                             <div class="flex justify-between">
                                 <span>Subtotal</span>
@@ -110,29 +135,23 @@
                                 <span id="cart-total">--,-- €</span>
                             </div>
                         </div>
-
-                        <%-- Lógica para habilitar o deshabilitar el botón de pago --%>
                         <c:choose>
                             <c:when test="${not empty shoppingCart.items}">
-                                <%-- Botón Habilitado --%>
                                 <a href="${pageContext.request.contextPath}/checkout" class="mt-auto block bg-pistachio text-white text-center py-3 rounded hover:bg-dark-pistachio transition">
                                     <span class="text-xl font-bold">Proceder al Pago</span>
                                 </a>
                             </c:when>
                             <c:otherwise>
-                                <%-- Botón Deshabilitado --%>
                                 <a class="mt-auto block bg-gray-300 text-white text-center py-3 rounded cursor-not-allowed pointer-events-none">
                                     <span class="text-xl font-bold">Proceder al Pago</span>
                                 </a>
                             </c:otherwise>
                         </c:choose>
-
                     </div>
                 </div>
             </div>
         </div>
-        
-        </main>
+    </main>
 
     <%@ include file="../includes/footer.jsp" %>
 </body>

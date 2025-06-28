@@ -61,9 +61,10 @@
     </style>
     
     <script> window.contextPath = '<%= request.getContextPath() %>'; </script>
+    <script>const userCartState = JSON.parse('${not empty userCartJson ? userCartJson : "{}"}');</script>
     <script src="${pageContext.request.contextPath}/js/products/productos.js" defer></script>
 
-	<body class="flex flex-col min-h-screen bg-white">
+	 <body class="flex flex-col min-h-screen bg-white" data-authenticated="${not empty pageContext.request.userPrincipal}">
 		<%@ include file="/WEB-INF/views/includes/navbar.jsp" %>
 
 		<main class="flex-grow container mx-auto px-4 py-8">
