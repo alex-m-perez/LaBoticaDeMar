@@ -1,3 +1,22 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  /* Prepara el contenedor para posicionar la línea */
+  .menu-with-line {
+    @apply relative;
+  }
+
+  /* Crea la línea (pseudo-elemento) por defecto invisible */
+  .menu-with-line::before {
+    content: '';
+    @apply absolute top-0 left-0 w-full h-px bg-gray-200;
+    @apply opacity-0 transition-opacity duration-500 ease-in-out;
+  }
+
+  /* Cuando el contenedor tiene la clase 'is-open', la línea se hace visible */
+  .menu-with-line.is-open::before {
+    @apply opacity-100;
+  }
+}

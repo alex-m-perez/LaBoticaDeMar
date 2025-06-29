@@ -151,11 +151,104 @@
                     </div>
                 </div>
 
+                <!-- STEP 2 -->
                 <div id="step-2" class="hidden space-y-6">
-                     </div>
-
-                <div id="step-3" class="hidden space-y-6">
+                    <!-- Fecha de Nacimiento -->
+                    <div>
+                        <label for="fechaNac" class="block text-sm font-medium text-gray-700">Fecha de Nacimiento *</label>
+                        <input name="fechaNac" id="fechaNac" type="date" required
+                            class="mt-1 w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-pistachio focus:border-pistachio"/>
                     </div>
+                    <!-- Género -->
+                    <div>
+                        <label for="genero" class="block text-sm font-medium text-gray-700">Género *</label>
+                        <select name="genero" id="genero" required
+                                class="mt-1 w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-pistachio focus:border-pistachio">
+                            <option value=""">Selecciona...</option>
+                            <option value=1>Masculino</option>
+                            <option value=2>Femenino</option>
+                            <option value=0>Otro</option>
+                        </select>
+                    </div>
+                    <!-- Teléfono -->
+                    <div>
+                        <label for="telefono" class="block text-sm font-medium text-gray-700">Teléfono *</label>
+                        <input name="telefono" id="telefono" type="tel" required
+                            placeholder="123456789"
+                            class="mt-1 w-full px-4 py-3	border rounded-lg focus:ring-2 focus:ring-pistachio focus:border-pistachio"/>
+                    </div>
+                    <!-- Dirección -->
+                    <div class="grid grid-cols-2 gap-6">
+                        <div>
+                            <label for="calle" class="block text-sm font-medium text-gray-700">Calle *</label>
+                            <input name="calle" id="calle" required
+                                placeholder="Calle"
+                                class="mt-1 w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-pistachio focus:border-pistachio"/>
+                        </div>
+                        <div>
+                            <label for="numero" class="block text-sm font-medium text-gray-700">Número *</label>
+                            <input name="numero" id="numero" required
+                                placeholder="Número"
+                                class="mt-1 w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-pistachio focus:border-pistachio"/>
+                        </div>
+                        <div>
+                            <label for="calle" class="block text-sm font-medium text-gray-700">Piso</label>
+                            <input name="piso" id="piso"
+                                placeholder="Piso"
+                                class="mt-1 w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-pistachio focus:border-pistachio"/>
+                        </div>
+                        <div>
+                            <label for="numero" class="block text-sm font-medium text-gray-700">Puerta</label>
+                            <input name="puerta" id="puerta"
+                                placeholder="Puerta"
+                                class="mt-1 w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-pistachio focus:border-pistachio"/>
+                        </div>
+                        <div>
+                            <label for="localidad" class="block text-sm font-medium text-gray-700">Localidad *</label>
+                            <input type="text" id="localidad" name="localidad" required
+                                placeholder="Localidad"
+                                class="mt-1 w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-pistachio focus:border-pistachio"/>
+                        </div>
+                        <div>
+                            <label for="codigoPostal" class="block text-sm font-medium text-gray-700">Código Postal *</label>
+                            <input name="codigoPostal" id="codigoPostal" required
+                                placeholder="Código Postal"
+                                class="mt-1 w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-pistachio focus:border-pistachio"/>
+                        </div>
+                        <div>
+                            <label for="provincia" class="block text-sm font-medium text-gray-700">Provincia *</label>
+                            <input name="provincia" id="provincia" required
+                                placeholder="Provincia"
+                                class="mt-1 w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-pistachio focus:border-pistachio"/>
+                        </div>
+                        <div>
+                            <label for="pais" class="block text-sm font-medium text-gray-700">País *</label>
+                            <input name="pais" id="pais" required
+                                placeholder="País"
+                                class="mt-1 w-full px-4 py-3	border rounded-lg focus:ring-2 focus:ring-pistachio focus:border-pistachio"/>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 3: Preferencias -->
+                <div id="step-3" class="hidden space-y-6">
+                    <span class="block text-lg font-medium text-gray-700 mb-2">Elige tus intereses:</span>
+                    <div class="flex flex-wrap justify-center gap-4">
+                        <c:forEach var="pref" items="${preferenciasEnumList}">
+                            <div
+                                data-id="${pref.id}"
+                                class="select-interes
+                                    cursor-pointer
+                                    border border-gray-300
+                                    rounded-3xl px-6 py-3 whitespace-nowrap
+                                    transition-colors duration-300 ease-in-out
+                                    hover:border-pistachio"
+                            >
+                                ${pref.label}
+                            </div>
+                        </c:forEach>
+                    </div>
+                </div>
 
                 <div class="absolute bottom-0 left-0 w-full bg-white p-4 flex justify-between rounded-b-xl shadow-inner">
                     <button

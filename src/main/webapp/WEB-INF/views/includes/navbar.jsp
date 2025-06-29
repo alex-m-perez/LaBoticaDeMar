@@ -3,14 +3,14 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 
-
+<script>window.contextPath = '<%= request.getContextPath() %>';</script>
 <script src="${pageContext.request.contextPath}/js/navbar/navbar.js" defer></script>
 
 <nav id="navbar" class="bg-white shadow-md sticky top-0 w-full z-50 transition-all duration-300 ease-in-out">
     <div class="container mx-auto p-4 h-full">
         <div class="flex justify-between items-center">
             <div class="flex-1 flex justify-start items-center">
-                <img src="${pageContext.request.contextPath}/images/logo.png" alt="Logo" class="h-14 mr-2 ">
+                <img href="/" src="${pageContext.request.contextPath}/images/logo.png" alt="Logo" class="h-14 mr-2 ">
                 <a href="/" class="text-3xl font-bold hidden lg:block" style="font-family: 'Satisfy', cursive; color: #86207e;">
                     La Botica de Mar
                 </a>
@@ -121,7 +121,8 @@
             </div>
         </div>
 
-        <div id="categoriesList" class="flex hidden mt-4 border-t justify-start border-gray-200 pt-4">
+        <div id="categoriesList"
+        class="flex justify-start overflow-hidden transition-[max-height,opacity] duration-500 ease-in-out max-h-0 opacity-0 menu-with-line">
             <!-- Lista de Familias -->
             <ul id="familiesList" class="w-1/4 list-none space-y-2 border-r border-gray-200 pr-4">
                 <c:forEach var="entry" items="${familiaCategorias}">
@@ -152,11 +153,14 @@
             <ul id="familyCategoriesList" class="w-3/4 list-none grid grid-flow-col grid-rows-6 gap-x-2 gap-y-1 pl-4"></ul>
         </div>
 
-        <div id="brandsList" class="hidden mt-4 border-t flex-col justify-start border-gray-200 pt-4">
-            <div id="alphabetButtons" class="flex justify-center flex-wrap mx-6 mb-4 gap-2"></div>
+        <div id="brandsList"
+        class="flex flex-col justify-start overflow-hidden transition-[max-height,opacity] duration-500 ease-in-out max-h-0 opacity-0 menu-with-line">
+
+
+            <div id="alphabetButtons" class="flex justify-center flex-wrap mx-6 mb-1 gap-2"></div>
 
             <div id="brandsByLetterContainer"
-                 class="w-full mt-4 p-4 border-t border-gray-100 flex justify-center flex-wrap gap-x-8 gap-y-2">
+                 class="w-full mt-1 p-4 border-t border-gray-100 flex justify-center flex-wrap gap-x-8 gap-y-2">
             </div>
         </div>
 

@@ -2,9 +2,7 @@
 // SECCIÓN 1: CONFIGURACIÓN Y ESTADO UNIFICADO (NUEVO)
 // ==========================================================
 const isAuthenticated = document.body.dataset.authenticated === 'true';
-// Carga el estado del carrito desde el objeto del servidor si está autenticado, si no, desde localStorage.
 let cartState = isAuthenticated ? userCartState : JSON.parse(localStorage.getItem('cart') || '{}');
-// La Wishlist sigue siendo gestionada por el cliente en localStorage.
 let wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
 
 
@@ -344,7 +342,7 @@ function loadPage(page) {
         if (v !== '') params.append(k, v);
     });
 
-    fetch(window.contextPath + '/product/api/get_pagable_list?' + params)
+    fetch(window.contextPath + '/api/product/get_pagable_list?' + params)
         .then(res => {
             if (!res.ok) throw new Error(res.statusText);
             return res.json();
@@ -369,7 +367,18 @@ nextBtn.addEventListener('click', function() {
     if (currentPage + 1 < totalPages) loadPage(currentPage + 1);
 });
 filterForm.addEventListener('submit', function(e) {
-    e.preventDefault(); // Evita que la página se recargue al enviar el formulario
+    e.preventDefault(); // Evita que la página se recargue
+
+    const fm = new FormData(filterForm);
+    const params = new URLSearchParams();
+    fm.forEach((value, key) => {
+        if (value !== '') {
+            params.append(key, value);
+        }
+    });
+    history.replaceState(null, '', window.location.pathname + '?' + params.toString());
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
     loadPage(0);
 });
 
@@ -388,91 +397,3 @@ window.addEventListener('resize', function() {
 // Carga inicial
 currentCols = calcLayout().cols;
 loadPage(0);
-
-document.addEventListener('DOMContentLoaded', () => {
-    // Seleccionamos todos los elementos necesarios
-    const sliderMin = document.getElementById('slider-min');
-    const sliderMax = document.getElementById('slider-max');
-    const inputMin = document.querySelector('input[name="precioMin"]');
-    const inputMax = document.querySelector('input[name="precioMax"]');
-    const progress = document.querySelector('.slider-progress');
-    
-    // Espacio mínimo entre los dos manejadores para que no se superpongan
-    const priceGap = 3; // 50€ de diferencia mínima
-
-    // Función para actualizar la barra de progreso visual
-    function updateProgress() {
-        const minVal = parseInt(sliderMin.value);
-        const maxVal = parseInt(sliderMax.value);
-        const minPercent = (minVal / sliderMin.max) * 100;
-        const maxPercent = (maxVal / sliderMax.max) * 100;
-
-        progress.style.left = minPercent + '%';
-        progress.style.width = (maxPercent - minPercent) + '%';
-    }
-
-    // --- EVENT LISTENERS PARA LOS SLIDERS ---
-
-    // Evento para el slider de MÍNIMO
-    sliderMin.addEventListener('input', () => {
-        let minVal = parseInt(sliderMin.value);
-        let maxVal = parseInt(sliderMax.value);
-
-        // Lógica para que no se crucen
-        if (maxVal - minVal < priceGap) {
-            minVal = maxVal - priceGap;
-            sliderMin.value = minVal;
-        }
-        
-        inputMin.value = minVal;
-        updateProgress();
-    });
-
-    // Evento para el slider de MÁXIMO
-    sliderMax.addEventListener('input', () => {
-        let minVal = parseInt(sliderMin.value);
-        let maxVal = parseInt(sliderMax.value);
-
-        // Lógica para que no se crucen
-        if (maxVal - minVal < priceGap) {
-            maxVal = minVal + priceGap;
-            sliderMax.value = maxVal;
-        }
-
-        inputMax.value = maxVal;
-        updateProgress();
-    });
-
-    // --- EVENT LISTENERS PARA LOS INPUTS DE TEXTO ---
-
-    // Sincronizar slider cuando se escribe en el input MÍNIMO
-    inputMin.addEventListener('input', () => {
-        let minVal = parseInt(inputMin.value);
-        if (!isNaN(minVal) && minVal >= 0 && minVal <= 1000) {
-            // Asegurarse de que no sobrepase al máximo
-            if (minVal > parseInt(sliderMax.value) - priceGap) {
-                minVal = parseInt(sliderMax.value) - priceGap;
-                inputMin.value = minVal;
-            }
-            sliderMin.value = minVal;
-            updateProgress();
-        }
-    });
-
-    // Sincronizar slider cuando se escribe en el input MÁXIMO
-    inputMax.addEventListener('input', () => {
-        let maxVal = parseInt(inputMax.value);
-        if (!isNaN(maxVal) && maxVal >= 0 && maxVal <= 1000) {
-            // Asegurarse de que no sea menor que el mínimo
-            if (maxVal < parseInt(sliderMin.value) + priceGap) {
-                maxVal = parseInt(sliderMin.value) + priceGap;
-                inputMax.value = maxVal;
-            }
-            sliderMax.value = maxVal;
-            updateProgress();
-        }
-    });
-
-    // Carga inicial de la barra de progreso
-    updateProgress();
-});

@@ -19,24 +19,30 @@
 
     <script> window.contextPath = '<%= request.getContextPath() %>'; </script>
     <script>const userCartState = JSON.parse('${not empty userCartJson ? userCartJson : "{}"}');</script>
-    <script src="${pageContext.request.contextPath}/js/products/producto_info.js" defer></script>
-    
-    <style>
-        .swiper-slide { flex-shrink: 0; margin-right: 10px !important; height: auto !important; }
-        #accordion-product-details .accordion-content { max-height: 12rem; overflow-y: auto; }
-        .scrollbar-invisible::-webkit-scrollbar { display: none; width: 0px; }
-        .scrollbar-invisible { scrollbar-width: none; -ms-overflow-style: none; }
-    </style>
+    <script src="${pageContext.request.contextPath}/js/products/producto-detail.js" defer></script>
 </head>
 
-<body class="flex flex-col min-h-screen bg-gray-50" data-authenticated="${not empty pageContext.request.userPrincipal}">
+<style>
+    .swiper-slide { flex-shrink: 0; margin-right: 10px !important; height: auto !important; }
+    #accordion-product-details .accordion-content { max-height: 12rem; /* equivale a max-h-48 */ overflow-y: auto; }
+    .scrollbar-invisible::-webkit-scrollbar {
+        display: none; /* Oculta la barra de scroll */
+        width: 0px; /* Asegura que no ocupe espacio */
+    }
 
-    <header>
-        <%@ include file="../includes/navbar.jsp" %>
-    </header>
+    /* Para Firefox */
+    .scrollbar-invisible {
+        scrollbar-width: none; /* Oculta la barra de scroll */
+        -ms-overflow-style: none;  /* Para IE/Edge */
+    }
+</style>
 
-    <main class="flex-grow bg-white py-8">
-        <div class="container mx-auto px-4">
+<body data-authenticated="${not empty pageContext.request.userPrincipal}">
+
+    <%@ include file="../includes/navbar.jsp" %>
+
+	<main class="flex-grow bg-white py-8">
+		<div class="container mx-auto px-4">
 
 			<!-- Breadcrumbs dinámicas -->
             <nav class="text-sm mb-6" aria-label="Breadcrumb">

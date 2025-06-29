@@ -3,14 +3,31 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!DOCTYPE html>
-<html lang="es">
+<html>
     <head>
-        <meta charset="UTF-8"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Productos</title>
-        <link rel="icon" href="${pageContext.request.contextPath}/images/icono_tab2.png" type="image/png"/>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/output.css"/>
+        <link rel="icon" href="/images/icono_tab2.png" type="image/png">
+
+        <link rel="stylesheet" href="/css/output.css"/>
         <link href="https://fonts.googleapis.com/css2?family=Satisfy&display=swap" rel="stylesheet"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+        <script>
+            window.contextPath = '<%= request.getContextPath() %>'; 
+            const urlParams = new URLSearchParams(window.location.search);
+
+            const userCartState = JSON.parse('${not empty userCartJson ? userCartJson : "{}"}');
+            const userWishlistState = JSON.parse('${not empty userWishlistJson ? userWishlistJson : "[]"}');
+
+            const jerarquiaFiltros = JSON.parse('${not empty jerarquiaFiltrosJson ? jerarquiaFiltrosJson  : "{}"}');
+            const laboratoriosAgrupados = JSON.parse('${not empty laboratoriosAgrupadosJson ? laboratoriosAgrupadosJson : "{}"}');
+        </script>
+    </head>
         
         <style>
             /* --- ESTILOS PARA EL SLIDER DE RANGO DOBLE --- */
@@ -54,11 +71,7 @@
             }
         </style>
         
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         
-        <script> window.contextPath = '<%= request.getContextPath() %>'; </script>
-        <script>const userCartState = JSON.parse('${not empty userCartJson ? userCartJson : "{}"}');</script>
-        <script>const userWishlistState = JSON.parse('${not empty userWishlistJson ? userWishlistJson : "[]"}');</script>
     </head>
     
     <body class="flex flex-col min-h-screen bg-gray-50" data-authenticated="${not empty pageContext.request.userPrincipal}">
@@ -93,88 +106,63 @@
                         <img src="${pageContext.request.contextPath}/images/filters.svg" class="h-4" alt="Filtros"/>
                         <span class="text-2xl font-bold">Filtros</span>
                     </div>
-                    
+
                     <form id="filterForm" class="space-y-6">
-                        <!-- FAMILIA -->
                         <div>
                             <h2 class="font-semibold mb-2">Familia</h2>
-                            <select name="familia" class="w-full border rounded p-2 focus:ring-pistachio focus:outline-none">
+                            <select id="familiaSelector" name="familia" class="w-full border rounded p-2 focus:ring-pistachio focus:outline-none">
                                 <option value="">Todas las familias</option>
-                                <c:if test="${not empty todasLasFamilias}">
-                                    <c:forEach var="fam" items="${todasLasFamilias}">
-                                        <option value="${fam.id}" <c:if test="${fam.id == filtroFamilia}">selected</c:if>>
-                                            ${fam.nombre}
-                                        </option>
-                                    </c:forEach>
-                                </c:if>
                             </select>
+                            <div id="selectedFamiliesContainer" class="mt-2 flex flex-wrap gap-2"></div>
+                            <div id="familiaInputsContainer" class="hidden"></div>
                         </div>
 
-                        <!-- CATEGORÍA -->
                         <div>
                             <h2 class="font-semibold mb-2">Categoría</h2>
-                            <select name="categoria" class="w-full border rounded p-2 focus:ring-pistachio focus:outline-none">
+                            <select id="categoriaSelector" name="categoria" class="w-full border rounded p-2 focus:ring-pistachio focus:outline-none">
                                 <option value="">Todas las categorías</option>
-
-                                <c:if test="${not empty categoriasPorFamilia}">
-                                    <c:forEach var="cat" items="${categoriasPorFamilia}">
-                                        <c:if test="${cat.familia.id == filtroFamilia}">
-                                            <option value="${cat.id}"
-                                                    <c:if test="${cat.id == filtroCategoria}">selected</c:if>>
-                                                ${cat.nombre}
-                                            </option>
-                                        </c:if>
-                                    </c:forEach>
-                                </c:if>
                             </select>
+                            <div id="selectedCategoriesContainer" class="mt-2 flex flex-wrap gap-2"></div>
+                            <div id="categoriaInputsContainer" class="hidden"></div>
                         </div>
 
-                        <!-- SUBCATEGORÍA -->
                         <div>
                             <h2 class="font-semibold mb-2">Subcategoría</h2>
-                            <select name="subCategoria" class="w-full border rounded p-2 focus:ring-pistachio focus:outline-none">
+                            <select id="subcategoriaSelector" name="subcategoria" class="w-full border rounded p-2 focus:ring-pistachio focus:outline-none">
                                 <option value="">Todas las subcategorías</option>
-                                <c:if test="${not empty todasLasSubcategorias}">
-                                    <c:forEach var="sub" items="${todasLasSubcategorias}">
-                                        <option value="${sub.id}" <c:if test="${sub.id == filtroSubCategoria}">selected</c:if>>
-                                            ${sub.nombre}
-                                        </option>
-                                    </c:forEach>
-                                </c:if>
                             </select>
+                            <div id="selectedSubcategoriesContainer" class="mt-2 flex flex-wrap gap-2"></div>
+                            <div id="subcategoriaInputsContainer" class="hidden"></div>
                         </div>
 
-                        <!-- TIPO -->
                         <div>
                             <h2 class="font-semibold mb-2">Tipo</h2>
-                            <select name="tipo" class="w-full border rounded p-2 focus:ring-pistachio focus:outline-none">
-                                <option value="">Todos los tipos</option>
+                            <select id="tipoSelector" class="w-full border rounded p-2 focus:ring-pistachio focus:outline-none">
+                                <option value="">Añadir un tipo...</option>
                                 <c:if test="${not empty todosLosTipos}">
                                     <c:forEach var="t" items="${todosLosTipos}">
-                                        <option value="${t.id}" <c:if test="${t.id == filtroTipo}">selected</c:if>>
-                                            ${t.nombre}
-                                        </option>
+                                        <option value="${t.id}" data-nombre="${t.nombre}">${t.nombre}</option>
                                     </c:forEach>
                                 </c:if>
                             </select>
+                            <div id="selectedTiposContainer" class="mt-2 flex flex-wrap gap-2"></div>
+                            <div id="tipoInputsContainer" class="hidden"></div>
                         </div>
 
-                        <!-- LABORATORIO -->
                         <div>
                             <h2 class="font-semibold mb-2">Laboratorio</h2>
-                            <select name="laboratorio" class="w-full border rounded p-2 focus:ring-pistachio focus:outline-none">
+                            <select id="laboratorioSelector" name="laboratorio" class="w-full border rounded p-2 focus:ring-pistachio focus:outline-none">
                                 <option value="">Todos los laboratorios</option>
-                                <c:if test="${not empty todosLosLaboratorios}">
-                                    <c:forEach var="lab" items="${todosLosLaboratorios}">
-                                        <option value="${lab.id}" <c:if test="${lab.id == filtroLaboratorio}">selected</c:if>>
-                                            ${lab.nombre}
-                                        </option>
-                                    </c:forEach>
-                                </c:if>
+                                 <c:if test="${not empty todosLosLaboratorios}">
+                                     <c:forEach var="lab" items="${todosLosLaboratorios}">
+                                         <option data-nombre="${lab.nombre}" value="${lab.id}">${lab.nombre}</option>
+                                     </c:forEach>
+                                 </c:if>
                             </select>
+                            <div id="selectedLaboratoriosContainer" class="mt-2 flex flex-wrap gap-2"></div>
+                            <div id="laboratorioInputsContainer" class="hidden"></div>
                         </div>
 
-                        <!-- DISPONIBILIDAD -->
                         <div class="space-y-2">
                             <h2 class="font-semibold mb-2">Disponibilidad</h2>
                             <label class="flex items-center">
@@ -191,7 +179,6 @@
                             </label>
                         </div>
 
-                        <!-- PRECIO -->
                         <div>
                             <h2 class="font-semibold mb-2">Precio (€)</h2>
                             <div class="flex space-x-2">
@@ -218,17 +205,18 @@
                             </div>
                         </div>
 
-                        <button type="submit"
-                                class="w-full py-2 bg-pistachio text-white font-medium rounded hover:bg-dark-pistachio transition">
+                        <button type="submit" class="w-full py-2 bg-pistachio text-white font-medium rounded hover:bg-dark-pistachio transition">
                             Filtrar
+                        </button>
+                        <button type="button" id="clearFilters" class="w-full mt-2 py-2 border border-gray-300 text-gray-700 font-medium rounded hover:bg-gray-100 transition">
+                            Limpiar
                         </button>
                     </form>
                 </aside>
 
                 <section class="lg:w-3/4 w-full flex flex-col">
-                    <div id="productsGrid"
-                         class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
-                         <%-- El contenido se generará con JS --%>
+                    <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+                        <%-- El contenido se generará con JS --%>
                     </div>
 
                     <div class="mt-8 flex justify-between items-center">
@@ -246,6 +234,7 @@
              </div>
         </footer>
 
-        <script src="${pageContext.request.contextPath}/js/products/productos.js" defer></script>
+        <script src="${pageContext.request.contextPath}/js/products/products-grid.js" defer></script>
+        <script src="${pageContext.request.contextPath}/js/products/filter-ui.js" defer></script>
     </body>
 </html>

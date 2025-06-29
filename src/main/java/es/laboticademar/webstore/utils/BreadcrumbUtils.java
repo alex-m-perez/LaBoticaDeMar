@@ -25,41 +25,68 @@ public class BreadcrumbUtils {
     public static List<Breadcrumb> generarBreadcrumbs(
             HttpServletRequest req,
             int page, int size,
-            Long familia, Long categoria, Long subCategoria,
+            List<Long> familiaIds, // Cambiado a Lista
+            List<Long> categoriaIds, // Cambiado a Lista
+            List<Long> subCategoriaIds, // Cambiado a Lista
             FamiliaService familiaSvc,
             CategoriaService categoriaSvc,
             SubcategoriaService subcategoriaSvc
     ) {
-        if (familia != null && categoria != null && !categoriaSvc.existsByIdAndFamiliaId(categoria, familia)) {
-            categoria = null;
-            subCategoria = null;
-        }
-        if (categoria != null && subCategoria != null && !subcategoriaSvc.existsByIdAndCategoriaId(subCategoria, categoria)) {
-            subCategoria = null;
-        }
-
         List<Breadcrumb> crumbs = new ArrayList<>();
         String baseUrl = "/product?page=" + page + "&size=" + size;
 
+        // 1. Miga de pan base, siempre presente.
         crumbs.add(new Breadcrumb(
                 "Todos los productos",
                 baseUrl + buildQueryStringExcluding(req, "familia", "categoria", "subCategoria")
         ));
 
-        if (familia != null) {
-            String label = familiaSvc.findById(familia).map(Familia::getNombre).orElse("Familia");
-            crumbs.add(new Breadcrumb(label, baseUrl + buildQueryStringKeeping(req, "familia")));
+        // 2. Nivel FAMILIA: solo se añade si hay EXACTAMENTE UNA familia seleccionada.
+        if (familiaIds == null || familiaIds.size() > 1) {
+            // Si hay 0 o más de 1 familia, detenemos la construcción de migas aquí.
+            return crumbs;
         }
 
-        if (categoria != null) {
-            String label = categoriaSvc.findById(categoria).map(Categoria::getNombre).orElse("Categoría");
-            crumbs.add(new Breadcrumb(label, baseUrl + buildQueryStringKeeping(req, "familia", "categoria")));
+        // Si llegamos aquí, es porque familiaIds.size() == 1
+        Long uniqueFamiliaId = familiaIds.get(0);
+        String familiaLabel = familiaSvc.findById(uniqueFamiliaId).map(Familia::getNombre).orElse("Familia");
+        crumbs.add(new Breadcrumb(familiaLabel, baseUrl + buildQueryStringKeeping(req, "familia")));
+
+
+        // 3. Nivel CATEGORÍA: solo se añade si hay EXACTAMENTE UNA categoría seleccionada.
+        if (categoriaIds == null || categoriaIds.size() > 1) {
+            // Si hay 0 o más de 1 categoría, nos detenemos después de la familia.
+            return crumbs;
         }
 
-        if (subCategoria != null) {
-            String label = subcategoriaSvc.findById(subCategoria).map(Subcategoria::getNombre).orElse("Subcategoría");
-            crumbs.add(new Breadcrumb(label, baseUrl + buildQueryStringKeeping(req, "familia", "categoria", "subCategoria")));
+        // Si llegamos aquí, es porque categoriaIds.size() == 1
+        Long uniqueCategoriaId = categoriaIds.get(0);
+
+        // Validación de consistencia (opcional pero recomendada)
+        if (!categoriaSvc.existsByIdAndFamiliaId(uniqueCategoriaId, uniqueFamiliaId)) {
+            return crumbs; // La categoría no pertenece a la familia, cortamos.
         }
+
+        String categoriaLabel = categoriaSvc.findById(uniqueCategoriaId).map(Categoria::getNombre).orElse("Categoría");
+        crumbs.add(new Breadcrumb(categoriaLabel, baseUrl + buildQueryStringKeeping(req, "familia", "categoria")));
+
+
+        // 4. Nivel SUBCATEGORÍA: solo se añade si hay EXACTAMENTE UNA subcategoría.
+        if (subCategoriaIds == null || subCategoriaIds.size() > 1) {
+            // Si hay 0 o más de 1 subcategoría, nos detenemos después de la categoría.
+            return crumbs;
+        }
+
+        // Si llegamos aquí, es porque subCategoriaIds.size() == 1
+        Long uniqueSubCategoriaId = subCategoriaIds.get(0);
+
+        // Validación de consistencia (opcional pero recomendada)
+        if (!subcategoriaSvc.existsByIdAndCategoriaId(uniqueSubCategoriaId, uniqueCategoriaId)) {
+            return crumbs; // La subcategoría no pertenece a la categoría, cortamos.
+        }
+
+        String subCategoriaLabel = subcategoriaSvc.findById(uniqueSubCategoriaId).map(Subcategoria::getNombre).orElse("Subcategoría");
+        crumbs.add(new Breadcrumb(subCategoriaLabel, baseUrl + buildQueryStringKeeping(req, "familia", "categoria", "subCategoria")));
 
         return crumbs;
     }

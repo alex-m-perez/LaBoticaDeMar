@@ -17,8 +17,8 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
         <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
-        <%-- Colocamos los scripts de estado aquí, dentro del head --%>
         <script>
+            window.contextPath = '<%= request.getContextPath() %>'; 
             const userCartState = JSON.parse('${not empty userCartJson ? userCartJson : "{}"}');
             const userWishlistState = JSON.parse('${not empty userWishlistJson ? userWishlistJson : "[]"}');
             const laboratoriosAgrupados = JSON.parse('${not empty laboratoriosAgrupadosJson ? laboratoriosAgrupadosJson : "{}"}');

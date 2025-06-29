@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     // ——————————————————————————————
-    // CONSTANTES Y SELECTORES
+    // CONSTANTES Y SELECTORES (Sin cambios)
     // ——————————————————————————————
     const toggleCategoriesBtn = document.getElementById('toggleCategoriesBtn');
     const toggleBrandsBtn = document.getElementById('toggleBrandsBtn');
@@ -21,11 +21,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const profileMenu = document.getElementById('profileMenu');
     const brandsByLetterContainer = document.getElementById('brandsByLetterContainer');
     const laboratoriosMap = laboratoriosAgrupados || {};
-    const alphabetButtons = []; 
+    const alphabetButtons = [];
+    const activeClasses = ['bg-pistachio', 'text-white'];
+    const inactiveClasses = ['bg-gray-200', 'text-gray-800', 'hover:bg-pistachio', 'hover:text-white'];
 
     let isCategoriesVisible = false;
     let isBrandsVisible = false;
     let navbarTimer;
+    let menuCloseTimer = null;
 
     // ——————————————————————————————
     // TOOGLE CATEGORIAS Y MENÚS PRINCIPALES
@@ -43,29 +46,72 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function setActive(element) {
         element.classList.remove("text-gray-500", "hover:text-gray-800", "text-red-500", "hover:text-red-800");
-        // Nota: Este condicional puede ser redundante si clearSelection ya lo gestiona.
         if (element.classList.contains("text-red-500")) element.classList.add("text-red-600");
     }
 
-    function toggleMenu(menuToShow, menuToHide, arrowDownToShow, arrowUpToShow, arrowDownToHide, arrowUpToHide, btnToActivate, visibilityFlagToShow) {
-        const shouldClose = visibilityFlagToShow;
-        if (!shouldClose) {
-            menuToShow.classList.remove('hidden');
-            arrowDownToShow.classList.add('hidden');
-            arrowUpToShow.classList.remove('hidden');
-            menuToHide.classList.add('hidden');
-            arrowDownToHide.classList.remove('hidden');
-            arrowUpToHide.classList.add('hidden');
-            clearSelection();
-            setActive(btnToActivate);
-        } else {
-            menuToShow.classList.add('hidden');
+    function startMenuCloseTimer() {
+        clearTimeout(menuCloseTimer);
+        menuCloseTimer = setTimeout(() => {
+            if (isCategoriesVisible) {
+                toggleMenu(categoriesList, brandsList, categoriesArrowDown, categoriesArrowUp, brandsArrowDown, brandsArrowUp, toggleCategoriesBtn, true);
+            } else if (isBrandsVisible) {
+                toggleMenu(brandsList, categoriesList, brandsArrowDown, brandsArrowUp, categoriesArrowDown, categoriesArrowUp, toggleBrandsBtn, true);
+            }
+        }, 6000);
+    }
+
+    function resetMenuCloseTimer() {
+        clearTimeout(menuCloseTimer);
+    }
+
+
+    // --- FUNCIÓN `toggleMenu` FINAL Y CORREGIDA ---
+    function toggleMenu(menuToShow, menuToHide, arrowDownToShow, arrowUpToShow, arrowDownToHide, arrowUpToHide, btnToActivate, shouldClose) {
+        resetMenuCloseTimer();
+
+        // 1. Cierra siempre el OTRO menú.
+        menuToHide.classList.add('max-h-0', 'opacity-0');
+        // Le quitamos 'is-open' para asegurar que su línea también se oculte.
+        menuToHide.classList.remove('pt-4', 'mt-4', 'is-open', 'max-h-[500px]');
+        arrowDownToHide.classList.remove('hidden');
+        arrowUpToHide.classList.add('hidden');
+
+        // 2. Gestiona el menú sobre el que se hizo clic.
+        if (shouldClose) {
+            // LÓGICA DE CIERRE: Colapsa y oculta el menú.
+            menuToShow.classList.add('max-h-0', 'opacity-0');
+            // Quitamos las clases de layout y la clase 'is-open' para ocultar la línea.
+            menuToShow.classList.remove('pt-4', 'mt-4', 'is-open', 'max-h-[500px]');
+
             arrowDownToShow.classList.remove('hidden');
             arrowUpToShow.classList.add('hidden');
             clearSelection();
+        } else {
+            // LÓGICA DE APERTURA: Expande y muestra el menú.
+            menuToShow.classList.remove('max-h-0', 'opacity-0');
+            // Añadimos las clases de layout y 'is-open' para que la línea aparezca suavemente.
+            menuToShow.classList.add('pt-4', 'mt-4', 'is-open', 'max-h-[500px]');
+
+            arrowDownToShow.classList.add('hidden');
+            arrowUpToShow.classList.remove('hidden');
+
+            clearSelection();
+            setActive(btnToActivate);
+            startMenuCloseTimer();
         }
-        isCategoriesVisible = (menuToShow === categoriesList) ? !shouldClose : false;
-        isBrandsVisible = (menuToShow === brandsList) ? !shouldClose : false;
+
+        // 3. Actualiza los flags de estado al final de la operación.
+        isCategoriesVisible = (menuToShow === categoriesList) && !shouldClose;
+        isBrandsVisible = (menuToShow === brandsList) && !shouldClose;
+
+        // 4. Limpia el contenido de las marcas (sin cambios)
+        if (shouldClose && menuToShow === brandsList && brandsByLetterContainer) {
+            brandsByLetterContainer.innerHTML = '';
+            alphabetButtons.forEach(btn => {
+                btn.classList.remove(...activeClasses);
+                btn.classList.add(...inactiveClasses);
+            });
+        }
     }
 
     toggleCategoriesBtn.addEventListener('click', () => {
@@ -76,15 +122,24 @@ document.addEventListener('DOMContentLoaded', () => {
         toggleMenu(brandsList, categoriesList, brandsArrowDown, brandsArrowUp, categoriesArrowDown, categoriesArrowUp, toggleBrandsBtn, isBrandsVisible);
     });
 
+    if (categoriesList) {
+        categoriesList.addEventListener('mouseenter', resetMenuCloseTimer);
+        categoriesList.addEventListener('mouseleave', startMenuCloseTimer);
+    }
+
+    if (brandsList) {
+        brandsList.addEventListener('mouseenter', resetMenuCloseTimer);
+        brandsList.addEventListener('mouseleave', startMenuCloseTimer);
+    }
+
+
     navbarItems.forEach(item => {
         if (item.id !== "toggleCategoriesBtn" && item.id !== "toggleBrandsBtn") {
             item.addEventListener('click', () => {
-                categoriesList.classList.add('hidden');
-                brandsList.classList.add('hidden');
-                categoriesArrowDown.classList.remove('hidden');
-                categoriesArrowUp.classList.add('hidden');
-                brandsArrowDown.classList.remove('hidden');
-                brandsArrowUp.classList.add('hidden');
+                // Al hacer clic en otro item, nos aseguramos de que los menús se cierren
+                if(isCategoriesVisible) toggleMenu(categoriesList, brandsList, categoriesArrowDown, categoriesArrowUp, brandsArrowDown, brandsArrowUp, toggleCategoriesBtn, true);
+                if(isBrandsVisible) toggleMenu(brandsList, categoriesList, brandsArrowDown, brandsArrowUp, categoriesArrowDown, categoriesArrowUp, toggleBrandsBtn, true);
+
                 isCategoriesVisible = false;
                 isBrandsVisible = false;
                 clearSelection();
@@ -116,9 +171,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (alphabetContainer && Object.keys(laboratoriosMap).length > 0) {
         const availableLetters = Object.keys(laboratoriosMap);
-
-        const activeClasses = ['bg-pistachio', 'text-white'];
-        const inactiveClasses = ['bg-gray-200', 'text-gray-800', 'hover:bg-pistachio', 'hover:text-white'];
 
         availableLetters.forEach(letter => {
             const button = document.createElement('button');
@@ -159,7 +211,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             alphabetContainer.appendChild(button);
-            // Novedad: Guardamos el botón en nuestro array.
             alphabetButtons.push(button); 
         });
 

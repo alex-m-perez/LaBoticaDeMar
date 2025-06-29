@@ -57,6 +57,55 @@ public class ControllerGlobalAdvice {
         return null;
     }
 
+    // Dentro de la clase ControllerGlobalAdvice
+
+    @ModelAttribute("jerarquiaFiltrosJson")
+    public String addJerarquiaFiltros() {
+        List<Familia> familias = familiaService.findAll();
+        List<Map<String, Object>> jerarquiaCompleta = new ArrayList<>();
+
+        for (Familia familia : familias) {
+            Map<String, Object> familiaMap = new LinkedHashMap<>();
+            familiaMap.put("id", familia.getId());
+            familiaMap.put("nombre", familia.getNombre());
+
+            List<Categoria> categorias = categoriaService.findByFamilia(familia);
+            List<Map<String, Object>> categoriasList = new ArrayList<>();
+
+            for (Categoria categoria : categorias) {
+                Map<String, Object> categoriaMap = new LinkedHashMap<>();
+                categoriaMap.put("id", categoria.getId());
+                categoriaMap.put("nombre", categoria.getNombre());
+                // Guardamos el ID de la familia a la que pertenece para la lógica inversa
+                categoriaMap.put("familiaId", familia.getId()); 
+
+                List<Subcategoria> subcategorias = subcategoriaService.findByCategoria(categoria);
+                List<Map<String, Object>> subcategoriasList = new ArrayList<>();
+
+                for (Subcategoria subcategoria : subcategorias) {
+                    Map<String, Object> subcategoriaMap = new LinkedHashMap<>();
+                    subcategoriaMap.put("id", subcategoria.getId());
+                    subcategoriaMap.put("nombre", subcategoria.getNombre());
+                    // Guardamos el ID de la categoría a la que pertenece
+                    subcategoriaMap.put("categoriaId", categoria.getId());
+                    subcategoriasList.add(subcategoriaMap);
+                }
+                categoriaMap.put("subcategorias", subcategoriasList);
+                categoriasList.add(categoriaMap);
+            }
+            familiaMap.put("categorias", categoriasList);
+            jerarquiaCompleta.add(familiaMap);
+        }
+
+        try {
+            // Usamos el ObjectMapper que ya tienes inyectado
+            return objectMapper.writeValueAsString(jerarquiaCompleta);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return "[]"; // Devuelve un array JSON vacío en caso de error
+        }
+    }
+
     @ModelAttribute("familiaCategorias")
     public Map<Familia, List<Map<Categoria, List<Subcategoria>>>> addCategorias() {
         List<Familia> familias = familiaService.findAll();
@@ -78,8 +127,7 @@ public class ControllerGlobalAdvice {
     @ModelAttribute("laboratoriosAgrupadosJson")
     public String addLaboratoriosAgrupados() {
         try {
-            String test = objectMapper.writeValueAsString(laboratorioService.getLaboratoriosAgrupadosPorLetra());
-            return test;
+            return objectMapper.writeValueAsString(laboratorioService.getLaboratoriosAgrupadosPorLetra());
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             return "{}";

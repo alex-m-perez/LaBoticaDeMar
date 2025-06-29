@@ -12,6 +12,7 @@ module.exports = {
                 'pistachio': '#88b861ff',
                 'dark-pistachio': '#689a3f',
                 'light-pistachio': '#b0dc8c',
+                'super-light-pistachio': '#dbfbc1',
                 'thistle': '#ddcce1ff',
                 'pomp-and-power': '#84599bff',
                 'finn': '#6b436eff',
