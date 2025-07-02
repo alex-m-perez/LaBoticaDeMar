@@ -612,13 +612,15 @@ video {
   }
 }
 
-/* Prepara el contenedor para posicionar la línea */
+/* ------------------------------------- */
+
+/* -- TU CÓDIGO ORIGINAL (INTACTO) -- */
+
+/* ------------------------------------- */
 
 .menu-with-line {
   position: relative;
 }
-
-/* Crea la línea (pseudo-elemento) por defecto invisible */
 
 .menu-with-line::before {
   content: '';
@@ -635,10 +637,18 @@ video {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Cuando el contenedor tiene la clase 'is-open', la línea se hace visible */
-
 .menu-with-line.is-open::before {
   opacity: 1;
+}
+
+/* ------------------------------------------ */
+
+/* -- NUEVA CLASE PARA LA ANIMACIÓN (AÑADIDA) -- */
+
+/* ------------------------------------------ */
+
+.bubble-pop {
+  animation: pop-and-shake 0.4s ease-in-out;
 }
 
 .pointer-events-none {
@@ -671,6 +681,14 @@ video {
 
 .inset-0 {
   inset: 0px;
+}
+
+.-right-2 {
+  right: -0.5rem;
+}
+
+.-top-2 {
+  top: -0.5rem;
 }
 
 .bottom-0 {
@@ -1027,6 +1045,10 @@ video {
 
 .max-h-\[80vh\] {
   max-height: 80vh;
+}
+
+.min-h-\[50vh\] {
+  min-height: 50vh;
 }
 
 .min-h-screen {
@@ -2041,6 +2063,36 @@ video {
 .ease-in-out {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+/* =================================================================== */
+
+/* == Tus animaciones personalizadas pueden ir aquí, fuera del layer == */
+
+/* =================================================================== */
+
+@keyframes pop-and-shake {
+  0% {
+    transform: scale(1);
+  }
+
+  30% {
+    transform: scale(1.25) rotate(5deg);
+  }
+
+  60% {
+    transform: scale(1.1) rotate(-5deg);
+  }
+
+  100% {
+    transform: scale(1) rotate(0);
+  }
+}
+
+/* ===================================================== */
+
+/* == Aquí agrupas todas tus clases personalizadas   == */
+
+/* ===================================================== */
 
 .hover\:border-pistachio:hover {
   border-color: #88b861ff;

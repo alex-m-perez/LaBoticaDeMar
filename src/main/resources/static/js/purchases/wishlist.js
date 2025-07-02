@@ -104,11 +104,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }).done(() => {
                 const index = wishlistState.indexOf(productId.toString());
                 if (index > -1) wishlistState.splice(index, 1);
+                window.dispatchEvent(new CustomEvent('cartUpdated'));
                 rowToRemove.fadeOut(400, () => {
                     rowToRemove.remove();
                     if ($('.wishlist-item-row').length === 0) window.location.reload();
                 });
-                window.dispatchEvent(new CustomEvent('wishlistUpdated'));
             }).fail(() => {
                 alert('Error al eliminar el producto.');
             });

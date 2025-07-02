@@ -7,24 +7,22 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Favoritos</title>
+        <title>Mis favoritos</title>
         <link rel="icon" href="/images/icono_tab2.png" type="image/png">
 
         <link rel="stylesheet" href="/css/output.css"/>
         <link href="https://fonts.googleapis.com/css2?family=Satisfy&display=swap" rel="stylesheet"/>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-        
-        <script>
-            window.contextPath = '<%= request.getContextPath() %>';
-            const userCartState = JSON.parse('${not empty userCartJson ? userCartJson : "{}"}');
-            const userWishlistState = JSON.parse('${not empty userWishlistJson ? userWishlistJson : "[]"}');
-        </script>
+        <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+        <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     </head>
-    
-<body class="flex flex-col min-h-screen bg-gray-50" data-authenticated="${not empty pageContext.request.userPrincipal}">
-    <header>
-        <%@ include file="../includes/navbar.jsp" %>
-    </header>
+
+    <body class="bg-gray-100 min-h-screen flex flex-col" data-authenticated="${not empty pageContext.request.userPrincipal}">
+
+        <header>
+            <%@ include file="../includes/navbar.jsp" %>
+        </header>
 
     <main class="flex-grow py-10">
         <div class="container mx-auto px-4">

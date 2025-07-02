@@ -3,7 +3,14 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 
-<script>window.contextPath = '<%= request.getContextPath() %>';</script>
+<script>
+    window.contextPath = '<%= request.getContextPath() %>';
+    
+    const userCartState = JSON.parse('${not empty userCartJson ? userCartJson : "{}"}');
+    const userWishlistState = JSON.parse('${not empty userWishlistJson ? userWishlistJson : "[]"}');  
+    
+    const laboratoriosAgrupados = JSON.parse('${not empty laboratoriosAgrupadosJson ? laboratoriosAgrupadosJson : "{}"}');
+</script>
 <script src="${pageContext.request.contextPath}/js/navbar/navbar.js" defer></script>
 
 <nav id="navbar" class="bg-white shadow-md sticky top-0 w-full z-50 transition-all duration-300 ease-in-out">
@@ -88,12 +95,17 @@
                     alt="Artículos que me gustan"
                     onclick="window.location.href='/wishlist'"
                 />
-                <img
-                    src="${pageContext.request.contextPath}/images/shopping-cart.svg"
-                    class="h-6 cursor-pointer"
-                    alt="Mi carrito"
-                    onclick="window.location.href='/cart'"
-                />
+                <div class="relative">
+                    <img
+                        src="${pageContext.request.contextPath}/images/shopping-cart.svg"
+                        class="h-6 cursor-pointer"
+                        alt="Mi carrito"
+                        onclick="window.location.href='/cart'"
+                    />
+                    <span id="cart-item-count" onclick="window.location.href='/cart'"
+                          class="absolute -top-2 -right-2 bg-light-pistachio text-gray-800 text-xs font-semibold rounded-full h-5 w-5 flex items-center justify-center hidden cursor-pointer">
+                    </span>
+                </div>
                 <sec:authorize access="hasRole('ROLE_ADMIN')">
                     <img
                         src="${pageContext.request.contextPath}/images/settings.svg"
@@ -131,7 +143,7 @@
                         
                         <ul class="hidden">
                             <li>
-                                <a href="productos?familia=${entry.key.id}"
+                                <a href="product?familia=${entry.key.id}"
                                     class="block py-1 hover:text-gray-700">
                                     Ver todo
                                 </a>

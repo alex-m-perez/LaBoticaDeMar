@@ -42,7 +42,7 @@ function sendIncrementalUpdate(productId, isAdding) {
             input.value = isAdding ? currentQty + 1 : currentQty - 1;
             
             recalculateTotals(); // Recalcula todos los precios, IVA, totales y estado de los botones
-            window.dispatchEvent(new CustomEvent('cartUpdated')); // Notifica al navbar
+            window.dispatchEvent(new CustomEvent('cartUpdated'));
         },
         error: function() {
             alert('Error: No se pudo actualizar la cantidad. La página se recargará.');
@@ -74,13 +74,14 @@ function eliminarDelCarrito(productoId, buttonElement) {
             const rowToRemove = $(buttonElement).closest('.cart-item-row');
             rowToRemove.fadeOut(300, function() {
                 $(this).remove();
+                window.dispatchEvent(new CustomEvent('cartUpdated'));
                 if ($('.cart-item-row').length === 0) {
                     window.location.reload();
                 } else {
                     recalculateTotals();
-                    window.dispatchEvent(new CustomEvent('cartUpdated'));
                 }
             });
+            
         },
         error: function() {
             alert('Error: No se pudo eliminar el producto.');

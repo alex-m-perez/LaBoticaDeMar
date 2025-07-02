@@ -71,16 +71,6 @@ public class AdminRestController {
         }
     }
 
-    @GetMapping(path = "/search_names", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<String> searchNames(
-        @RequestParam("q") String q,
-        @RequestParam(value = "active", defaultValue = "false") boolean active
-    ) {
-        if (active) {
-            return productService.findNamesContainingActive(q);
-        } else {
-            return productService.findNamesContaining(q);
-        }
-    }
+    
 
 }

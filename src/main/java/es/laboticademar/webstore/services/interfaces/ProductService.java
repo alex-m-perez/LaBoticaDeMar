@@ -11,12 +11,12 @@ import es.laboticademar.webstore.dto.ProductoDTO;
 import es.laboticademar.webstore.entities.Producto;
 
 public interface ProductService {
-    Producto saveOrUpdateProducto(Producto producto);
-    Optional<Producto> findById(BigDecimal id);
-    List<Producto> findAll();
-    void deleteProductoById(BigDecimal id);
-    Page<ProductoDTO> getAllProducts(int page, int size);
-    Page<ProductoDTO> getAllProducts(
+    public Producto saveOrUpdateProducto(Producto producto);
+    public Optional<Producto> findById(BigDecimal id);
+    public List<Producto> findAll();
+    public void deleteProductoById(BigDecimal id);
+    public Page<ProductoDTO> getAllProducts(int page, int size);
+    public Page<ProductoDTO> getAllProducts(
         int page,
         int size,
         String id,
@@ -31,10 +31,10 @@ public interface ProductService {
         BigDecimal precioMin,
         BigDecimal precioMax
     );
-    List<Producto> bulkUpload(MultipartFile file) throws Exception;
-    List<String> findNamesContaining(String q);
-    List<String> findNamesContainingActive(String q);
-    Long countAllProducts();
-    Long countByActivo(Boolean activo);
-    Integer sumTotalStock();
+    public List<Producto> bulkUpload(MultipartFile file) throws Exception;
+    public List<String> findNamesContaining(String q);
+    public List<String> findNamesContainingActive(String q);
+    public Long countAllProducts();
+    public Long countByActivo(Boolean activo);
+    public Integer sumTotalStock();
 }

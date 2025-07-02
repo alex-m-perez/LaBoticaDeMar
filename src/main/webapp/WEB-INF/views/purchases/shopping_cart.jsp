@@ -13,13 +13,17 @@
         <link rel="stylesheet" href="/css/output.css"/>
         <link href="https://fonts.googleapis.com/css2?family=Satisfy&display=swap" rel="stylesheet"/>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+        <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     </head>
 
-<body class="flex flex-col min-h-screen">
+    <%-- El body ya tenía las clases correctas, lo cual es perfecto --%>
+    <body class="bg-gray-100 min-h-screen flex flex-col" data-authenticated="${not empty pageContext.request.userPrincipal}">
 
-    <header>
-        <%@ include file="../includes/navbar.jsp" %>
-    </header>
+        <header>
+            <%@ include file="../includes/navbar.jsp" %>
+        </header>
 
     <main class="flex-grow bg-gray-50 py-10">
         <div class="container mx-auto px-4">

@@ -292,18 +292,19 @@ const FilterUI = {
 document.addEventListener('DOMContentLoaded', () => {
   if (typeof jerarquiaFiltros !== 'undefined') {
     FilterUI.init(jerarquiaFiltros);
+
+    if (typeof loadPage === 'function') {
+      loadPage(0);
+    } else {
+      console.error("La función loadPage() de products-grid.js no está disponible.");
+    }
+
+  } else {
+      console.error("Error cargando el mapa de jerarquias para el filtrado de productos.");
   }
 
   const clearBtn = document.getElementById('clearFilters');
   if (clearBtn) {
     clearBtn.addEventListener('click', () => FilterUI.clearAll());
   }
-});
-
-document.addEventListener('DOMContentLoaded', () => {
-    if (typeof jerarquiaFiltros !== 'undefined') {
-        FilterUI.init(jerarquiaFiltros);
-    } else {
-        console.error("Error cargando el mapa de jerarquias para el filtrado de productos.");
-    }
 });

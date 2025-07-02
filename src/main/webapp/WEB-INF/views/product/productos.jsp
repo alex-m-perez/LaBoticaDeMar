@@ -18,14 +18,8 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
         <script>
-            window.contextPath = '<%= request.getContextPath() %>'; 
             const urlParams = new URLSearchParams(window.location.search);
-
-            const userCartState = JSON.parse('${not empty userCartJson ? userCartJson : "{}"}');
-            const userWishlistState = JSON.parse('${not empty userWishlistJson ? userWishlistJson : "[]"}');
-
             const jerarquiaFiltros = JSON.parse('${not empty jerarquiaFiltrosJson ? jerarquiaFiltrosJson  : "{}"}');
-            const laboratoriosAgrupados = JSON.parse('${not empty laboratoriosAgrupadosJson ? laboratoriosAgrupadosJson : "{}"}');
         </script>
     </head>
         
@@ -83,7 +77,7 @@
         <main class="flex-grow container mx-auto px-4 py-8">
             <div class="flex justify-between items-center mb-4">
                 <nav class="text-sm text-gray-600" aria-label="Breadcrumb">
-                    <ol class="list-reset flex">
+                    <ol id="breadcrumb-list" class="list-reset flex">
                         <c:forEach var="crumb" items="${breadcrumbs}" varStatus="st">
                             <li>
                                 <a href="${pageContext.request.contextPath}${crumb.href}" class="hover:underline">${crumb.label}</a>
@@ -208,7 +202,7 @@
                         <button type="submit" class="w-full py-2 bg-pistachio text-white font-medium rounded hover:bg-dark-pistachio transition">
                             Filtrar
                         </button>
-                        <button type="button" id="clearFilters" class="w-full mt-2 py-2 border border-gray-300 text-gray-700 font-medium rounded hover:bg-gray-100 transition">
+                        <button type="button" id="clearFilters" class="w-full mt-1 py-2 border border-gray-300 text-gray-700 font-medium rounded hover:bg-gray-100 transition">
                             Limpiar
                         </button>
                     </form>
@@ -219,7 +213,7 @@
                         <%-- El contenido se generará con JS --%>
                     </div>
 
-                    <div class="mt-8 flex justify-between items-center">
+                    <div id="pagination-controls" class="mt-8 flex justify-between items-center">
                         <button id="prevBtn" class="px-4 py-2 bg-gray-200 rounded disabled:opacity-50" disabled>Anterior</button>
                         <span>Página <span id="pageNum">1</span> de <span id="totalPages">1</span></span>
                         <button id="nextBtn" class="px-4 py-2 bg-gray-200 rounded disabled:opacity-50">Siguiente</button>

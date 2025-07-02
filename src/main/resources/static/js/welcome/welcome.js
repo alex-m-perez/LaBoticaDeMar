@@ -205,13 +205,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 const isInWishlist = wishlistState.includes(productIdStr);
 
                 if (isAuthenticated) {
-                    // --- Usuario Autenticado: Llama al servidor ---
                     // Si está en la lista, queremos eliminarlo (isAdding = false)
                     // Si no está, queremos añadirlo (isAdding = true)
                     updateServerWishlist(productData.id, !isInWishlist, wishlistBtn);
 
                 } else {
-                    // --- Usuario Invitado: Usa localStorage ---
                     const index = wishlistState.indexOf(productIdStr);
                     if (index > -1) {
                         wishlistState.splice(index, 1); // Eliminar

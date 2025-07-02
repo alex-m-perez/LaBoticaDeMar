@@ -24,7 +24,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const alphabetButtons = [];
     const activeClasses = ['bg-pistachio', 'text-white'];
     const inactiveClasses = ['bg-gray-200', 'text-gray-800', 'hover:bg-pistachio', 'hover:text-white'];
+    const isAuthenticated = document.body.dataset.authenticated === 'true';
 
+    let cartState = isAuthenticated ? userCartState : JSON.parse(localStorage.getItem('cart') || '{}');
+    
     let isCategoriesVisible = false;
     let isBrandsVisible = false;
     let navbarTimer;
@@ -231,7 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             navbarTimer = setTimeout(() => {
-                fetch(`${window.contextPath}/admin/api/products/search_names?q=${encodeURIComponent(q)}`)
+                fetch(`${window.contextPath}/api/product/search_names?q=${encodeURIComponent(q)}`)
                     .then(res => {
                         if (!res.ok) throw new Error(`Status ${res.status}`);
                         return res.json();
@@ -281,4 +284,31 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.href = `${window.contextPath}/profile`;
         });
     }
+
+    function updateCartBubble() {
+        const bubble = document.getElementById('cart-item-count');
+        if (!bubble) return;
+
+        const totalItems = Object.keys(cartState || {}).length;
+
+        if (totalItems > 0) {
+            // No actualices el DOM si el número no ha cambiado
+            if (bubble.textContent !== String(totalItems)) {
+                bubble.textContent = totalItems > 99 ? '99+' : totalItems;
+
+                bubble.classList.remove('bubble-pop');
+
+                void bubble.offsetWidth; 
+
+                bubble.classList.add('bubble-pop');
+            }
+
+            bubble.classList.remove('hidden');
+        } else {
+            bubble.classList.add('hidden');
+        }
+    }
+
+    updateCartBubble();
+    window.addEventListener('cartUpdated', updateCartBubble);
 });

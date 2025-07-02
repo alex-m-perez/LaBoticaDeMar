@@ -16,13 +16,6 @@
         <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
         <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-
-        <script>
-            window.contextPath = '<%= request.getContextPath() %>'; 
-            const userCartState = JSON.parse('${not empty userCartJson ? userCartJson : "{}"}');
-            const userWishlistState = JSON.parse('${not empty userWishlistJson ? userWishlistJson : "[]"}');
-            const laboratoriosAgrupados = JSON.parse('${not empty laboratoriosAgrupadosJson ? laboratoriosAgrupadosJson : "{}"}');
-        </script>
     </head>
 
     <%-- El body ya tenía las clases correctas, lo cual es perfecto --%>
