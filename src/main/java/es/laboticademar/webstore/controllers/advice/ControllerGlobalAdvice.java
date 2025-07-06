@@ -1,4 +1,4 @@
-package es.laboticademar.webstore.controllers.config;
+package es.laboticademar.webstore.controllers.advice;
 
 import java.security.Principal;
 import java.util.ArrayList;

@@ -19,17 +19,26 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <c:forEach var="u" items="${topBuyers}">
-                            <tr>
-                                <td class="px-4 py-2">${u.username}</td>
-                                <td class="px-4 py-2">${u.totalSales}</td>
-                                <td class="px-4 py-2">${u.totalSales}</td>
-                            </tr>
-                        </c:forEach>
+                        <tr>
+                            <td class="px-4 py-2">carlos89@mail.com</td>
+                            <td class="px-4 py-2">8</td>
+                            <td class="px-4 py-2">8.10</td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-2">lucia.g@mail.com</td>
+                            <td class="px-4 py-2">6</td>
+                            <td class="px-4 py-2">7.95</td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-2">martaruiz@mail.com</td>
+                            <td class="px-4 py-2">4</td>
+                            <td class="px-4 py-2">8.00</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         </div>
+
         <!-- Últimos registrados -->
         <div class="bg-white p-6 rounded-2xl shadow border">
             <h2 class="text-lg font-semibold mb-4">Últimos usuarios registrados</h2>
@@ -42,16 +51,23 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <c:forEach var="u" items="${latestUsers}">
-                            <tr>
-                                <td class="px-4 py-2">${u.id}</td>
-                                <td class="px-4 py-2">${u.registerDate}</td>
-                            </tr>
-                        </c:forEach>
+                        <tr>
+                            <td class="px-4 py-2">U1003</td>
+                            <td class="px-4 py-2">05/06/2025</td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-2">U1002</td>
+                            <td class="px-4 py-2">02/06/2025</td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-2">U1001</td>
+                            <td class="px-4 py-2">29/05/2025</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         </div>
+
         <!-- Usuarios con más devoluciones -->
         <div class="bg-white p-6 rounded-2xl shadow border">
             <h2 class="text-lg font-semibold mb-4">Usuarios con más devoluciones</h2>
@@ -65,13 +81,21 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <c:forEach var="u" items="${topReturners}">
-                            <tr>
-                                <td class="px-4 py-2">${u.username}</td>
-                                <td class="px-4 py-2">${u.totalReturns}</td>
-                                <td class="px-4 py-2">${u.totalReturns}</td>
-                            </tr>
-                        </c:forEach>
+                        <tr>
+                            <td class="px-4 py-2">lucia.g@mail.com</td>
+                            <td class="px-4 py-2">7</td>
+                            <td class="px-4 py-2">7.80</td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-2">carlos89@mail.com</td>
+                            <td class="px-4 py-2">5</td>
+                            <td class="px-4 py-2">8.20</td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-2">martaruiz@mail.com</td>
+                            <td class="px-4 py-2">3</td>
+                            <td class="px-4 py-2">8.00</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -93,29 +117,54 @@
                         <th class="px-4 py-2 text-left">Correo</th>
                         <th class="px-4 py-2 text-left">Dirección</th>
                         <th class="px-4 py-2 text-left">Teléfono</th>
-                        <th class="px-4 py-2 text-left">Roles</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <c:forEach var="u" items="${allUsers}">
-                        <tr>
-                            <td class="px-4 py-2">${u.id}</td>
-                            <td class="px-4 py-2">${u.nombre}</td>
-                            <td class="px-4 py-2">${u.apellido1}</td>
-                            <td class="px-4 py-2">${u.apellido2}</td>
-                            <td class="px-4 py-2">${u.puntos}</td>
-                            <td class="px-4 py-2">${u.correo}</td>
-                            <td class="px-4 py-2">${u.direccionPostal}</td>
-                            <td class="px-4 py-2">${u.telefono}</td>
-                            <td class="px-4 py-2">
-                                <c:forEach var="rol" items="${u.roles}">
-                                    <span class="inline-block px-2 py-0.5 text-xs bg-gray-100 rounded mr-1">${rol}</span>
-                                </c:forEach>
-                            </td>
-                        </tr>
-                    </c:forEach>
+                    <tr>
+                        <td class="px-4 py-2">U1001</td>
+                        <td class="px-4 py-2">Carlos</td>
+                        <td class="px-4 py-2">Gómez</td>
+                        <td class="px-4 py-2">Martínez</td>
+                        <td class="px-4 py-2">320</td>
+                        <td class="px-4 py-2">carlos89@mail.com</td>
+                        <td class="px-4 py-2">Calle Mayor 12</td>
+                        <td class="px-4 py-2">612345678</td>
+                    </tr>
+                    <tr>
+                        <td class="px-4 py-2">U1002</td>
+                        <td class="px-4 py-2">Lucía</td>
+                        <td class="px-4 py-2">González</td>
+                        <td class="px-4 py-2">Pérez</td>
+                        <td class="px-4 py-2">280</td>
+                        <td class="px-4 py-2">lucia.g@mail.com</td>
+                        <td class="px-4 py-2">Avda. del Sol 7</td>
+                        <td class="px-4 py-2">622334455</td>
+                    </tr>
+                    <tr>
+                        <td class="px-4 py-2">U1003</td>
+                        <td class="px-4 py-2">Marta</td>
+                        <td class="px-4 py-2">Ruiz</td>
+                        <td class="px-4 py-2">Domínguez</td>
+                        <td class="px-4 py-2">150</td>
+                        <td class="px-4 py-2">martaruiz@mail.com</td>
+                        <td class="px-4 py-2">C/ Luna 25</td>
+                        <td class="px-4 py-2">600112233</td>
+                    </tr>
                 </tbody>
             </table>
+        </div>
+
+        <div id="pagination" class="flex justify-between items-center mt-4">
+            <button id="prevBtn"
+                    class="bg-gray-200 text-gray-700 font-medium px-4 py-1.5 rounded-md hover:bg-gray-300 transition"
+                    disabled>
+                Anterior
+            </button>
+            <span>Página <span id="pageNum">1</span> de <span id="totalPages">1</span></span>
+            <button id="nextBtn"
+                    class="bg-gray-200 text-gray-700 font-medium px-4 py-1.5 rounded-md hover:bg-gray-300 transition">
+                Siguiente
+            </button>
         </div>
     </div>
 

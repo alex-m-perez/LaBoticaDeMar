@@ -1,3 +1,4 @@
+//wellcome.js
 document.addEventListener('DOMContentLoaded', () => {
     // --- 1. CONFIGURACIÓN INICIAL ---
     const isAuthenticated = document.body.dataset.authenticated === 'true';

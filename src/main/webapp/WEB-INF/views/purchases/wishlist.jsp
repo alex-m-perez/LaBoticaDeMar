@@ -24,7 +24,7 @@
             <%@ include file="../includes/navbar.jsp" %>
         </header>
 
-    <main class="flex-grow py-10">
+    <main class="flex-grow bg-gray-50 py-10">
         <div class="container mx-auto px-4">
             <h1 class="text-3xl font-bold mb-6 text-left text-gray-800">Mi Lista de Deseos</h1>
             <div class="flex">

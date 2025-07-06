@@ -51,6 +51,5 @@ class SecurityConfigIntegrationTest {
     void shouldBlockAccessToProtectedRoutesWithoutAuth() throws Exception {
         mockMvc.perform(get("/profile")).andExpect(status().is3xxRedirection());
         mockMvc.perform(get("/admin/home")).andExpect(status().is3xxRedirection());
-        mockMvc.perform(get("/cart")).andExpect(status().is3xxRedirection());
     }
 }

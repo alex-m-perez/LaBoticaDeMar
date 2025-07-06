@@ -4,8 +4,8 @@
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
     <!-- Dashboard de KPIs: 2x2 tablas -->
+    <!--
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        <!-- Ranking Ventas Totales -->
         <div class="bg-white p-6 rounded-2xl shadow border">
             <h2 class="text-lg font-semibold mb-4">Ventas Totales</h2>
             <div class="overflow-auto">
@@ -27,7 +27,6 @@
                 </table>
             </div>
         </div>
-        <!-- Ranking Ticket Medio Venta -->
         <div class="bg-white p-6 rounded-2xl shadow border">
             <h2 class="text-lg font-semibold mb-4">Ticket Medio Venta (€)</h2>
             <div class="overflow-auto">
@@ -49,7 +48,6 @@
                 </table>
             </div>
         </div>
-        <!-- Ranking Devoluciones Totales -->
         <div class="bg-white p-6 rounded-2xl shadow border">
             <h2 class="text-lg font-semibold mb-4">Devoluciones Totales</h2>
             <div class="overflow-auto">
@@ -71,7 +69,6 @@
                 </table>
             </div>
         </div>
-        <!-- Ranking Ticket Medio Devolución -->
         <div class="bg-white p-6 rounded-2xl shadow border">
             <h2 class="text-lg font-semibold mb-4">Ticket Medio Devolución (€)</h2>
             <div class="overflow-auto">
@@ -94,6 +91,7 @@
             </div>
         </div>
     </div>
+    -->
 
     <!-- Tabla de Empleados -->
     <div class="bg-white p-6 rounded-2xl shadow border">
@@ -109,19 +107,34 @@
             </button>
         </div>
         <div class="overflow-auto">
-            <table id="tablaEmpleados" class="min-w-full text-sm">
-                <thead class="text-gray-500 border-b">
-                    <tr>
-                        <th class="px-4 py-2 text-left">ID</th>
-                        <th class="px-4 py-2 text-left">Nombre</th>
-                        <th class="px-4 py-2 text-left">Rol</th>
-                        <th class="px-4 py-2 text-left">Ventas (€)</th>
-                        <th class="px-4 py-2 text-left">Pedidos</th>
-                    </tr>
-                </thead>
-                <tbody id="empleadosBody" class="text-gray-700 divide-y"></tbody>
-            </table>
+          <table id="tablaEmpleados" class="min-w-full text-sm">
+            <thead class="text-gray-500 border-b">
+              <tr>
+                <th class="px-4 py-2 text-left">ID</th>
+                <th class="px-4 py-2 text-left">Nombre</th>
+                <th class="px-4 py-2 text-left">Rol</th>
+              </tr>
+            </thead>
+            <tbody id="empleadosBody" class="text-gray-700 divide-y">
+              <tr>
+                <td class="px-4 py-2">1</td>
+                <td class="px-4 py-2">Lucía Fernández</td>
+                <td class="px-4 py-2">EMPLEADO</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-2">2</td>
+                <td class="px-4 py-2">Carlos Gómez</td>
+                <td class="px-4 py-2">EMPLEADO</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-2">3</td>
+                <td class="px-4 py-2">Marta Ruiz</td>
+                <td class="px-4 py-2">EMPLEADO</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
+
 
         <!-- Paginación -->
         <div id="paginationEmp" class="flex justify-between items-center mt-4">

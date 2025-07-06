@@ -1,3 +1,4 @@
+//product_detail.js
 document.addEventListener('DOMContentLoaded', () => {
 
     // =================================================================

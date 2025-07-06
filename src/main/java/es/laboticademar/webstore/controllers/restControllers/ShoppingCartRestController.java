@@ -22,7 +22,7 @@ public class ShoppingCartRestController {
     @PostMapping(path = "/add_item")
     public ResponseEntity<Void> addItem(Principal principal, @RequestParam("itemId") BigDecimal itemId, @RequestParam("add") Boolean add) {
 
-        boolean isSuccess = shoppingCartService.addItemT(principal, itemId, add);
+        boolean isSuccess = shoppingCartService.addItem(principal, itemId, add);
 
         if (isSuccess) {
             return ResponseEntity.ok().build();
@@ -34,7 +34,6 @@ public class ShoppingCartRestController {
     @PostMapping("/delete_item")
     public ResponseEntity<Void> deleteItem(Principal principal, @RequestParam("itemId") BigDecimal itemId) {
 
-        // Ahora llamas al service con el tipo correcto
         boolean isSuccess = shoppingCartService.deleteItem(principal, itemId);
 
         if (isSuccess) {

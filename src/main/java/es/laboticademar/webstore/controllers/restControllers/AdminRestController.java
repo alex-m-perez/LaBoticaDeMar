@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import es.laboticademar.webstore.dto.ProductoDTO;
 import es.laboticademar.webstore.services.interfaces.ProductService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -26,37 +27,29 @@ public class AdminRestController {
     
     @GetMapping("/products/get_pagable_list")
     public Page<ProductoDTO> list(
+        HttpServletRequest request,
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "25") int size,
-
         @RequestParam(required = false) String id,
         @RequestParam(required = false) String nombreProducto,
+        @RequestParam(required = false) List<Long> familia,
+        @RequestParam(required = false) List<Long> categoria,
+        @RequestParam(required = false) List<Long> subCategoria,
+        @RequestParam(required = false) List<Long> tipo,
+        @RequestParam(required = false) List<Long> laboratorio,
         @RequestParam(required = false) Boolean activo,
-        @RequestParam(required = false) Long categoria,
-        @RequestParam(required = false) Long subCategoria,
-        @RequestParam(required = false) Long tipo,
-        @RequestParam(required = false) Long familia,
-        @RequestParam(required = false) Long laboratorio,
-        @RequestParam(required = false) Long presentacion,
         @RequestParam(required = false) Boolean stock,
         @RequestParam(required = false) BigDecimal precioMin,
         @RequestParam(required = false) BigDecimal precioMax
     ) {
-        return productService.getAllProducts(
-            page, size,
-            id,
-            nombreProducto,
-            activo,
-            categoria,
-            subCategoria,
-            tipo,
-            familia,
-            laboratorio,
-            presentacion,
-            stock,
-            precioMin,
-            precioMax
+
+        Page<ProductoDTO> productPage = productService.getAllProducts(
+            page, size, id, nombreProducto, activo, 
+            familia, categoria, subCategoria, tipo,
+            laboratorio, stock, precioMin, precioMax
         );
+
+        return productPage;
     }
 
     @PostMapping("/products/upload")

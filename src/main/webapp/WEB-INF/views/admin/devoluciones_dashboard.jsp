@@ -82,50 +82,15 @@
 		</div>
 		<div class="p-4 rounded-2xl shadow border">
 			<h2 class="text-sm text-gray-500">Importe Total Devuelto</h2>
-			<p class="text-2xl font-bold">320.00 €</p>
+			<p class="text-2xl font-bold">302.57 €</p>
 		</div>
 		<div class="p-4 rounded-2xl shadow border">
 			<h2 class="text-sm text-gray-500">% De Devoluciones (Mes)</h2>
-			<p class="text-2xl font-bold">2.4%</p>
+			<p class="text-2xl font-bold">83,33%</p>
 		</div>
 		<div class="p-4 rounded-2xl shadow border">
 			<h2 class="text-sm text-gray-500">Media Días Hasta Devolver</h2>
-			<p class="text-2xl font-bold">3.7 días</p>
-		</div>
-	</div>
-
-	<!-- Chart Section -->
-	<div class="bg-white p-6 rounded-2xl shadow border">
-		<h2 class="text-lg font-semibold mb-4">Evolución de Devoluciones</h2>
-		<div id="returns-line-chart" class="w-full h-64 bg-gray-100 flex items-center justify-center text-gray-400">
-			[Gráfico de Línea de Devoluciones]
-		</div>
-	</div>
-
-	<!-- Top Returned Products & Motivos -->
-	<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-		<div class="bg-white p-6 rounded-2xl shadow border">
-			<h2 class="text-lg font-semibold mb-4">Productos Más Devueltos</h2>
-			<ul class="space-y-2">
-				<li class="flex justify-between text-sm">
-					<span>Crema Hidratante Aloe</span>
-					<span class="font-medium">30 unidades</span>
-				</li>
-				<li class="flex justify-between text-sm">
-					<span>Multivitaminas Pack</span>
-					<span class="font-medium">22 unidades</span>
-				</li>
-				<li class="flex justify-between text-sm">
-					<span>Gel Antibacteriano</span>
-					<span class="font-medium">18 unidades</span>
-				</li>
-			</ul>
-		</div>
-		<div class="bg-white p-6 rounded-2xl shadow border">
-			<h2 class="text-lg font-semibold mb-4">Motivos de Devolución</h2>
-			<div id="reason-pie-chart" class="w-full h-64 bg-gray-100 flex items-center justify-center text-gray-400">
-				[Gráfico de Motivos de Devolución]
-			</div>
+			<p class="text-2xl font-bold">2,4 días</p>
 		</div>
 	</div>
 
@@ -148,22 +113,139 @@
 				<tbody class="text-gray-700 divide-y">
 					<tr>
 						<td class="px-4 py-2">#R0342</td>
-						<td class="px-4 py-2">02/05/2025</td>
+						<td class="px-4 py-2">12/06/2025</td>
 						<td class="px-4 py-2">Crema Hidratante</td>
 						<td class="px-4 py-2">1</td>
 						<td class="px-4 py-2">12.50 €</td>
-						<td class="px-4 py-2">Producto dañado</td>
+						<td class="px-4 py-2">Producto dañado en envío</td>
 						<td class="px-4 py-2">Ana P.</td>
 					</tr>
 					<tr>
 						<td class="px-4 py-2">#R0343</td>
-						<td class="px-4 py-2">02/05/2025</td>
+						<td class="px-4 py-2">12/06/2025</td>
 						<td class="px-4 py-2">Vitaminas Pack</td>
 						<td class="px-4 py-2">2</td>
 						<td class="px-4 py-2">25.00 €</td>
-						<td class="px-4 py-2">Error en el pedido</td>
+						<td class="px-4 py-2">Producto defectuoso</td>
 						<td class="px-4 py-2">Luis G.</td>
 					</tr>
+                    <tr>
+                      <td class="px-4 py-2">#R0401</td>
+                      <td class="px-4 py-2">12/06/2025</td>
+                      <td class="px-4 py-2">Gel Antibacterial</td>
+                      <td class="px-4 py-2">1</td>
+                      <td class="px-4 py-2">3.50 €</td>
+                      <td class="px-4 py-2">Cantidad incorrecta</td>
+                      <td class="px-4 py-2">Carlos M.</td>
+                    </tr>
+                    <tr>
+                      <td class="px-4 py-2">#R0402</td>
+                      <td class="px-4 py-2">12/06/2025</td>
+                      <td class="px-4 py-2">Protector Solar SPF50</td>
+                      <td class="px-4 py-2">1</td>
+                      <td class="px-4 py-2">9.90 €</td>
+                      <td class="px-4 py-2">Embalaje abierto</td>
+                      <td class="px-4 py-2">Marta R.</td>
+                    </tr>
+                    <tr>
+                      <td class="px-4 py-2">#R0403</td>
+                      <td class="px-4 py-2">12/06/2025</td>
+                      <td class="px-4 py-2">Jarabe Tos Infantil</td>
+                      <td class="px-4 py-2">2</td>
+                      <td class="px-4 py-2">15.00 €</td>
+                      <td class="px-4 py-2">Error en descripción</td>
+                      <td class="px-4 py-2">Sofía V.</td>
+                    </tr>
+                    <tr>
+                      <td class="px-4 py-2">#R0404</td>
+                      <td class="px-4 py-2">12/06/2025</td>
+                      <td class="px-4 py-2">Vitaminas C 500mg</td>
+                      <td class="px-4 py-2">1</td>
+                      <td class="px-4 py-2">6.30 €</td>
+                      <td class="px-4 py-2">Dañado en transporte</td>
+                      <td class="px-4 py-2">Raúl J.</td>
+                    </tr>
+                    <tr>
+                      <td class="px-4 py-2">#R0405</td>
+                      <td class="px-4 py-2">12/06/2025</td>
+                      <td class="px-4 py-2">Colirio Hidratante</td>
+                      <td class="px-4 py-2">1</td>
+                      <td class="px-4 py-2">4.80 €</td>
+                      <td class="px-4 py-2">No era necesario</td>
+                      <td class="px-4 py-2">Laura F.</td>
+                    </tr>
+                    <tr>
+                      <td class="px-4 py-2">#R0406</td>
+                      <td class="px-4 py-2">12/06/2025</td>
+                      <td class="px-4 py-2">Termómetro Digital</td>
+                      <td class="px-4 py-2">1</td>
+                      <td class="px-4 py-2">11.95 €</td>
+                      <td class="px-4 py-2">No funciona</td>
+                      <td class="px-4 py-2">Ismael L.</td>
+                    </tr>
+                    <tr>
+                      <td class="px-4 py-2">#R0407</td>
+                      <td class="px-4 py-2">12/06/2025</td>
+                      <td class="px-4 py-2">Mascarilla Facial</td>
+                      <td class="px-4 py-2">3</td>
+                      <td class="px-4 py-2">9.00 €</td>
+                      <td class="px-4 py-2">Producto defectuoso</td>
+                      <td class="px-4 py-2">Clara T.</td>
+                    </tr>
+                    <tr>
+                      <td class="px-4 py-2">#R0408</td>
+                      <td class="px-4 py-2">12/06/2025</td>
+                      <td class="px-4 py-2">Crema Analgésica</td>
+                      <td class="px-4 py-2">1</td>
+                      <td class="px-4 py-2">7.40 €</td>
+                      <td class="px-4 py-2">Reacción alérgica</td>
+                      <td class="px-4 py-2">Diego C.</td>
+                    </tr>
+                    <tr>
+                      <td class="px-4 py-2">#R0409</td>
+                      <td class="px-4 py-2">12/06/2025</td>
+                      <td class="px-4 py-2">Spray Nasal</td>
+                      <td class="px-4 py-2">2</td>
+                      <td class="px-4 py-2">10.00 €</td>
+                      <td class="px-4 py-2">Envase roto</td>
+                      <td class="px-4 py-2">Eva B.</td>
+                    </tr>
+                    <tr>
+                      <td class="px-4 py-2">#R0410</td>
+                      <td class="px-4 py-2">12/06/2025</td>
+                      <td class="px-4 py-2">Champú Anticaspa</td>
+                      <td class="px-4 py-2">1</td>
+                      <td class="px-4 py-2">5.60 €</td>
+                      <td class="px-4 py-2">Cambio por otro</td>
+                      <td class="px-4 py-2">Sergio E.</td>
+                    </tr>
+                    <tr>
+                      <td class="px-4 py-2">#R0411</td>
+                      <td class="px-4 py-2">12/06/2025</td>
+                      <td class="px-4 py-2">Toallitas Antisépticas</td>
+                      <td class="px-4 py-2">2</td>
+                      <td class="px-4 py-2">4.20 €</td>
+                      <td class="px-4 py-2">Pedido duplicado</td>
+                      <td class="px-4 py-2">Patricia Z.</td>
+                    </tr>
+                    <tr>
+                      <td class="px-4 py-2">#R0412</td>
+                      <td class="px-4 py-2">12/06/2025</td>
+                      <td class="px-4 py-2">Aceite Esencial Lavanda</td>
+                      <td class="px-4 py-2">1</td>
+                      <td class="px-4 py-2">6.75 €</td>
+                      <td class="px-4 py-2">Mal olor</td>
+                      <td class="px-4 py-2">Beatriz H.</td>
+                    </tr>
+                    <tr>
+                      <td class="px-4 py-2">#R0413</td>
+                      <td class="px-4 py-2">12/06/2025</td>
+                      <td class="px-4 py-2">Pastillas para Garganta</td>
+                      <td class="px-4 py-2">1</td>
+                      <td class="px-4 py-2">3.20 €</td>
+                      <td class="px-4 py-2">Sabor desagradable</td>
+                      <td class="px-4 py-2">Tomás D.</td>
+                    </tr>
 				</tbody>
 			</table>
 		</div>

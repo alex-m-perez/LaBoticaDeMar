@@ -1,6 +1,4 @@
 <div class="bg-white min-h-screen space-y-6">
-
-    <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
     <!-- Filtros de Productos -->
@@ -208,52 +206,6 @@
         </div>
     </div>
 
-	<!-- Inventario Chart Section -->
-	<div class="bg-white p-6 rounded-2xl shadow border">
-		<h2 class="text-lg font-semibold mb-4">Distribución de Inventario</h2>
-		<div id="inventory-bar-chart" class="w-full h-64 bg-gray-100 flex items-center justify-center text-gray-400">
-			[Gráfico de Barras por Categoría]
-		</div>
-	</div>
-
-	<!-- Top Stock & Bajo Stock -->
-	<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-		<div class="bg-white p-6 rounded-2xl shadow border">
-			<h2 class="text-lg font-semibold mb-4">Productos con Más Stock</h2>
-			<ul class="space-y-2">
-				<li class="flex justify-between text-sm">
-					<span>Ibuprofeno 400mg</span>
-					<span class="font-medium">3,200 uds.</span>
-				</li>
-				<li class="flex justify-between text-sm">
-					<span>Vitamina C 1g</span>
-					<span class="font-medium">2,850 uds.</span>
-				</li>
-				<li class="flex justify-between text-sm">
-					<span>Gel Antibacteriano</span>
-					<span class="font-medium">2,400 uds.</span>
-				</li>
-			</ul>
-		</div>
-		<div class="bg-white p-6 rounded-2xl shadow border">
-			<h2 class="text-lg font-semibold mb-4">Productos con Bajo Stock</h2>
-			<ul class="space-y-2">
-				<li class="flex justify-between text-sm">
-					<span>Paracetamol 500mg</span>
-					<span class="font-medium">35 uds.</span>
-				</li>
-				<li class="flex justify-between text-sm">
-					<span>Colirio Ocular</span>
-					<span class="font-medium">20 uds.</span>
-				</li>
-				<li class="flex justify-between text-sm">
-					<span>Cremas para Afeitar</span>
-					<span class="font-medium">15 uds.</span>
-				</li>
-			</ul>
-		</div>
-	</div>
-
 	<!-- Modal Nuevo/Editar producto -->
     <div id="nuevoModal" class="fixed inset-0 flex items-center justify-center hidden z-[10000]">
         <div class="bg-white rounded-2xl shadow-lg w-full max-w-2xl p-6 relative">
@@ -353,6 +305,18 @@
                     <div class="col-span-2">
                         <label for="newDesc" class="block text-sm text-gray-600">Descripción</label>
                         <textarea id="newDesc" name="descripcion" rows="3"
+                            class="w-full border border-gray-300 rounded-md px-2 py-1 focus:ring-pistachio focus:border-pistachio"></textarea>
+                    </div>
+                    <!-- Descripción -->
+                    <div class="col-span-2">
+                        <label for="newUse" class="block text-sm text-gray-600">Uso</label>
+                        <textarea id="newUse" name="use" rows="3"
+                            class="w-full border border-gray-300 rounded-md px-2 py-1 focus:ring-pistachio focus:border-pistachio"></textarea>
+                    </div>
+                    <!-- Descripción -->
+                    <div class="col-span-2">
+                        <label for="newComp" class="block text-sm text-gray-600">Composición</label>
+                        <textarea id="newComp" name="comp" rows="3"
                             class="w-full border border-gray-300 rounded-md px-2 py-1 focus:ring-pistachio focus:border-pistachio"></textarea>
                     </div>
                     <!-- Precio -->

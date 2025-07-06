@@ -1,4 +1,4 @@
-// Se ejecuta cuando el DOM está completamente cargado
+//shopping_cart.js
 document.addEventListener('DOMContentLoaded', function() {
     const contextPathEl = document.querySelector('script[src*="/js/purchases/shopping_cart.js"]');
     if (contextPathEl) {

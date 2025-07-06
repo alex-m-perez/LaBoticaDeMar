@@ -1,3 +1,4 @@
+//navbar.js
 document.addEventListener('DOMContentLoaded', () => {
     // ——————————————————————————————
     // CONSTANTES Y SELECTORES (Sin cambios)

@@ -59,12 +59,9 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public ShoppingCart getOrCreateShoppingCartFromPrincipal(Principal principal) {
-        if (principal == null) {
-            // Si no hay usuario, devuelve un mapa vacío.
-            return new ShoppingCart();
-        }
+        if (principal == null)  return new ShoppingCart();
 
-        ShoppingCart cart = null;
+        ShoppingCart cart = new ShoppingCart();
         try {
             Long usuarioId = usuarioService.getIdFromPrincipal(principal);
             cart = getOrCreateShoppingCartByUsuarioId(usuarioId);
@@ -93,10 +90,15 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     @Transactional
-    public boolean addItemT(Principal principal, BigDecimal productId, Boolean add) {
+    public boolean addItem(Principal principal, BigDecimal productId, Boolean add) {
         if (principal == null || productId == null) {
             return false;
         }
+
+        Producto producto = productService.findById(productId)
+            .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+            
+        if (!producto.getActivo()) return false;
 
         try {
             ShoppingCart userCart = getOrCreateShoppingCartFromPrincipal(principal);
@@ -119,9 +121,6 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 }
             } else {
                 if (add) {
-                    Producto producto = productService.findById(productId)
-                            .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
-
                     CartItem newItem = new CartItem();
                     newItem.setShoppingCart(userCart);
                     newItem.setProducto(producto);

@@ -1,3 +1,4 @@
+//product-grid.js
 // ==========================================================
 // SECCIÓN 1: CONFIGURACIÓN Y ESTADO UNIFICADO (NUEVO)
 // ==========================================================
@@ -326,7 +327,7 @@ function renderGrid(items) {
                 var wrapImg = document.createElement('div');
                 wrapImg.className = 'p-2 cursor-pointer';
                 var img = document.createElement('img');
-                img.src       = p.imagenPath;
+                img.src       = window.contextPath + p.imagenPath;
                 img.alt       = p.nombre;
                 img.className = 'h-40 w-full object-cover rounded';
                 wrapImg.addEventListener('click', function() {

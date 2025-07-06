@@ -21,7 +21,7 @@ public class WishlistRestController {
     private final WishlistService wishlistService;
 
     @PostMapping("/add_item")
-    public ResponseEntity<Void> addItemToWishlist(Principal principal, @RequestParam("productId") BigDecimal productId) {
+    public ResponseEntity<Void> addItemoWishlist(Principal principal, @RequestParam("productId") BigDecimal productId) {
         if (principal == null) {
             return ResponseEntity.status(401).build(); // 401 Unauthorized
         }
