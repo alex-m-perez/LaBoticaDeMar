@@ -369,7 +369,7 @@ function setupEventListeners() {
  */
 function procesarPago() {
     // 1. Recopilar los datos del formulario de pago
-    debugger
+    
     const paymentData = {
         cardNumber: document.getElementById('cardNumber').value,
         cardExpiringDate: document.getElementById('expiryDate').value,
@@ -490,7 +490,7 @@ function initializeApp() {
     if (isAuthenticated) {
         if (document.querySelectorAll('.cart-item-row').length > 0) updateUI();
     } else {
-        debugger   
+           
         const guestCart = JSON.parse(localStorage.getItem('cart') || '{}');
         if (Object.keys(guestCart).length > 0) {
             $.ajax({

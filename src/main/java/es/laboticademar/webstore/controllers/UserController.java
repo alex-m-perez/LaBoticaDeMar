@@ -13,7 +13,7 @@ public class UserController {
     /**
      * Maneja la carga inicial de la página de perfil y las peticiones de fragmentos.
      */
-    @GetMapping({"", "/datos_personales", "/pedidos", "/devoluciones"})
+    @GetMapping({"", "/datos_personales", "/mis_compras", "/mis_devoluciones"})
     public String getProfileSection(HttpServletRequest request) {
         boolean isAjax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
         
@@ -30,10 +30,10 @@ public class UserController {
         switch (section) {
             case "datos_personales":
                 return "user/datos_personales"; // Devuelve /WEB-INF/jsp/profile_fragments/_datos.jsp
-            case "pedidos":
-                return "user/purchases";
-            case "devoluciones":
-                return "user/refunds";
+            case "mis_compras":
+                return "user/mis_compras";
+            case "mis_devoluciones":
+                return "user/mis_devoluciones";
             default:
                 // Por defecto, o si la URL es solo /profile, cargamos la sección de datos.
                 return "user/datos_personales";

@@ -44,9 +44,11 @@ public class Devolucion {
     @Column(name = "FECHA_SOLICITUD", nullable = false)
     private LocalDateTime fechaSolicitud;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "MOTIVO", nullable = false, length = 50)
+    @Column(name = "MOTIVO", nullable = false)
     private DevolucionEnum motivoCategoria;
+
+    @Column(name = "COMENTARIOS", length = 650)
+    private String comentarios;
 
     @OneToMany(
         mappedBy = "devolucion",

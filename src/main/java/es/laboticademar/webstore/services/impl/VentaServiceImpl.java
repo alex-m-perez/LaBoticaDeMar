@@ -1,15 +1,26 @@
 package es.laboticademar.webstore.services.impl;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.security.Principal;
 import java.time.LocalDateTime;
-import java.time.YearMonth;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.laboticademar.webstore.dto.PaymentDTO;
+import es.laboticademar.webstore.dto.venta.DetalleVentaDTO;
+import es.laboticademar.webstore.dto.venta.VentaDTO;
+import es.laboticademar.webstore.dto.venta.VentaPageDTO;
+import es.laboticademar.webstore.dto.venta.VentaResumenDTO;
 import es.laboticademar.webstore.entities.CartItem;
 import es.laboticademar.webstore.entities.DetalleVenta;
 import es.laboticademar.webstore.entities.Producto;
@@ -17,12 +28,13 @@ import es.laboticademar.webstore.entities.ShoppingCart;
 import es.laboticademar.webstore.entities.Usuario;
 import es.laboticademar.webstore.entities.Venta;
 import es.laboticademar.webstore.exceptions.InsufficientStockException;
-import es.laboticademar.webstore.exceptions.InvalidPaymentDataException;
 import es.laboticademar.webstore.repositories.ProductDAO;
 import es.laboticademar.webstore.repositories.VentaDAO;
 import es.laboticademar.webstore.services.interfaces.ShoppingCartService;
 import es.laboticademar.webstore.services.interfaces.UsuarioService;
 import es.laboticademar.webstore.services.interfaces.VentaService;
+import es.laboticademar.webstore.utils.CreditCardUtils;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -35,45 +47,90 @@ public class VentaServiceImpl implements VentaService {
     private final ProductDAO productoDAO;
 
     @Override
+    public Optional<Venta> findById(Long id) {
+        return ventaDAO.findById(id);
+    }
+
+
+    @Override
     @Transactional
     public Boolean realizarVenta(Principal principal, PaymentDTO paymentData, Boolean useDiscountPoints) {
         return usuarioService.findById(usuarioService.getIdFromPrincipal(principal))
-                .map(usuario -> {
-                    ShoppingCart userCart = shoppingCartService.getOrCreateShoppingCartFromPrincipal(principal);
-                    if (userCart.getItems().isEmpty()) {
-                        return false;
-                    }
+            .map(usuario -> {
+                ShoppingCart userCart = shoppingCartService.getOrCreateShoppingCartFromPrincipal(principal);
+                if (userCart.getItems().isEmpty()) {
+                    return false;
+                }
 
-                    // --- PASO 1: VALIDACIONES PREVIAS ---
-                    validarDatosDePago(paymentData);
-                    validarStock(userCart);
+                // --- PASO 1: VALIDACIONES PREVIAS ---
+                CreditCardUtils.validarDatosDePago(paymentData);
+                validarStock(userCart);
 
-                    // --- PASO 2: CREAR LA VENTA Y APLICAR DESCUENTOS ---
-                    Venta nuevaVenta = crearVentaDesdeCarrito(usuario, userCart);
-                    
-                    if (Boolean.TRUE.equals(useDiscountPoints)) {
-                        aplicarDescuentoYActualizarPuntos(nuevaVenta, usuario);
-                    }
+                // --- PASO 2: CREAR LA VENTA Y APLICAR DESCUENTOS ---
+                Venta nuevaVenta = crearVentaDesdeCarrito(usuario, userCart);
+                if (Boolean.TRUE.equals(useDiscountPoints)) {
+                    aplicarDescuentoYActualizarPuntos(nuevaVenta, usuario);
+                }
 
-                    // --- PASO 3: PERSISTIR CAMBIOS ---
-                    // La anotación @Transactional se encarga de que todo lo siguiente
-                    // se ejecute como una única operación: o todo funciona, o nada se guarda.
-                    
-                    // Actualiza el stock de los productos
-                    actualizarStock(userCart);
-                    
-                    // Guarda la venta con el total final
-                    ventaDAO.save(nuevaVenta);
-                    
-                    // Guarda el usuario si sus puntos han cambiado
-                    usuarioService.save(usuario); // O usuarioDAO.save(usuario)
-                    
-                    // Vacía el carrito del usuario
-                    shoppingCartService.clearCart(principal);
+                // --- PASO 3: PERSISTIR CAMBIOS ---
+                actualizarStock(userCart);
+                ventaDAO.save(nuevaVenta);
 
-                    return true;
-                })
-                .orElse(false);
+                // 3.3 CALCULAR Y ACUMULAR PUNTOS GENERADOS
+                BigDecimal totalFinal = BigDecimal.valueOf(nuevaVenta.getMontoTotal())
+                    .setScale(2, RoundingMode.HALF_UP);
+                int puntosGenerados = totalFinal
+                    .multiply(BigDecimal.valueOf(5))
+                    .setScale(0, RoundingMode.DOWN)
+                    .intValue();
+                usuario.setPuntos(usuario.getPuntos() + puntosGenerados);
+
+                // 3.4 Guardar usuario y limpiar carrito
+                usuarioService.save(usuario);
+                shoppingCartService.clearCart(principal);
+                return true;
+            })
+            .orElse(false);
+    }
+
+    private Venta crearVentaDesdeCarrito(Usuario usuario, ShoppingCart userCart) {
+        Venta venta = new Venta();
+        venta.setCliente(usuario);
+        venta.setFechaVenta(LocalDateTime.now());
+
+        List<DetalleVenta> detalles = userCart.getItems().stream()
+            .map(ci -> crearDetalleVenta(ci, venta))
+            .collect(Collectors.toList());
+        venta.setDetalles(detalles);
+
+        // Suma linea a linea, redondeando cada total de detalle a 2 decimales
+        BigDecimal suma = detalles.stream()
+            .map(det -> BigDecimal.valueOf(det.getPrecioUnitario())
+                .multiply(BigDecimal.valueOf(det.getCantidad()))
+                .setScale(2, RoundingMode.HALF_UP))
+            .reduce(BigDecimal.ZERO, BigDecimal::add)
+            .setScale(2, RoundingMode.HALF_UP);
+
+        venta.setMontoTotal(suma.floatValue());
+        return venta;
+    }
+
+    private DetalleVenta crearDetalleVenta(CartItem cartItem, Venta venta) {
+        Producto producto = cartItem.getProducto();
+        DetalleVenta detalle = new DetalleVenta();
+        detalle.setVenta(venta);
+        detalle.setProducto(producto);
+        detalle.setCantidad(cartItem.getCantidad());
+
+        // Calcula precio unitario con descuento y redondea a 2 decimales
+        BigDecimal base = BigDecimal.valueOf(producto.getPrice());
+        BigDecimal unitPrice = (producto.getDiscount() > 0
+            ? base.multiply(BigDecimal.valueOf(1 - producto.getDiscount() / 100.0))
+            : base)
+            .setScale(2, RoundingMode.HALF_UP);
+
+        detalle.setPrecioUnitario(unitPrice.floatValue());
+        return detalle;
     }
     
     // --- MÉTODOS PRIVADOS DE AYUDA ---
@@ -106,98 +163,96 @@ public class VentaServiceImpl implements VentaService {
 
         if (discountToApply > 0) {
             venta.setMontoTotal(currentTotal - discountToApply);
-            Integer pointsUsed = Math.round(discountToApply * 100);
-            usuario.setPuntos(userPoints - pointsUsed);
+            venta.setPuntosUtilizados(usuario.getPuntos());
+            usuario.setPuntos(0);
         }
     }
 
-    private Venta crearVentaDesdeCarrito(Usuario usuario, ShoppingCart userCart) {
-        Venta venta = new Venta();
-        venta.setCliente(usuario);
-        venta.setFechaVenta(LocalDateTime.now());
 
-        List<DetalleVenta> detalles = userCart.getItems().stream()
-                .map(cartItem -> crearDetalleVenta(cartItem, venta))
-                .collect(Collectors.toList());
-        venta.setDetalles(detalles);
-        
-        Float montoTotal = (float) detalles.stream()
-            .mapToDouble(detalle -> detalle.getPrecioUnitario() * detalle.getCantidad())
-            .sum();
-            
-        venta.setMontoTotal(montoTotal);
-        return venta;
-    }
-    
-    private DetalleVenta crearDetalleVenta(CartItem cartItem, Venta venta) {
-        Producto producto = cartItem.getProducto();
-        DetalleVenta detalle = new DetalleVenta();
-        
-        detalle.setVenta(venta);
-        detalle.setProducto(producto);
-        detalle.setCantidad(cartItem.getCantidad());
+    @Override
+    @Transactional(readOnly = true)
+    public VentaPageDTO findVentasByCurrentUser(Principal principal, int page, int size) {
+        Usuario currentUser = getCurrentUser(principal);
 
-        Float precioBase = producto.getPrice();
-        Float descuento = producto.getDiscount();
-        if (descuento != null && descuento > 0) {
-            detalle.setPrecioUnitario(precioBase * (1 - descuento / 100));
-        } else {
-            detalle.setPrecioUnitario(precioBase);
-        }
-        return detalle;
+        // Crear objeto de paginación, ordenando por fecha de venta descendente (más recientes primero)
+        Pageable pageable = PageRequest.of(page, size, Sort.by("fechaVenta").descending());
+
+        Page<Venta> ventasPage = ventaDAO.findByCliente(currentUser, pageable);
+
+        // Mapear la página de entidades a una página de DTOs
+        Page<VentaResumenDTO> dtoPage = ventasPage.map(this::convertToVentaResumenDTO);
+
+        return new VentaPageDTO(dtoPage);
     }
 
-    // --- MÉTODOS DE VALIDACIÓN DE PAGO ---
-    
-    private void validarDatosDePago(PaymentDTO paymentData) {
-        if (paymentData == null) {
-            throw new InvalidPaymentDataException("Los datos de pago no pueden ser nulos.");
-        }
-        validarNumeroTarjeta(paymentData.getCardNumber());
-        validarFechaCaducidad(paymentData.getCardExpiringDate());
-        validarCvc(paymentData.getCardSecretNumber());
+    @Override
+    @Transactional(readOnly = true)
+    public VentaDTO findVentaDetailsByIdAndUser(Long ventaId, Principal principal) {
+        Usuario currentUser = getCurrentUser(principal);
+
+        // Buscar la venta por ID y por propietario para asegurar que el usuario tiene permiso
+        Venta venta = ventaDAO.findByIdAndCliente(ventaId, currentUser)
+                .orElseThrow(() -> new EntityNotFoundException("Pedido no encontrado o no tiene permiso para verlo. ID: " + ventaId));
+
+        return convertToVentaDetalleDTO(venta);
     }
 
-    private void validarNumeroTarjeta(String cardNumber) {
-        if (cardNumber == null || cardNumber.isBlank()) {
-            throw new InvalidPaymentDataException("El número de la tarjeta es obligatorio.");
+    /**
+     * Método de utilidad para obtener la entidad Usuario a partir de UserDetails.
+     */
+    private Usuario getCurrentUser(Principal principal) {
+        if (principal == null) {
+            throw new IllegalArgumentException("El usuario no está autenticado.");
         }
-        String digitsOnly = cardNumber.replace(" ", "");
-        if (!digitsOnly.matches("\\d{16}")) {
-            throw new InvalidPaymentDataException("El número de tarjeta debe contener exactamente 16 dígitos.");
-        }
+        String username = principal.getName();
+        return usuarioService.getUserByCorreo(username) // o findByUsername, dependiendo de tu implementación
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado: " + username));
     }
 
-    private void validarFechaCaducidad(String fecha) {
-        if (fecha == null || !fecha.matches("\\d{2}/\\d{4}")) {
-            throw new InvalidPaymentDataException("El formato de la fecha de caducidad debe ser MM/AAAA.");
-        }
-        String[] partes = fecha.split("/");
-        try {
-            int mes = Integer.parseInt(partes[0]);
-            int anio = Integer.parseInt(partes[1]);
-            if (mes < 1 || mes > 12) {
-                throw new InvalidPaymentDataException("El mes de la fecha de caducidad no es válido.");
-            }
-            YearMonth fechaCaducidad = YearMonth.of(anio, mes);
-            YearMonth fechaActual = YearMonth.now();
-            if (fechaCaducidad.isBefore(fechaActual)) {
-                throw new InvalidPaymentDataException("La tarjeta ha caducado.");
-            }
-            if (anio > fechaActual.getYear() + 15) {
-                throw new InvalidPaymentDataException("El año de caducidad es demasiado lejano.");
-            }
-        } catch (NumberFormatException e) {
-            throw new InvalidPaymentDataException("La fecha de caducidad contiene caracteres no válidos.");
-        }
+    /**
+     * Convierte una entidad Venta a su DTO de resumen.
+     */
+    private VentaResumenDTO convertToVentaResumenDTO(Venta venta) {
+        return VentaResumenDTO.builder()
+                .id(venta.getId())
+                .fechaVenta(venta.getFechaVenta())
+                .montoTotal(venta.getMontoTotal())
+                // Calcula el número total de artículos sumando las cantidades de cada detalle
+                .totalItems(venta.getDetalles().stream().mapToInt(DetalleVenta::getCantidad).sum())
+                .build();
     }
 
-    private void validarCvc(Integer cvc) {
-        if (cvc == null) {
-            throw new InvalidPaymentDataException("El CVC es obligatorio.");
-        }
-        if (cvc < 0 || cvc > 999) {
-            throw new InvalidPaymentDataException("El CVC debe ser un número de 3 dígitos.");
-        }
+    /**
+     * Convierte una entidad Venta a su DTO de detalle completo.
+     */
+    private VentaDTO convertToVentaDetalleDTO(Venta venta) {
+        return VentaDTO.builder()
+                .id(venta.getId())
+                .fechaVenta(venta.getFechaVenta())
+                .montoTotal(venta.getMontoTotal())
+                .puntosUtilizados(venta.getPuntosUtilizados())
+                .productos(venta.getDetalles().stream()
+                        .map(this::convertToProductoVentaDTO)
+                        .collect(Collectors.toList()))
+                .build();
     }
+
+    /**
+     * Convierte una entidad DetalleVenta a su DTO de producto dentro de una venta.
+     */
+    private DetalleVentaDTO convertToProductoVentaDTO(DetalleVenta detalle) {
+        return DetalleVentaDTO.builder()
+                // Datos del producto en el momento de la compra
+                .id(detalle.getProducto().getId())
+                .nombre(detalle.getProducto().getNombre())
+                .imagenPath(detalle.getProducto().getImagenPath())
+                .laboratorioNombre(detalle.getProducto().getLaboratorio() != null ? detalle.getProducto().getLaboratorio().getNombre() : "N/D")
+                // Datos específicos de la venta
+                .cantidad(detalle.getCantidad())
+                .precioUnitario(detalle.getPrecioUnitario())
+                .build();
+    }
+
+
+
 }

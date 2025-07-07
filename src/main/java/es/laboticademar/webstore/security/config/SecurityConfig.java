@@ -45,8 +45,7 @@ public class SecurityConfig {
                     "/",
                     "/login",
                     "/register",
-                    "/cart",
-                    "/api/cart/guest-details",
+                    "/cart", "/api/cart/guest-details",
                     "/wishlist",
                     "/product/**", "/api/product/**",
                     "/auth/**" 
@@ -54,6 +53,9 @@ public class SecurityConfig {
 
                 // --- ENDPOINTS PROTEGIDOS ---
                 .requestMatchers("/profile/**").hasAnyRole("USUARIO", "ADMIN")
+                .requestMatchers("/profile/**").hasAnyRole("USUARIO", "ADMIN")
+                .requestMatchers("/api/ventas/**").hasAnyRole("USUARIO", "ADMIN")
+                .requestMatchers("/api/devoluciones/**").hasAnyRole("USUARIO", "ADMIN")
                 .requestMatchers("/employee/**").hasAnyRole("EMPLOYEE", "ADMIN")
                 .requestMatchers("/admin/**").hasRole("ADMIN")
 

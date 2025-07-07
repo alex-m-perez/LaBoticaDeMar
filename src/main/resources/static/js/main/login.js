@@ -34,7 +34,7 @@ async function login(event) {
 
 // Nueva función de fusión usando axios
 async function mergeGuestCartOnLogin() {
-    debugger
+    
     const GUEST_CART_KEY = 'cart';
     const guestCart = JSON.parse(localStorage.getItem(GUEST_CART_KEY) || '{}');
     const contextPath = window.contextPath || '';

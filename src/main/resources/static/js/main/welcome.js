@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- 2. MANEJO DEL ESTADO (GUARDADO) ---
 
     function saveCartState() {
-        debugger
+        
         if (!isAuthenticated) {
             localStorage.setItem(GUEST_CART_KEY, JSON.stringify(cartState));
         }

@@ -2,11 +2,6 @@ package es.laboticademar.webstore.dto;
 
 import java.math.BigDecimal;
 
-import es.laboticademar.webstore.entities.Categoria;
-import es.laboticademar.webstore.entities.Familia;
-import es.laboticademar.webstore.entities.Laboratorio;
-import es.laboticademar.webstore.entities.Subcategoria;
-import es.laboticademar.webstore.entities.TipoProducto;
 import es.laboticademar.webstore.entities.Producto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -2,7 +2,7 @@
  * Expone la función de inicialización para la sección "Mis Datos".
  * Es llamada por perfil.js después de cargar el fragmento HTML.
  */
-function initDatos_personalesPage() {
+function initializePage() {
     
     const API_URL_GET = `${window.contextPath}/api/user/data`;
     const API_URL_UPDATE = `${window.contextPath}/api/user/update_data`;

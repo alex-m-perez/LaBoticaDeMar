@@ -65,6 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
      * @param {string} url La URL de la sección.
      */
     function loadSectionScript(url) {
+        
         const section = url.split('/').pop(); // e.g., "datos" de "/profile/datos_personales"
         const scriptId = 'section-script';
 
@@ -81,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Opcional: Ejecuta una función de inicialización cuando el script cargue
         script.onload = () => {
             // Para "datos", buscará la función global `initDatosPage()`
-            const initFunctionName = `init${section.charAt(0).toUpperCase() + section.slice(1)}Page`;
+            const initFunctionName = `initializePage`;
             if (typeof window[initFunctionName] === 'function') {
                 window[initFunctionName]();
             }
@@ -114,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // C) Carga inicial de la página según la URL
-    const validSections = ['/profile/datos_personales', '/profile/pedidos', '/profile/devoluciones'];
+    const validSections = ['/profile/datos_personales', '/profile/mis_compras', '/profile/mis_devoluciones'];
     const currentPath = window.location.pathname;
     const defaultSection = '/profile/datos_personales';
 

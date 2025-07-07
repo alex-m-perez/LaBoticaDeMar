@@ -35,4 +35,7 @@ public class DetalleDevolucion {
 
     @Column(name = "CANTIDAD", nullable = false)
     private Integer cantidad;
+
+    @Column(name = "PRECIO_UNITARIO", nullable = false)
+    private Float precioUnitario;
 }

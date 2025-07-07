@@ -30,9 +30,9 @@
             <div class="container mx-auto p-4">
                 <div class="w-full overflow-x-auto">
                     <nav id="section-nav" class="flex w-max space-x-6 px-4 py-3 border-b-2 border-gray-300 mx-auto min-w-fit">
-                        <a href="/profile/datos_personales" class="text-xl text-gray-500 transition-colors whitespace-nowrap" data-section="Datos">Mis datos</a>
-                        <a href="/profile/pedidos" class="text-xl text-gray-500 transition-colors whitespace-nowrap" data-section="Pedidos">Mis pedidos</a>
-                        <a href="/profile/devoluciones" class="text-xl text-gray-500 transition-colors whitespace-nowrap" data-section="Devoluciones">Mis devoluciones</a>
+                        <a href="/profile/datos_personales" class="text-xl text-gray-500 transition-colors whitespace-nowrap cursor-pointer" data-section="Datos">Mis datos</a>
+                        <a href="/profile/mis_compras" class="text-xl text-gray-500 transition-colors whitespace-nowrap cursor-pointer" data-section="Pedidos">Mis pedidos</a>
+                        <a href="/profile/mis_devoluciones" class="text-xl text-gray-500 transition-colors whitespace-nowrap cursor-pointer" data-section="Devoluciones">Mis devoluciones</a>
                     </nav>
                 </div>
 

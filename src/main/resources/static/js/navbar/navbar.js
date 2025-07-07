@@ -299,7 +299,7 @@ function updateCartBubble() {
     const isAuthenticated = document.body.dataset.authenticated === 'true';
 
     // 2. Lee el estado MÁS RECIENTE desde la fuente correcta
-    debugger
+    
     const currentCartState = isAuthenticated 
         ? (typeof userCartState !== 'undefined' ? userCartState : {}) 
         : JSON.parse(localStorage.getItem('cart') || '{}'); // Usa la clave 'cart' que definiste en welcome.js

@@ -4,7 +4,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<div class="max-w-4xl mx-auto p-4 sm:p-6">
+<div class="max-w-4xl mx-auto">
     <form id="profileForm" class="space-y-8">
         <div class="bg-white border border-gray-200 rounded-2xl shadow-sm p-6">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
