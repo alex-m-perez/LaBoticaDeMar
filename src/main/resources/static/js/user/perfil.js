@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const links       = document.querySelectorAll('#section-nav a');
     const contentArea = document.getElementById('content-area');
+    const contextPath = document.body.dataset.contextPath || '';
 
     /**
      * Carga un fragmento de HTML y su script asociado.
@@ -73,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Crea el nuevo tag <script>
         const script = document.createElement('script');
         // **NUEVA CONVENCIÓN DE NOMBRES PARA SCRIPTS DE PERFIL**
-        script.src = `${window.contextPath}/js/user/${section}.js`; 
+        script.src = `${contextPath}/js/user/${section}.js`; 
         script.id = scriptId;
         script.defer = true;
         

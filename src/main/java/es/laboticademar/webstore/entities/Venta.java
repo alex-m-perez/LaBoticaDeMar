@@ -40,8 +40,11 @@ public class Venta {
     @Column(name = "FECHA_VENTA", nullable = false)
     private LocalDateTime fechaVenta;
 
-    @Column(name = "MONTO_TOTAL", nullable = false, precision = 10, scale = 2)
-    private BigDecimal montoTotal;
+    @Column(name = "MONTO_TOTAL", nullable = false)
+    private Float montoTotal;
+
+    @Column(name = "PUNTOS_UTILIZADOS")
+    private Integer puntosUtilizados;
     
     @OneToMany(
         mappedBy = "venta",

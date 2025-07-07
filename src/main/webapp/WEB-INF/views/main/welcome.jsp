@@ -18,7 +18,6 @@
         <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     </head>
 
-    <%-- El body ya tenía las clases correctas, lo cual es perfecto --%>
     <body class="bg-gray-100 min-h-screen flex flex-col" data-authenticated="${not empty pageContext.request.userPrincipal}">
 
         <header>
@@ -122,6 +121,6 @@
             });
         </script>
         
-        <script src="${pageContext.request.contextPath}/js/welcome/welcome.js" defer></script>
+        <script src="${pageContext.request.contextPath}/js/main/welcome.js" defer></script>
     </body>
 </html>

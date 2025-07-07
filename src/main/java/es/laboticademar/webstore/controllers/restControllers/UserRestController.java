@@ -28,7 +28,7 @@ public class UserRestController {
     @PostMapping(path = "/update_data")
     public ResponseEntity<Void> updatePersonalData(Principal principal, @RequestBody UsuarioPersonalDataDTO formData) {
         if (usuarioService.updatePersonalData(principal, formData))  return ResponseEntity.ok().build();
-        return ResponseEntity.badRequest().body(null);
+        return ResponseEntity.badRequest().build();
     }
 
 }

@@ -12,11 +12,12 @@ public interface UsuarioService {
     public Optional<Usuario> findById(Long id);
     public List<Usuario> getAllByCorreo();
     public Optional<Usuario> getUserByCorreo(String correo);
-    public Usuario saveUsuario(Usuario usuario);
+    public Usuario save(Usuario usuario);
     public Usuario assignRoleToUser(String correo, String role);
     public Usuario removeRoleFromUser(String correo, String role);
     public Long getIdFromPrincipal(Principal principal);
     public UsuarioPersonalDataDTO getUserPersonalData(Principal principal);
     public Boolean updatePersonalData(Principal principal, UsuarioPersonalDataDTO data);
+    public Integer getUserPoints(Principal principal);
 
 }

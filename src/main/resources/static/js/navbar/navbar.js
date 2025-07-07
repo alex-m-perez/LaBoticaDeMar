@@ -285,31 +285,45 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.href = `${window.contextPath}/profile`;
         });
     }
-
-    function updateCartBubble() {
-        const bubble = document.getElementById('cart-item-count');
-        if (!bubble) return;
-
-        const totalItems = Object.keys(cartState || {}).length;
-
-        if (totalItems > 0) {
-            // No actualices el DOM si el número no ha cambiado
-            if (bubble.textContent !== String(totalItems)) {
-                bubble.textContent = totalItems > 99 ? '99+' : totalItems;
-
-                bubble.classList.remove('bubble-pop');
-
-                void bubble.offsetWidth; 
-
-                bubble.classList.add('bubble-pop');
-            }
-
-            bubble.classList.remove('hidden');
-        } else {
-            bubble.classList.add('hidden');
-        }
-    }
-
-    updateCartBubble();
-    window.addEventListener('cartUpdated', updateCartBubble);
+    
 });
+
+// ——————————————————————————————
+// BURBUJA DE CANTIDAD DE ITEMS EN CARRITO
+// ——————————————————————————————
+function updateCartBubble() {
+    const bubble = document.getElementById('cart-item-count'); // Asegúrate de que este ID coincida con tu HTML
+    if (!bubble) return;
+
+    // 1. Determina si el usuario está autenticado CADA VEZ que se ejecuta la función
+    const isAuthenticated = document.body.dataset.authenticated === 'true';
+
+    // 2. Lee el estado MÁS RECIENTE desde la fuente correcta
+    debugger
+    const currentCartState = isAuthenticated 
+        ? (typeof userCartState !== 'undefined' ? userCartState : {}) 
+        : JSON.parse(localStorage.getItem('cart') || '{}'); // Usa la clave 'cart' que definiste en welcome.js
+
+    // 3. CORREGIDO: Suma las CANTIDADES de los productos, no solo cuenta las claves.
+    const totalItems = Object.keys(currentCartState).length;
+
+    // 4. Actualiza el DOM
+    if (totalItems > 0) {
+        const displayText = totalItems > 99 ? '99+' : totalItems;
+        // Solo actualiza el DOM si el texto ha cambiado para evitar animaciones innecesarias
+        if (bubble.textContent !== displayText.toString()) {
+            bubble.textContent = displayText;
+            // Reinicia la animación de "pop"
+            bubble.classList.remove('bubble-pop');
+            void bubble.offsetWidth; // Truco para forzar el repintado del navegador
+            bubble.classList.add('bubble-pop');
+        }
+        bubble.classList.remove('hidden');
+    } else {
+        bubble.classList.add('hidden');
+    }
+}
+
+// Los listeners se mantienen igual, ya que la lógica corregida está dentro de la función.
+window.addEventListener('cartUpdated', updateCartBubble);
+document.addEventListener('DOMContentLoaded', updateCartBubble);

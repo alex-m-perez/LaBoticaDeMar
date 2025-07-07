@@ -18,7 +18,7 @@
         <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     </head>
 
-    <body class="flex flex-col min-h-screen">
+    <body class="flex flex-col min-h-screen" data-authenticated="${not empty pageContext.request.userPrincipal}">
 
         <header>
             <%@ include file="../includes/navbar.jsp" %>

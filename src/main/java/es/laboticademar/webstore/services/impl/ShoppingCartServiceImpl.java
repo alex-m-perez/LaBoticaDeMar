@@ -3,6 +3,7 @@ package es.laboticademar.webstore.services.impl;
 import java.math.BigDecimal;
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -12,10 +13,16 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import es.laboticademar.webstore.dto.CartItemDTO;
+import es.laboticademar.webstore.dto.GuestCartProductoDTO;
+import es.laboticademar.webstore.dto.PaymentDTO;
+import es.laboticademar.webstore.dto.ProductoDTO;
+import es.laboticademar.webstore.dto.ShoppingCartDTO;
 import es.laboticademar.webstore.entities.CartItem;
 import es.laboticademar.webstore.entities.Producto;
 import es.laboticademar.webstore.entities.ShoppingCart;
 import es.laboticademar.webstore.entities.Usuario;
+import es.laboticademar.webstore.exceptions.InvalidPaymentDataException;
 import es.laboticademar.webstore.repositories.ShoppingCartDAO;
 import es.laboticademar.webstore.services.interfaces.CartItemService;
 import es.laboticademar.webstore.services.interfaces.ProductService;
@@ -161,5 +168,76 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         return cartStateMap;
     }
 
-    
+    @Override
+    @Transactional
+    public void clearCart(Principal principal) {
+        ShoppingCart cart = getOrCreateShoppingCartFromPrincipal(principal);
+        cart.getItems().clear();
+        shoppingCartDAO.save(cart);
+    }
+
+
+    @Override
+    @Transactional
+    public void mergeGuestCart(Principal principal, Map<String, Integer> guestCart) {
+        // Obtiene el carrito persistente del usuario
+        ShoppingCart userCart = getOrCreateShoppingCartFromPrincipal(principal);
+
+        // Itera sobre cada producto del carrito de invitado
+        guestCart.forEach((productIdStr, guestQuantity) -> {
+            BigDecimal productId = new BigDecimal(productIdStr);
+
+            // Busca el producto en la BBDD para obtener el stock actualizado
+            Producto producto = productService.findById(productId).orElse(null);
+            if (producto == null || producto.getStock() <= 0) {
+                return; // Si el producto no existe o no tiene stock, lo ignoramos
+            }
+
+            // Busca si el producto ya existía en el carrito del usuario
+            CartItem existingItem = userCart.getItems().stream()
+                .filter(item -> item.getProducto().getId().equals(productId))
+                .findFirst()
+                .orElse(null);
+
+            if (existingItem != null) {
+                // Si el producto ya existe, se actualiza su cantidad.
+                int newQuantity = existingItem.getCantidad() + guestQuantity;
+                existingItem.setCantidad(Math.min(newQuantity, producto.getStock())); // Se limita la cantidad al stock disponible.
+
+            } else {
+                // Si el producto es nuevo, se crea y añade al carrito.
+                CartItem newItem = new CartItem();
+                newItem.setProducto(producto);
+                newItem.setCantidad(Math.min(guestQuantity, producto.getStock())); // Se limita la cantidad inicial al stock.
+                newItem.setShoppingCart(userCart);
+                userCart.getItems().add(newItem);
+            }
+        });
+
+        // Guarda el carrito del usuario con los productos fusionados
+        shoppingCartDAO.save(userCart);
+    }
+
+
+     @Override
+    public ShoppingCartDTO getGuestCartDetails(Map<String, Integer> guestCart) {
+        ShoppingCartDTO cartDTO = new ShoppingCartDTO(new ArrayList<>());
+
+        guestCart.forEach((productIdStr, quantity) -> {
+            // Usamos BigDecimal para buscar el producto
+            productService.findById(new BigDecimal(productIdStr)).ifPresent(producto -> {
+
+                // Mapeamos la entidad a un DTO para enviarlo al frontend
+                GuestCartProductoDTO productoDTO = new GuestCartProductoDTO().fromEntityToGuestCartProducto(producto);
+
+                CartItemDTO itemDTO = new CartItemDTO();
+                itemDTO.setProducto(productoDTO);
+                // La cantidad se limita al stock disponible
+                itemDTO.setCantidad(Math.min(quantity, producto.getStock()));
+
+                cartDTO.getItems().add(itemDTO);
+            });
+        });
+      return cartDTO;
+    }
 }

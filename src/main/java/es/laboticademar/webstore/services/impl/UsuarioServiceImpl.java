@@ -43,7 +43,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public Usuario saveUsuario(Usuario usuario) {
+    public Usuario save(Usuario usuario) {
         return usuarioDAO.save(usuario);
     }
 
@@ -94,5 +94,10 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
 
-    
+    @Override
+    public Integer getUserPoints(Principal principal) {
+        return getUserByCorreo(principal.getName())
+            .map(Usuario::getPuntos)
+            .orElse(0);
+    }
 }

@@ -38,6 +38,6 @@ public class DetalleVenta {
     @Column(name = "CANTIDAD", nullable = false)
     private Integer cantidad;
 
-    @Column(name = "PRECIO_UNITARIO", nullable = false, precision = 10, scale = 2)
-    private BigDecimal precioUnitario;
+    @Column(name = "PRECIO_UNITARIO", nullable = false)
+    private Float precioUnitario;
 }

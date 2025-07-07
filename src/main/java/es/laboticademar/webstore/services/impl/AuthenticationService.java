@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
-    private final UsuarioDAO usuarioRDAO;
+    private final UsuarioDAO usuarioDAO;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
@@ -52,7 +52,7 @@ public class AuthenticationService {
             .roles(Set.of("ROLE_USUARIO"))
             .build();
 
-        usuarioRDAO.save(usuario);
+        usuarioDAO.save(usuario);
 
         var usuarioPrincipal = new UsuarioPrincipal(usuario);
         var jwtToken = jwtService.generateToken(usuarioPrincipal);
@@ -67,7 +67,7 @@ public class AuthenticationService {
             )
         );
 
-        var usuario = usuarioRDAO.getByCorreo(request.getCorreo()).orElseThrow();
+        var usuario = usuarioDAO.getByCorreo(request.getCorreo()).orElseThrow();
         var usuarioPrincipal = new UsuarioPrincipal(usuario);
         var jwtToken = jwtService.generateToken(usuarioPrincipal);
         return AuthenticationResponse.builder().token(jwtToken).build();

@@ -7,8 +7,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import es.laboticademar.webstore.services.interfaces.DestacadoService;
 import es.laboticademar.webstore.services.interfaces.ShoppingCartService;
+import es.laboticademar.webstore.services.interfaces.UsuarioService;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -17,13 +17,15 @@ import lombok.RequiredArgsConstructor;
 public class ShoppingCartController {
 
     private final ShoppingCartService shoppingCartService;
-    private final DestacadoService destacadoService;
+    private final UsuarioService usuarioService;
 
     @GetMapping({"/", ""})
     public String goShoppingCart(Principal principal, Model model) {
         
-        model.addAttribute("shoppingCart", shoppingCartService.getOrCreateShoppingCartFromPrincipal(principal));
-        model.addAttribute("destacados", destacadoService.getAllDestacados());
+        if (principal != null) {
+            model.addAttribute("shoppingCart", shoppingCartService.getOrCreateShoppingCartFromPrincipal(principal));
+            model.addAttribute("puntos", usuarioService.getUserPoints(principal));
+        }
 
         return "purchases/shopping_cart";
     }
