@@ -72,10 +72,6 @@ import lombok.RequiredArgsConstructor;
         @RequestParam("q") String q,
         @RequestParam(value = "active", defaultValue = "false") boolean active
     ) {
-        if (active) {
-            return productService.findNamesContainingActive(q);
-        } else {
-            return productService.findNamesContaining(q);
-        }
+        return productService.findNamesContainingActive(q);
     }
 }

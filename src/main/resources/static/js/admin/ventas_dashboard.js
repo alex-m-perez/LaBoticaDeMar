@@ -57,11 +57,9 @@
         function setDefaultDateRange() {
             const now = new Date();
             const year = now.getFullYear();
-            const month = now.getMonth(); // 0 para Enero, 11 para Diciembre
+            const month = now.getMonth();
 
-            // Primer día del mes actual
             const firstDay = new Date(year, month, 1);
-            // Último día del mes actual (usando el día 0 del mes siguiente)
             const lastDay = new Date(year, month + 1, 0);
 
             // Formato YYYY-MM-DD requerido por <input type="date">
@@ -283,6 +281,10 @@
                         }
                     });
             }, 300);
+        });
+
+        userInput.addEventListener('blur', () => {
+            setTimeout(() => userSuggestions.classList.add('hidden'), 200);
         });
         
         // --- Carga Inicial ---

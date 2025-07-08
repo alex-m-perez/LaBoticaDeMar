@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import es.laboticademar.webstore.enumerations.PreferenciaEnum;
 import es.laboticademar.webstore.services.interfaces.CategoriaService;
 import es.laboticademar.webstore.services.interfaces.FamiliaService;
 import es.laboticademar.webstore.services.interfaces.LaboratorioService;
@@ -69,6 +70,12 @@ public class AdminController {
 
         // petición normal (refresh, url directa) → devolvemos el layout completo
         return "admin/home";
+    }
+
+    @GetMapping("/register")
+    public String goRegisterPage(Model model) {
+        model.addAttribute("preferenciasEnumList", PreferenciaEnum.values());
+        return "admin/registro_empleado";
     }
 
 }

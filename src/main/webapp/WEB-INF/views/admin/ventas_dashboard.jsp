@@ -1,24 +1,6 @@
 <%-- Archivo: /WEB-INF/views/admin/sections/ventas.jsp --%>
 <div class="bg-white space-y-6">
-    <!-- KPIs Section -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div class="p-4 rounded-2xl shadow border">
-            <h2 class="text-sm text-gray-500">Total Compras (Hoy)</h2>
-            <p id="kpi-ventas-hoy" class="text-2xl font-bold">0</p>
-        </div>
-        <div class="p-4 rounded-2xl shadow border">
-            <h2 class="text-sm text-gray-500">Ingresos totales (Hoy)</h2>
-            <p id="kpi-ingresos-hoy" class="text-2xl font-bold">0,00 €</p>
-        </div>
-        <div class="p-4 rounded-2xl shadow border">
-            <h2 class="text-sm text-gray-500">Total Compras (Rango)</h2>
-            <p id="kpi-ventas-rango" class="text-2xl font-bold">0</p>
-        </div>
-        <div class="p-4 rounded-2xl shadow border">
-            <h2 class="text-sm text-gray-500">Ingresos totales (Rango)</h2>
-            <p id="kpi-ingresos-rango" class="text-2xl font-bold">0,00 €</p>
-        </div>
-    </div>
+    
     
 
     <div class="flex justify-center mb-10">
@@ -61,6 +43,26 @@
                     <button type="reset" class="bg-gray-200 text-gray-700 font-medium px-4 py-1.5 rounded-md hover:bg-gray-300 transition">Limpiar</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- KPIs Section -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="p-4 rounded-2xl shadow border">
+            <h2 class="text-sm text-gray-500">Total Compras (Hoy)</h2>
+            <p id="kpi-ventas-hoy" class="text-2xl font-bold">0</p>
+        </div>
+        <div class="p-4 rounded-2xl shadow border">
+            <h2 class="text-sm text-gray-500">Ingresos totales (Hoy)</h2>
+            <p id="kpi-ingresos-hoy" class="text-2xl font-bold">0,00 €</p>
+        </div>
+        <div class="p-4 rounded-2xl shadow border">
+            <h2 class="text-sm text-gray-500">Total Compras (Rango)</h2>
+            <p id="kpi-ventas-rango" class="text-2xl font-bold">0</p>
+        </div>
+        <div class="p-4 rounded-2xl shadow border">
+            <h2 class="text-sm text-gray-500">Ingresos totales (Rango)</h2>
+            <p id="kpi-ingresos-rango" class="text-2xl font-bold">0,00 €</p>
         </div>
     </div>
 

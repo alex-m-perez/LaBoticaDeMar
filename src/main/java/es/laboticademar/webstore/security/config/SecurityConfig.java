@@ -57,6 +57,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/devoluciones/**").hasAnyRole("USUARIO", "ADMIN")
                 .requestMatchers("/employee/**").hasAnyRole("EMPLOYEE", "ADMIN")
                 .requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers("/admin/register").hasRole("ADMIN")
 
                 // --- REGLA FINAL ---
                 // Cualquier otra petición que no coincida con las anteriores debe estar autenticada.

@@ -65,4 +65,12 @@ public class AdminProdcutRestController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+    @GetMapping(path = "/search_names", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<String> searchNames(
+        @RequestParam("q") String q,
+        @RequestParam(value = "active", defaultValue = "false") boolean active
+    ) {
+        return productService.findNamesContaining(q);
+    }
 }
