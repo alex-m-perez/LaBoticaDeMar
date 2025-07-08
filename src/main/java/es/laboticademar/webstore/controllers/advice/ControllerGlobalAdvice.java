@@ -47,11 +47,7 @@ public class ControllerGlobalAdvice {
 
             var usuario = principal.getUsuario();
             String nombre = usuario.getNombre();
-            String apellido1 = usuario.getApellido1();
 
-            if (apellido1 != null && !apellido1.isBlank()) {
-                return nombre + " " + apellido1;
-            }
             return nombre;
     }
         return null;

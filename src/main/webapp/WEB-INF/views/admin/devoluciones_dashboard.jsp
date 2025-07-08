@@ -1,5 +1,25 @@
 <div class="bg-white min-h-screen space-y-6">
 
+    <!-- KPIs Section -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="p-4 rounded-2xl shadow border">
+            <h2 class="text-sm text-gray-500">Total Devoluciones (Hoy)</h2>
+            <p class="text-2xl font-bold">15</p>
+        </div>
+        <div class="p-4 rounded-2xl shadow border">
+            <h2 class="text-sm text-gray-500">Importe Total Devuelto</h2>
+            <p class="text-2xl font-bold">302.57 €</p>
+        </div>
+        <div class="p-4 rounded-2xl shadow border">
+            <h2 class="text-sm text-gray-500">% De Devoluciones (Mes)</h2>
+            <p class="text-2xl font-bold">83,33%</p>
+        </div>
+        <div class="p-4 rounded-2xl shadow border">
+            <h2 class="text-sm text-gray-500">Media Días Hasta Devolver</h2>
+            <p class="text-2xl font-bold">2,4 días</p>
+        </div>
+    </div>
+
 	<!-- Filtros de Devolución -->
 	<div class="flex justify-center mb-10">
 		<div class="p-4 bg-gray-100 border border-gray-200 rounded-xl shadow-sm inline-block">
@@ -71,26 +91,6 @@
 					</button>
 				</div>
 			</form>
-		</div>
-	</div>
-
-	<!-- KPIs Section -->
-	<div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-		<div class="p-4 rounded-2xl shadow border">
-			<h2 class="text-sm text-gray-500">Total Devoluciones (Hoy)</h2>
-			<p class="text-2xl font-bold">15</p>
-		</div>
-		<div class="p-4 rounded-2xl shadow border">
-			<h2 class="text-sm text-gray-500">Importe Total Devuelto</h2>
-			<p class="text-2xl font-bold">302.57 €</p>
-		</div>
-		<div class="p-4 rounded-2xl shadow border">
-			<h2 class="text-sm text-gray-500">% De Devoluciones (Mes)</h2>
-			<p class="text-2xl font-bold">83,33%</p>
-		</div>
-		<div class="p-4 rounded-2xl shadow border">
-			<h2 class="text-sm text-gray-500">Media Días Hasta Devolver</h2>
-			<p class="text-2xl font-bold">2,4 días</p>
 		</div>
 	</div>
 

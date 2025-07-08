@@ -53,7 +53,6 @@ public class SecurityConfig {
 
                 // --- ENDPOINTS PROTEGIDOS ---
                 .requestMatchers("/profile/**").hasAnyRole("USUARIO", "ADMIN")
-                .requestMatchers("/profile/**").hasAnyRole("USUARIO", "ADMIN")
                 .requestMatchers("/api/ventas/**").hasAnyRole("USUARIO", "ADMIN")
                 .requestMatchers("/api/devoluciones/**").hasAnyRole("USUARIO", "ADMIN")
                 .requestMatchers("/employee/**").hasAnyRole("EMPLOYEE", "ADMIN")

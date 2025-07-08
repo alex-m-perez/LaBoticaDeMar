@@ -3,13 +3,16 @@ package es.laboticademar.webstore.services.impl;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.laboticademar.webstore.dto.UsuarioPersonalDataDTO;
+import es.laboticademar.webstore.dto.usuario.UsuarioBusquedaDTO;
 import es.laboticademar.webstore.entities.Usuario;
 import es.laboticademar.webstore.repositories.UsuarioDAO;
 import es.laboticademar.webstore.services.interfaces.UsuarioService;
@@ -99,5 +102,23 @@ public class UsuarioServiceImpl implements UsuarioService {
         return getUserByCorreo(principal.getName())
             .map(Usuario::getPuntos)
             .orElse(0);
+    }
+
+
+    @Override
+    public List<UsuarioBusquedaDTO> findNombresCompletosContaining(String query) {
+        PageRequest pageable = PageRequest.of(0, 10);
+        List<Usuario> usuarios = usuarioDAO.findByNombreFlexible(query, pageable);
+
+        return usuarios.stream()
+                .map(u -> {
+                    String nombre = u.getNombre() != null ? u.getNombre() : "";
+                    String apellido1 = u.getApellido1() != null ? u.getApellido1() : "";
+                    String apellido2 = u.getApellido2() != null ? u.getApellido2() : "";
+                    String nombreCompleto = (nombre + " " + apellido1 + " " + apellido2).trim().replaceAll("\\s+", " ");
+                    // Devuelve el nuevo DTO con ID y nombre
+                    return new UsuarioBusquedaDTO(u.getId(), nombreCompleto);
+                })
+                .collect(Collectors.toList());
     }
 }

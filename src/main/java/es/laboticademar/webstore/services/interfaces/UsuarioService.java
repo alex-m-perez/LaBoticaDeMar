@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import es.laboticademar.webstore.dto.UsuarioPersonalDataDTO;
+import es.laboticademar.webstore.dto.usuario.UsuarioBusquedaDTO;
 import es.laboticademar.webstore.entities.Usuario;
 
 public interface UsuarioService {
@@ -19,5 +20,5 @@ public interface UsuarioService {
     public UsuarioPersonalDataDTO getUserPersonalData(Principal principal);
     public Boolean updatePersonalData(Principal principal, UsuarioPersonalDataDTO data);
     public Integer getUserPoints(Principal principal);
-
+    public List<UsuarioBusquedaDTO> findNombresCompletosContaining(String query);
 }

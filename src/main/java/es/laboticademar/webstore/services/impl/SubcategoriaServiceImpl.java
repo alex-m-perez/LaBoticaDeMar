@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import es.laboticademar.webstore.entities.Categoria;
 import es.laboticademar.webstore.entities.Subcategoria;
-import es.laboticademar.webstore.repositories.CategoriaDAO;
 import es.laboticademar.webstore.repositories.SubcategoriaDAO;
 import es.laboticademar.webstore.services.interfaces.SubcategoriaService;
 import lombok.RequiredArgsConstructor;

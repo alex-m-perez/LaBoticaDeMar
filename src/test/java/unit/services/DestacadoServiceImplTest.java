@@ -2,26 +2,24 @@ package unit.services;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import jakarta.persistence.EntityNotFoundException;
 
 import es.laboticademar.webstore.entities.Destacado;
 import es.laboticademar.webstore.entities.Producto;
 import es.laboticademar.webstore.repositories.DestacadoDAO;
 import es.laboticademar.webstore.services.impl.DestacadoServiceImpl;
+import jakarta.persistence.EntityNotFoundException;
 
 @ExtendWith(MockitoExtension.class)
 class DestacadoServiceImplTest {

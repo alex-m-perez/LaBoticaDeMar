@@ -3,7 +3,7 @@
 	// ——————————————————————————————
 	// 1) Paginación, filtrado y renderizado de productos
 	// ——————————————————————————————
-	function initProductsPage() {
+	function initializePage() {
 		let currentPage = 0,
 			totalPages  = 1,
 			size        = 25;
@@ -106,9 +106,6 @@
 		loadPage(0);
 	}
 
-	// exponemos la función para que pueda llamarla home.js
-	window.initProductsPage = initProductsPage;
-
 
 	// ——————————————————————————————
 	// 2) Modal "Nuevo producto"
@@ -165,6 +162,8 @@
         document.getElementById('newCod').value      = prod.id || '';
         document.getElementById('newNombre').value   = prod.nombre || '';
         document.getElementById('newDesc').value     = prod.descripcion || '';
+        document.getElementById('newUse').value      = prod.use || '';
+        document.getElementById('newComp').value     = prod.composition || '';
         document.getElementById('newStock').value    = prod.stock != null ? prod.stock : '';
         document.getElementById('newPrice').value    = prod.price != null ? prod.price : '';
         document.getElementById('newDiscount').value = prod.discount != null ? prod.discount : '';
@@ -308,5 +307,6 @@
         setTimeout(() => suggBox.classList.add('hidden'), 200);
     });
 
+    window.initializePage = initializePage;
 
 })();

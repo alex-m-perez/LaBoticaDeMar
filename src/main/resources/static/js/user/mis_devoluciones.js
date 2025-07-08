@@ -3,12 +3,10 @@
  * Esta función es llamada por perfil.js después de cargar dinámicamente el HTML y este script.
  */
 function initializePage() {
-
     const tableBody = document.getElementById('returns-table-body');
     const paginationControls = document.getElementById('pagination-controls');
     const modal = document.getElementById('return-detail-modal');
 
-    // Es importante verificar que los elementos existan antes de continuar.
     if (!tableBody || !paginationControls || !modal) {
         console.error('Faltan elementos del DOM para inicializar la sección de Mis Devoluciones.');
         return;
@@ -44,16 +42,17 @@ function initializePage() {
             });
     }
 
-    function renderReturns(returns) {
+    function renderReturns(returnsList) {
         tableBody.innerHTML = '';
-        if (!returns || returns.length === 0) {
+        if (!returnsList || returnsList.length === 0) {
             tableBody.innerHTML = `<tr><td colspan="5" class="text-center p-10">No has solicitado ninguna devolución todavía.</td></tr>`;
             return;
         }
 
-        returns.forEach(ret => {
+        returnsList.forEach(ret => {
             const row = document.createElement('tr');
-            row.className = 'hover:bg-gray-50';
+            row.className = 'hover:bg-gray-50 cursor-pointer';
+            row.dataset.returnId = ret.id;
             row.innerHTML = `
                 <td class="px-4 py-3 font-medium">#${String(ret.id).padStart(6, '0')}</td>
                 <td class="px-4 py-3">${formatDate(ret.fechaSolicitud)}</td>
@@ -120,16 +119,17 @@ function initializePage() {
 
     // --- EVENT LISTENERS ---
     tableBody.addEventListener('click', event => {
-        if (event.target.classList.contains('details-btn')) {
-            const returnId = event.target.dataset.returnId;
-            fetchReturnDetails(returnId);
-        }
+        const btn = event.target.closest('.details-btn');
+        const row = event.target.closest('tr[data-return-id]');
+        const id = btn ? btn.dataset.returnId : row ? row.dataset.returnId : null;
+        if (id) fetchReturnDetails(id);
     });
 
     modalCloseBtn.addEventListener('click', hideDetailModal);
     modalOverlay.addEventListener('click', hideDetailModal);
-    
+
     // --- CARGA INICIAL ---
-    // Se llama a la función para cargar los datos tan pronto como se inicializa el script.
     fetchReturns();
 }
+
+document.addEventListener('DOMContentLoaded', initializePage);

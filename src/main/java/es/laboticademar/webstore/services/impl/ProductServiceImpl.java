@@ -24,7 +24,6 @@ import es.laboticademar.webstore.entities.Producto;
 import es.laboticademar.webstore.mappers.ExcelToProductMapper;
 import es.laboticademar.webstore.repositories.ProductDAO;
 import es.laboticademar.webstore.services.interfaces.ProductService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @Service

@@ -42,7 +42,7 @@
             script.defer = true;
             // cuando cargue, ejecutar el inicializador si existe
             script.onload = () => {
-                const initFn = window[`init${section[0].toUpperCase()}${section.slice(1)}Page`];
+                const initFn = window[`initializePage`];
                 if (typeof initFn === 'function') initFn();
             };
             document.body.appendChild(script);

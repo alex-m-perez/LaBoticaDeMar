@@ -59,6 +59,41 @@ public class AuthenticationService {
         return AuthenticationResponse.builder().token(jwtToken).build();
     }
 
+    @SuppressWarnings("null")
+    public AuthenticationResponse registerEmployee(RegisterRequest request) {
+        String direccion = String.format(
+            "%s %s%s%s, %s, %s, %s (%s)",
+            request.getCalle(), request.getNumero(),
+            request.getPiso() != null ? ", " + request.getPiso() : "º",
+            request.getPuerta() != null ? " " + request.getPuerta() : "",
+            request.getCodigoPostal(), request.getLocalidad(),
+            request.getProvincia(), request.getPais()
+        );
+
+        var usuario = Usuario.builder()
+            .nombre(request.getNombre())
+            .apellido1(request.getApellido1())
+            .apellido2(request.getApellido2())
+            .correo(request.getCorreo())
+            .passwd(passwordEncoder.encode(request.getPassword()))
+            .telefono(request.getTelefono())
+            .fechaNac(java.sql.Date.valueOf(request.getFechaNac()))
+            .genero(request.getGenero())
+            .direccionPostal(direccion)
+            .aceptaPromociones(false)
+            .aceptaTerminos(true)
+            .aceptaPrivacidad(true)
+            .preferencias(null)
+            .roles(Set.of("ROLE_EMPLEADO"))
+            .build();
+
+        usuarioDAO.save(usuario);
+
+        var usuarioPrincipal = new UsuarioPrincipal(usuario);
+        var jwtToken = jwtService.generateToken(usuarioPrincipal);
+        return AuthenticationResponse.builder().token(jwtToken).build();
+    }
+
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(

@@ -17,6 +17,8 @@ public class ProductoDTO {
     private BigDecimal  id;
     private String      nombre;
     private String      descripcion;
+    private String      use;
+    private String      composition;
 
     private Long        familiaId;
     private String      familiaNombre;
@@ -49,6 +51,8 @@ public class ProductoDTO {
             .id(p.getId())
             .nombre(p.getNombre())
             .descripcion(p.getDescripcion())
+            .use(p.getUse())
+            .composition(p.getComposition())
             // Familia
             .familiaId(p.getFamilia() != null ? p.getFamilia().getId().longValue() : null)
             .familiaNombre(p.getFamilia() != null ? p.getFamilia().getNombre() : null)

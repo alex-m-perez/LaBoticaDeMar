@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const isAuthenticated = document.body.dataset.authenticated === 'true';
 
     let cartState = isAuthenticated ? userCartState : JSON.parse(localStorage.getItem('cart') || '{}');
-    
+    let profileMenuTimer = null; 
     let isCategoriesVisible = false;
     let isBrandsVisible = false;
     let navbarTimer;
@@ -276,8 +276,27 @@ document.addEventListener('DOMContentLoaded', () => {
     // MENU CONTEXTUAL PROFILE
     // ——————————————————————————————
     if (profileContainer && profileMenu) {
-        profileContainer.addEventListener('mouseenter', () => profileMenu.classList.remove('hidden'));
-        profileContainer.addEventListener('mouseleave', () => profileMenu.classList.add('hidden'));
+        const openMenu = () => {
+            // Cancela cualquier temporizador de cierre pendiente
+            clearTimeout(profileMenuTimer);
+            // Muestra el menú
+            profileMenu.classList.remove('hidden');
+        };
+
+        const startCloseTimer = () => {
+            // Inicia un temporizador para cerrar el menú después de 1 segundo
+            profileMenuTimer = setTimeout(() => {
+                profileMenu.classList.add('hidden');
+            }, 250); // 1000 ms = 1 segundo
+        };
+
+        // Eventos para el contenedor del icono
+        profileContainer.addEventListener('mouseenter', openMenu);
+        profileContainer.addEventListener('mouseleave', startCloseTimer);
+
+        // Eventos para el menú desplegable
+        profileMenu.addEventListener('mouseenter', openMenu);
+        profileMenu.addEventListener('mouseleave', startCloseTimer);
     }
 
     if (profileIcon) {

@@ -135,19 +135,19 @@
 	<div class="grid grid-cols-1 md:grid-cols-4 gap-4">
 		<div class="p-4 rounded-2xl shadow border">
 			<h2 class="text-sm text-gray-500">Total Productos</h2>
-			<p class="text-2xl font-bold">${totalProductos}</p>
+			<p class="text-2xl font-bold"></p>
 		</div>
 		<div class="p-4 rounded-2xl shadow border">
 			<h2 class="text-sm text-gray-500">Productos Activos</h2>
-			<p class="text-2xl font-bold">${totalActivos}</p>
+			<p class="text-2xl font-bold"></p>
 		</div>
 		<div class="p-4 rounded-2xl shadow border">
 			<h2 class="text-sm text-gray-500">Productos Inactivos</h2>
-			<p class="text-2xl font-bold">${totalInactivos}</p>
+			<p class="text-2xl font-bold"></p>
 		</div>
 		<div class="p-4 rounded-2xl shadow border">
 			<h2 class="text-sm text-gray-500">Stock Total</h2>
-			<p class="text-2xl font-bold">${stockTotal}</p>
+			<p class="text-2xl font-bold"></p>
 		</div>
 	</div>
 

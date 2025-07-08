@@ -5,15 +5,14 @@ import java.util.Optional;
 
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import es.laboticademar.webstore.entities.Producto;
-import es.laboticademar.webstore.services.interfaces.FamiliaService;
 import es.laboticademar.webstore.services.interfaces.CategoriaService;
+import es.laboticademar.webstore.services.interfaces.FamiliaService;
+import es.laboticademar.webstore.services.interfaces.LaboratorioService;
 import es.laboticademar.webstore.services.interfaces.SubcategoriaService;
 import es.laboticademar.webstore.services.interfaces.TipoService;
-import es.laboticademar.webstore.services.interfaces.LaboratorioService;
 
 @Component
 public class ExcelToProductMapper {
@@ -26,7 +25,6 @@ public class ExcelToProductMapper {
     private final TipoService tipoService;
     private final LaboratorioService laboratorioService;
 
-    @Autowired
     public ExcelToProductMapper(
         FamiliaService familiaService,
         CategoriaService categoriaService,

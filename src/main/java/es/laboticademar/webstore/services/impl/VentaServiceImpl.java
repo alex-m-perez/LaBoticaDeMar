@@ -3,7 +3,9 @@ package es.laboticademar.webstore.services.impl;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.security.Principal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -12,13 +14,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.laboticademar.webstore.dto.PaymentDTO;
 import es.laboticademar.webstore.dto.venta.DetalleVentaDTO;
+import es.laboticademar.webstore.dto.venta.VentaAdminResumenDTO;
 import es.laboticademar.webstore.dto.venta.VentaDTO;
+import es.laboticademar.webstore.dto.venta.VentaKpisDTO;
 import es.laboticademar.webstore.dto.venta.VentaPageDTO;
 import es.laboticademar.webstore.dto.venta.VentaResumenDTO;
 import es.laboticademar.webstore.entities.CartItem;
@@ -35,6 +40,8 @@ import es.laboticademar.webstore.services.interfaces.UsuarioService;
 import es.laboticademar.webstore.services.interfaces.VentaService;
 import es.laboticademar.webstore.utils.CreditCardUtils;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.criteria.Expression;
+import jakarta.persistence.criteria.Join;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -251,6 +258,132 @@ public class VentaServiceImpl implements VentaService {
                 .cantidad(detalle.getCantidad())
                 .precioUnitario(detalle.getPrecioUnitario())
                 .build();
+    }
+
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<VentaAdminResumenDTO> findAllVentasFiltered(
+            int page, int size, Long clienteId, Long idUsuario, LocalDate fechaInicio,
+            LocalDate fechaFin, Float precioMin, Float precioMax, Integer numProductos) {
+
+        if (clienteId != null && idUsuario != null && !clienteId.equals(idUsuario)) {
+            return Page.empty();
+        }
+
+        Long finalIdUsuario = clienteId != null ? clienteId : idUsuario;
+
+        Specification<Venta> spec = Specification.where(null);
+
+        if (finalIdUsuario != null) {
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("cliente").get("id"), finalIdUsuario));
+        }
+        if (fechaInicio != null) {
+            spec = spec.and((root, query, cb) -> cb.greaterThanOrEqualTo(root.get("fechaVenta"), fechaInicio.atStartOfDay()));
+        }
+        if (fechaFin != null) {
+            spec = spec.and((root, query, cb) -> cb.lessThanOrEqualTo(root.get("fechaVenta"), fechaFin.atTime(23, 59, 59)));
+        }
+        if (precioMin != null) {
+            spec = spec.and((root, query, cb) -> cb.ge(root.get("montoTotal"), precioMin));
+        }
+        if (precioMax != null) {
+            spec = spec.and((root, query, cb) -> cb.le(root.get("montoTotal"), precioMax));
+        }
+        if (numProductos != null) {
+            spec = spec.and((root, query, cb) -> cb.equal(cb.size(root.get("detalles")), numProductos));
+        }
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by("fechaVenta").descending());
+
+        return ventaDAO.findAll(spec, pageable).map(this::mapToVentaAdminResumenDTO);
+    }
+
+
+    @Override
+    @Transactional(readOnly = true)
+    public VentaDTO findVentaDetailsById(Long ventaId) {
+        Venta venta = ventaDAO.findById(ventaId)
+                .orElseThrow(() -> new EntityNotFoundException("Venta no encontrada con ID: " + ventaId));
+
+        // Reutilizamos el mapper que ya tenías para convertir la entidad a un DTO de detalle
+        return convertToVentaDetalleDTO(venta);
+    }
+
+    /**
+     * MAPPER AÑADIDO: Convierte una entidad Venta al DTO de resumen para el admin.
+     * Este DTO incluye información del cliente.
+     */
+    private VentaAdminResumenDTO mapToVentaAdminResumenDTO(Venta venta) {
+        Usuario cliente = venta.getCliente();
+        String apellido2 = cliente.getApellido2() != null ? cliente.getApellido2() : ""  ;
+        String nombreCompleto = (cliente.getNombre() + " " + cliente.getApellido1() + " " + apellido2).trim();
+        
+
+        return VentaAdminResumenDTO.builder()
+                .id(venta.getId())
+                .fechaVenta(venta.getFechaVenta())
+                .montoTotal(venta.getMontoTotal())
+                .totalItems(venta.getDetalles() != null ? venta.getDetalles().stream().mapToInt(DetalleVenta::getCantidad).sum() : 0)
+                .clienteId(cliente.getId())
+                .clienteNombre(nombreCompleto)
+                .build();
+    }
+
+
+    @Override
+    @Transactional(readOnly = true)
+    public VentaKpisDTO getVentaKpis(Long clienteId, Long idUsuario, LocalDate fechaInicio, LocalDate fechaFin, Float precioMin, Float precioMax, Integer numProductos) {
+
+        // --- Rango para KPIs de "Hoy" ---
+        LocalDate hoy = LocalDate.now();
+        Specification<Venta> specHoy = buildVentaSpecification(clienteId, idUsuario, hoy, hoy, precioMin, precioMax, numProductos);
+
+        // --- Rango para KPIs de "Rango de Fechas" ---
+        LocalDate inicioRango = (fechaInicio != null) ? fechaInicio : LocalDate.now().withDayOfMonth(1);
+        LocalDate finRango = (fechaFin != null) ? fechaFin : LocalDate.now().with(TemporalAdjusters.lastDayOfMonth());
+        Specification<Venta> specRango = buildVentaSpecification(clienteId, idUsuario, inicioRango, finRango, precioMin, precioMax, numProductos);
+
+        // --- Construcción del DTO ---
+        VentaKpisDTO kpis = new VentaKpisDTO();
+        kpis.setTotalVentasHoy(countVentas(specHoy));
+        kpis.setIngresosHoy(sumIngresos(specHoy));
+        kpis.setTotalVentasRango(countVentas(specRango));
+        kpis.setIngresosRango(sumIngresos(specRango));
+
+        return kpis;
+    }
+
+    // --- Métodos privados para los cálculos ---
+
+    private long countVentas(Specification<Venta> spec) {
+        return ventaDAO.count(spec);
+    }
+
+    private BigDecimal sumIngresos(Specification<Venta> spec) {
+        List<Venta> ventas = ventaDAO.findAll(spec);
+        return ventas.stream()
+                .map(venta -> BigDecimal.valueOf(venta.getMontoTotal()))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    // --- Lógica de filtrado reutilizable ---
+
+    private Specification<Venta> buildVentaSpecification(Long clienteId, Long idUsuario, LocalDate fechaInicio, LocalDate fechaFin, Float precioMin, Float precioMax, Integer numProductos) {
+        // Lógica de conflicto de IDs
+        if (clienteId != null && idUsuario != null && !clienteId.equals(idUsuario)) {
+            return (root, query, cb) -> cb.disjunction(); // Devuelve una condición que nunca es verdadera
+        }
+        Long finalIdUsuario = clienteId != null ? clienteId : idUsuario;
+
+        Specification<Venta> spec = Specification.where(null);
+        // ... (Aquí va la lógica de construcción de la Specification que ya tenías)
+        if (finalIdUsuario != null) { spec = spec.and((root, query, cb) -> cb.equal(root.get("cliente").get("id"), finalIdUsuario)); }
+        if (fechaInicio != null) { spec = spec.and((root, query, cb) -> cb.greaterThanOrEqualTo(root.get("fechaVenta"), fechaInicio.atStartOfDay())); }
+        if (fechaFin != null) { spec = spec.and((root, query, cb) -> cb.lessThanOrEqualTo(root.get("fechaVenta"), fechaFin.atTime(23, 59, 59))); }
+        // ... etc para los otros filtros
+        
+        return spec;
     }
 
 

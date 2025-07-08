@@ -1,9 +1,11 @@
-package es.laboticademar.webstore.controllers.restControllers;
+package es.laboticademar.webstore.controllers.restControllers.admin;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,13 +21,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/admin/api")
+@RequestMapping("/admin/api/products")
 @RequiredArgsConstructor
-public class AdminRestController {
+public class AdminProdcutRestController {
 
     private final ProductService productService;
     
-    @GetMapping("/products/get_pagable_list")
+    @GetMapping("/get_pagable_list")
     public Page<ProductoDTO> list(
         HttpServletRequest request,
         @RequestParam(defaultValue = "0") int page,
@@ -52,7 +54,7 @@ public class AdminRestController {
         return productPage;
     }
 
-    @PostMapping("/products/upload")
+    @PostMapping("/upload")
     public ResponseEntity<Void> uploadProducts(
             @RequestParam("file") MultipartFile file) throws Exception {
         try {
@@ -63,7 +65,4 @@ public class AdminRestController {
             return ResponseEntity.badRequest().build();
         }
     }
-
-    
-
 }

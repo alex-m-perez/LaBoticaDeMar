@@ -1,16 +1,8 @@
 package es.laboticademar.webstore.controllers;
 
 import java.math.BigDecimal;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-
-import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,6 +20,7 @@ import es.laboticademar.webstore.services.interfaces.ProductService;
 import es.laboticademar.webstore.services.interfaces.SubcategoriaService;
 import es.laboticademar.webstore.utils.BreadcrumbUtils;
 import es.laboticademar.webstore.utils.objects.Breadcrumb;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
 @Controller
