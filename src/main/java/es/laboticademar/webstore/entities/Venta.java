@@ -3,6 +3,8 @@ package es.laboticademar.webstore.entities;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import es.laboticademar.webstore.enumerations.DevolucionEnum;
+import es.laboticademar.webstore.enumerations.VentaEstadoEnum;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -42,6 +44,9 @@ public class Venta {
 
     @Column(name = "PUNTOS_UTILIZADOS")
     private Integer puntosUtilizados;
+
+    @Column(name = "ESTADO", nullable = false)
+    private VentaEstadoEnum estado;
     
     @OneToMany(
         mappedBy = "venta",

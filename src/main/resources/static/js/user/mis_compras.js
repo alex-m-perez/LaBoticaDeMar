@@ -92,6 +92,7 @@ function initializePage() {
             row.innerHTML = `
                 <td class="px-4 py-3 font-medium">#${String(sale.id).padStart(6, '0')}</td>
                 <td class="px-4 py-3">${formatDate(sale.fechaVenta)}</td>
+                <td class="px-4 py-3">${sale.estado}</td>
                 <td class="px-4 py-3">${sale.totalItems}</td>
                 <td class="px-4 py-3 text-right">${formatCurrency(sale.montoTotal)}</td>
                 <td class="px-4 py-3 text-center"><span class="text-blue-600 hover:underline">Detalles</span></td>

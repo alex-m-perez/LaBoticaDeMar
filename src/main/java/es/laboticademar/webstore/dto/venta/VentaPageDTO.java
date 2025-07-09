@@ -1,14 +1,14 @@
-package es.laboticademar.webstore.dto.venta;
+    package es.laboticademar.webstore.dto.venta;
 
-import org.springframework.data.domain.Page;
+    import org.springframework.data.domain.Page;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+    import lombok.AllArgsConstructor;
+    import lombok.Data;
+    import lombok.NoArgsConstructor;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class VentaPageDTO {
-    private Page<VentaResumenDTO> salesPage;
-}
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public class VentaPageDTO {
+        private Page<VentaResumenDTO> salesPage;
+    }

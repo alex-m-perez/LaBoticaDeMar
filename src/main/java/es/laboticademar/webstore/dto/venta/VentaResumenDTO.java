@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 public class VentaResumenDTO {
     private Long id;
     private LocalDateTime fechaVenta;
+    private String estado;
     private Float montoTotal;
     private Integer totalItems; // Total number of items in the sale
 }

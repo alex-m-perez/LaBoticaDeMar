@@ -32,6 +32,7 @@ import es.laboticademar.webstore.entities.Producto;
 import es.laboticademar.webstore.entities.ShoppingCart;
 import es.laboticademar.webstore.entities.Usuario;
 import es.laboticademar.webstore.entities.Venta;
+import es.laboticademar.webstore.enumerations.VentaEstadoEnum;
 import es.laboticademar.webstore.exceptions.InsufficientStockException;
 import es.laboticademar.webstore.repositories.ProductDAO;
 import es.laboticademar.webstore.repositories.VentaDAO;
@@ -104,6 +105,7 @@ public class VentaServiceImpl implements VentaService {
         Venta venta = new Venta();
         venta.setCliente(usuario);
         venta.setFechaVenta(LocalDateTime.now());
+        venta.setEstado(VentaEstadoEnum.ACEPTADO);
 
         List<DetalleVenta> detalles = userCart.getItems().stream()
             .map(ci -> crearDetalleVenta(ci, venta))
@@ -223,6 +225,7 @@ public class VentaServiceImpl implements VentaService {
         return VentaResumenDTO.builder()
                 .id(venta.getId())
                 .fechaVenta(venta.getFechaVenta())
+                .estado(VentaEstadoEnum.fromId(venta.getEstado().getId()).getEtiqueta())
                 .montoTotal(venta.getMontoTotal())
                 // Calcula el número total de artículos sumando las cantidades de cada detalle
                 .totalItems(venta.getDetalles().stream().mapToInt(DetalleVenta::getCantidad).sum())

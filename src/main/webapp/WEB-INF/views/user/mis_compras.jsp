@@ -6,6 +6,7 @@
                 <tr>
                     <th class="px-4 py-2 text-left">Pedido ID</th>
                     <th class="px-4 py-2 text-left">Fecha</th>
+                    <th class="px-4 py-2 text-left">Estado</th>
                     <th class="px-4 py-2 text-left">Nº de productos</th>
                     <th class="px-4 py-2 text-right">Total</th>
                     <th class="px-4 py-2 text-center">Acciones</th>

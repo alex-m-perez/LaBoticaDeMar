@@ -15,7 +15,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.laboticademar.webstore.dto.usuario.EmpleadoDTO;
+import es.laboticademar.webstore.dto.usuario.TopCompradorDTO;
+import es.laboticademar.webstore.dto.usuario.TopDevolucionesDTO;
+import es.laboticademar.webstore.dto.usuario.TopGastadorDTO;
 import es.laboticademar.webstore.dto.usuario.UsuarioBusquedaDTO;
+import es.laboticademar.webstore.dto.usuario.UsuarioDetalleDTO;
 import es.laboticademar.webstore.dto.usuario.UsuarioPersonalDataDTO;
 import es.laboticademar.webstore.entities.Usuario;
 import es.laboticademar.webstore.repositories.UsuarioDAO;
@@ -154,5 +158,51 @@ public class UsuarioServiceImpl implements UsuarioService {
         }
 
         return usuarioDAO.save(usuarioExistente);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<UsuarioDetalleDTO> findAllClientes(Pageable pageable) {
+        // Llama al nuevo método del DAO y mapea el resultado a DTO
+        return usuarioDAO.findClientes(pageable)
+                         .map(this::toDetalleDTO);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public UsuarioDetalleDTO findUsuarioDetailsById(Long id) {
+        // Busca el usuario o lanza una excepción, luego lo mapea al DTO de detalle
+        return usuarioDAO.findById(id)
+                         .map(this::toDetalleDTO)
+                         .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado con ID: " + id));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<TopCompradorDTO> findTopCompradores(Pageable pageable) {
+        // La lógica está en la consulta del DAO, aquí solo se llama al método
+        return usuarioDAO.findTopCompradores(pageable);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<TopGastadorDTO> findTopGastadores(Pageable pageable) {
+        // La lógica está en la consulta del DAO
+        return usuarioDAO.findTopGastadores(pageable);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<TopDevolucionesDTO> findTopDevoluciones(Pageable pageable) {
+        // La lógica está en la consulta del DAO
+        return usuarioDAO.findTopDevoluciones(pageable);
+    }
+
+    /**
+     * Método privado para convertir una entidad Usuario a UsuarioDetalleDTO.
+     * Reutiliza tu ModelMapper existente.
+     */
+    private UsuarioDetalleDTO toDetalleDTO(Usuario usuario) {
+        return modelMapper.map(usuario, UsuarioDetalleDTO.class);
     }
 }

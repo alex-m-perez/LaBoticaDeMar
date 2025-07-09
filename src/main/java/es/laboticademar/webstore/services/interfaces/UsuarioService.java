@@ -8,7 +8,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import es.laboticademar.webstore.dto.usuario.EmpleadoDTO;
+import es.laboticademar.webstore.dto.usuario.TopCompradorDTO;
+import es.laboticademar.webstore.dto.usuario.TopDevolucionesDTO;
+import es.laboticademar.webstore.dto.usuario.TopGastadorDTO;
 import es.laboticademar.webstore.dto.usuario.UsuarioBusquedaDTO;
+import es.laboticademar.webstore.dto.usuario.UsuarioDetalleDTO;
 import es.laboticademar.webstore.dto.usuario.UsuarioPersonalDataDTO;
 import es.laboticademar.webstore.entities.Usuario;
 
@@ -28,4 +32,10 @@ public interface UsuarioService {
     public Page<Usuario> findEmpleados(Pageable pageable);
     public void setActivo(Long id, boolean activo);
     public Usuario updateEmpleado(Long id, EmpleadoDTO empleadoDTO);
+    public Page<UsuarioDetalleDTO> findAllClientes(Pageable pageable);
+    public UsuarioDetalleDTO findUsuarioDetailsById(Long id);
+    public Page<TopCompradorDTO> findTopCompradores(Pageable pageable);
+    public Page<TopGastadorDTO> findTopGastadores(Pageable pageable);
+    public Page<TopDevolucionesDTO> findTopDevoluciones(Pageable pageable);
+    
 }

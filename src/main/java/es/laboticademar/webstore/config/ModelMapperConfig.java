@@ -6,6 +6,7 @@ import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -20,9 +21,11 @@ import org.springframework.context.annotation.Configuration;
 import es.laboticademar.webstore.dto.producto.ProductoDTO;
 import es.laboticademar.webstore.dto.usuario.EmpleadoDTO;
 import es.laboticademar.webstore.dto.usuario.UsuarioDTO;
+import es.laboticademar.webstore.dto.usuario.UsuarioDetalleDTO;
 import es.laboticademar.webstore.dto.usuario.UsuarioPersonalDataDTO;
 import es.laboticademar.webstore.entities.Producto;
 import es.laboticademar.webstore.entities.Usuario;
+import es.laboticademar.webstore.enumerations.PreferenciaEnum;
 
 @Configuration
 public class ModelMapperConfig {
@@ -148,12 +151,31 @@ public class ModelMapperConfig {
             return destination;
         });
 
+        // Usuario → UsuarioDetalleDTO
+        TypeMap<Usuario, es.laboticademar.webstore.dto.usuario.UsuarioDetalleDTO> detalleMap = mapper.createTypeMap(Usuario.class, es.laboticademar.webstore.dto.usuario.UsuarioDetalleDTO.class);
+
+        // 1. Le decimos que IGNORE el campo 'preferencias' en el mapeo automático
+        detalleMap.addMappings(m -> m.skip(es.laboticademar.webstore.dto.usuario.UsuarioDetalleDTO::setPreferencias));
+
+        // 2. Usamos un PostConverter para rellenar el campo manualmente después del mapeo
+        detalleMap.setPostConverter(context -> {
+            Usuario source = context.getSource();
+            es.laboticademar.webstore.dto.usuario.UsuarioDetalleDTO destination = context.getDestination();
+
+            if (source.getPreferencias() != null) {
+                Set<String> labels = source.getPreferencias().stream()
+                        .map(id -> PreferenciaEnum.fromId(id).getLabel())
+                        .collect(Collectors.toSet());
+                destination.setPreferencias(labels);
+            }
+            return destination;
+        });
+
         // EmpleadoDTO -> Usuario
         TypeMap<EmpleadoDTO, Usuario> toUsuarioEntityMap = mapper.createTypeMap(EmpleadoDTO.class, Usuario.class);
         toUsuarioEntityMap.addMappings(m -> m.using(localDateToDate).map(EmpleadoDTO::getFechaNac, Usuario::setFechaNac));
         toUsuarioEntityMap.addMappings(m -> m.when(ctx -> ctx.getSource() != null && ((EmpleadoDTO)ctx.getSource()).getPassword() != null && !((EmpleadoDTO)ctx.getSource()).getPassword().isEmpty())
                                             .map(EmpleadoDTO::getPassword, Usuario::setPasswd));
-
 
 
         // DTO → Usuario (inverso)
