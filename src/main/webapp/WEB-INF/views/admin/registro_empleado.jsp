@@ -53,7 +53,7 @@
             </div>
 
             <form id="register-form"
-                  action="${pageContext.request.contextPath}/auth/register"
+                  action="${pageContext.request.contextPath}/auth/register_empleado"
                   method="post"
                   data-success-redirect="/auth/login"
                   class="space-y-8 pb-20">

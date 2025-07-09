@@ -1,4 +1,4 @@
-package es.laboticademar.webstore.dto.venta;
+package es.laboticademar.webstore.dto.producto;
 
 import lombok.Data;
 

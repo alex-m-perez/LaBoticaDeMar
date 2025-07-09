@@ -6,16 +6,21 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import es.laboticademar.webstore.dto.UsuarioPersonalDataDTO;
+import es.laboticademar.webstore.dto.usuario.EmpleadoDTO;
 import es.laboticademar.webstore.dto.usuario.UsuarioBusquedaDTO;
+import es.laboticademar.webstore.dto.usuario.UsuarioPersonalDataDTO;
 import es.laboticademar.webstore.entities.Usuario;
 import es.laboticademar.webstore.repositories.UsuarioDAO;
 import es.laboticademar.webstore.services.interfaces.UsuarioService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -24,6 +29,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     private final UsuarioDAO usuarioDAO;
     private final ModelMapper modelMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public List<Usuario> getAllUsers() {
@@ -120,5 +126,33 @@ public class UsuarioServiceImpl implements UsuarioService {
                     return new UsuarioBusquedaDTO(u.getId(), nombreCompleto);
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Usuario> findEmpleados(Pageable pageable) {
+        // Llama al método del repositorio para obtener solo los empleados
+        return usuarioDAO.findByRolesContaining("ROLE_EMPLEADO", pageable);
+    }
+
+    @Override
+    public void setActivo(Long id, boolean activo) {
+        Usuario usuario = usuarioDAO.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Empleado no encontrado con id: " + id));
+        usuario.setActivo(activo);
+        usuarioDAO.save(usuario);
+    }
+
+    @Override
+    public Usuario updateEmpleado(Long id, EmpleadoDTO empleadoDTO) {
+        Usuario usuarioExistente = usuarioDAO.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Empleado no encontrado con id: " + id));
+
+        modelMapper.map(empleadoDTO, usuarioExistente);
+        if (empleadoDTO.getPassword() != null && !empleadoDTO.getPassword().isEmpty()) {
+            usuarioExistente.setPasswd(passwordEncoder.encode(empleadoDTO.getPassword()));
+        }
+
+        return usuarioDAO.save(usuarioExistente);
     }
 }

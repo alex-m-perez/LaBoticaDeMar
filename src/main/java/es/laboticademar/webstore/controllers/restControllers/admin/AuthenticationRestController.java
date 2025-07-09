@@ -1,4 +1,4 @@
-package es.laboticademar.webstore.controllers.restControllers;
+package es.laboticademar.webstore.controllers.restControllers.admin;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,13 +20,18 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
-public class AuthenticationController {
+public class AuthenticationRestController {
 
     private final AuthenticationService authenticationService;
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
         return ResponseEntity.ok(authenticationService.register(request));
+    }
+
+    @PostMapping("/register_empleado")
+    public ResponseEntity<AuthenticationResponse> registerEmpleado(@RequestBody RegisterRequest request) {
+        return ResponseEntity.ok(authenticationService.registerEmployee(request));
     }
     
     @PostMapping("/authenticate")

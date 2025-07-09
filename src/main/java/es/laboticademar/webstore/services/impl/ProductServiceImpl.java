@@ -19,7 +19,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import es.laboticademar.webstore.dto.ProductoDTO;
+import es.laboticademar.webstore.dto.producto.ProductoDTO;
 import es.laboticademar.webstore.entities.Producto;
 import es.laboticademar.webstore.mappers.ExcelToProductMapper;
 import es.laboticademar.webstore.repositories.ProductDAO;

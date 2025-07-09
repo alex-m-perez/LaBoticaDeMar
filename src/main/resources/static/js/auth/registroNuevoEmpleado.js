@@ -1,67 +1,45 @@
-//registro_nuevo.js
 document.addEventListener('DOMContentLoaded', () => {
-    const form        = document.getElementById('register-form');
-    const prevBtn     = document.getElementById('prev-btn');
-    const nextBtn     = document.getElementById('next-btn');
-    const progress    = document.getElementById('progress-bar');
-    const stepLabel   = document.getElementById('step-label');
-    const stepTitle   = document.getElementById('step-title');
-    const step1       = document.getElementById('step-1');
-    const step2       = document.getElementById('step-2');
-    const pwdField    = document.getElementById('passwd');
-    const confirmPwd  = document.getElementById('confirm_passwd');
-    const togglePwd   = document.getElementById('toggle-password');
+    // --- Referencias a elementos del DOM ---
+    const form = document.getElementById('register-form');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const progress = document.getElementById('progress-bar');
+    const stepLabel = document.getElementById('step-label');
+    const stepTitle = document.getElementById('step-title');
+    const step1 = document.getElementById('step-1');
+    const step2 = document.getElementById('step-2');
+    // Se eliminó la referencia a step-3
+
+    const pwdField = document.getElementById('passwd');
+    const confirmPwd = document.getElementById('confirm_passwd');
+    const togglePwd = document.getElementById('toggle-password');
     const correoField = document.getElementById('correo');
 
-    // Lista de caracteres especiales permitidos
+    // Listas para validación (se mantienen)
     const allowedSpecials = '!@#$%^&*()+-=[]{};,<>/?|~';
-    // Lista de dominios de correo válidos en España
     const allowedEmailDomains = [
-        // Internacionales
         'gmail.com', 'hotmail.com', 'outlook.com', 'live.com', 'icloud.com',
         'yahoo.com', 'yahoo.es', 'protonmail.com', 'gmx.es', 'msn.com',
-        'hotmail.es', 'outlook.es', 'live.es',
-
-        // Nacionales
-        'telefonica.net', 'terra.es', 'ono.com', 'jazztel.com', 'wanadoo.es',
-        'ya.com', 'orange.es', 'movistar.es', 'vodafone.es'
+        'hotmail.es', 'outlook.es', 'live.es', 'telefonica.net', 'terra.es',
+        'ono.com', 'jazztel.com', 'wanadoo.es', 'ya.com', 'orange.es',
+        'movistar.es', 'vodafone.es'
     ];
 
-
     let currentStep = 1;
-    const selectedIntereses = new Set();
+    const TOTAL_STEPS = 2; // El total de pasos ahora es 2
 
-    // Quitar borde rojo al rellenar dinámicamente
+    // --- Funciones de utilidad y validación (la mayoría se mantienen) ---
+
+    // Quitar borde rojo al rellenar (sin cambios)
     document.querySelectorAll('#register-form input[required], #register-form select[required]').forEach(field => {
         field.addEventListener('input', () => {
-            if (field.type === 'checkbox') return;
             if (field.value.trim()) {
-                field.classList.remove('border-2','border-red-500');
-            }
-        });
-        field.addEventListener('change', () => {
-            if (field.type === 'checkbox') {
-                if (field.checked) {
-                    field.classList.remove('border-2','border-red-500');
-                }
-            } else if (field.value.trim()) {
-                field.classList.remove('border-2','border-red-500');
+                field.classList.remove('border-2', 'border-red-500');
             }
         });
     });
 
-    // Deshabilitar placeholder en select de género tras selección
-    const generoSelect = document.getElementById('genero');
-    if (generoSelect) {
-        generoSelect.addEventListener('change', () => {
-            const placeholder = generoSelect.querySelector('option[value=""]');
-            if (generoSelect.value && placeholder) {
-                placeholder.disabled = true;
-            }
-        });
-    }
-
-    // Íconos ojo contraseña
+    // Toggle para mostrar/ocultar contraseña (sin cambios)
     const eyeOpenIcon = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>`;
     const eyeClosedIcon = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7a9.96 9.96 0 012.22-3.479m1.504-1.504A9.969 9.969 0 0112 5c4.477 0 8.268 2.943 9.542 7"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3l18 18"/></svg>`;
     togglePwd.innerHTML = eyeOpenIcon;
@@ -75,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Insertar lista de requisitos de contraseña bajo confirmación
+    // Requisitos de contraseña (sin cambios)
     const confirmDiv = confirmPwd.closest('div');
     const reqList = document.createElement('ul');
     reqList.id = 'pwd-requirements';
@@ -89,60 +67,32 @@ document.addEventListener('DOMContentLoaded', () => {
     ].map(req => `<li id="${req.id}" class="flex items-center text-red-500"><span class="mr-2">❌</span>${req.text}</li>`).join('');
     confirmDiv.appendChild(reqList);
 
-    // Selección de intereses: borde verde y envío de IDs seleccionados
-    const interesEls = document.querySelectorAll('.select-interes');
-    interesEls.forEach(el => {
-        el.addEventListener('click', () => {
-            const id = parseInt(el.dataset.id, 10);
-            if (selectedIntereses.has(id)) {
-                selectedIntereses.delete(id);
-                el.classList.remove('border-2','border-pistachio');
-                el.classList.add('border','border-gray-300');
-            } else {
-                selectedIntereses.add(id);
-                el.classList.remove('border','border-gray-300');
-                el.classList.add('border-2','border-pistachio');
-            }
-        });
-    });
-
-
-    // Mensaje de advertencia (requeridos, email o contraseñas)
+    // Mensaje de advertencia (sin cambios)
     const footerActions = form.querySelector('.shadow-inner');
     const warningMsg = document.createElement('div');
     warningMsg.id = 'warning-msg';
     warningMsg.className = 'hidden text-red-500 flex items-center space-x-2 mt-2';
-    warningMsg.innerHTML = `<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"h-5 w-5\" fill=\"none\" viewBox=\"0 0 24 24\" stroke=\"currentColor\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M10.29 3.86L1.82 18a1 1 0 00.86 1.5h18.64a1 1 0 00.86-1.5L13.71 3.86a1 1 0 00-1.72 0zM12 9v4m0 4h.01\"/></svg><span id=\"warning-text\"></span>`;
+    warningMsg.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.29 3.86L1.82 18a1 1 0 00.86 1.5h18.64a1 1 0 00.86-1.5L13.71 3.86a1 1 0 00-1.72 0zM12 9v4m0 4h.01"/></svg><span id="warning-text"></span>`;
     footerActions.insertBefore(warningMsg, nextBtn);
 
-    // Validar campos required en paso actual
+    // --- Funciones de validación (la lógica interna se mantiene) ---
     function validateRequired() {
         const invalid = [];
         document.getElementById(`step-${currentStep}`).querySelectorAll('input[required], select[required]').forEach(f => {
-            const empty = f.type === 'checkbox' ? !f.checked : !f.value.trim();
-            if (empty) {
+            if (!f.value.trim()) {
                 invalid.push(f);
-                if (f.type === 'checkbox') {
-                    f.classList.add('ring-2','ring-red-500','rounded');
-                } else {
-                    f.classList.add('border-2','border-red-500');
-                }
+                f.classList.add('border-2', 'border-red-500');
             } else {
-                if (f.type === 'checkbox') {
-                    f.classList.remove('ring-2','ring-red-500','rounded');
-                } else {
-                    f.classList.remove('border-2','border-red-500');
-                }
+                f.classList.remove('border-2', 'border-red-500');
             }
         });
         return invalid;
     }
 
-    // Validar fuerza y coincidencia de contraseñas
-    function validatePasswords() {
+    function validatePasswords() { /* ...lógica sin cambios... */
         const pw = pwdField.value;
         const cp = confirmPwd.value;
-        const specialRegex = /[!@#$%^&*()+\-=[\]{};,<>\/\?\|~]/;
+        const specialRegex = new RegExp(`[${allowedSpecials.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}]`);
         const checks = {
             length: pw.length >= 8,
             uppercase: /[A-Z]/.test(pw),
@@ -158,93 +108,115 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         return Object.values(checks).every(Boolean);
     }
+    [pwdField, confirmPwd].forEach(f => f.addEventListener('input', validatePasswords));
 
-    // Validar formato y dominio de correo electrónico
-    function validateEmail() {
+    function validateEmail() { /* ...lógica sin cambios... */
         const email = correoField.value.trim();
-        // Formato básico
         const basicRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!basicRegex.test(email)) return false;
-        // Comprobar dominio
         const domain = email.split('@')[1].toLowerCase();
         return allowedEmailDomains.includes(domain);
     }
 
-    // Al cambiar cualquiera de las dos contraseñas, actualizar lista
-    [pwdField, confirmPwd].forEach(f => f.addEventListener('input', validatePasswords));
-
+    // --- Lógica del Asistente (Wizard) ---
     function updateWizard() {
-        nextBtn.textContent = (currentStep < 2) ? 'Siguiente' : 'Terminar';
+        // Actualiza el botón 'Siguiente' para que en el último paso diga 'Registrar Empleado'
+        nextBtn.textContent = (currentStep < TOTAL_STEPS) ? 'Siguiente' : 'Registrar Empleado';
+        
+        // El botón 'Atrás' solo es visible a partir del paso 2
         prevBtn.classList.toggle('invisible', currentStep === 1);
         prevBtn.disabled = (currentStep === 1);
+
+        // Actualiza la barra de progreso y los textos para 2 pasos
         if (currentStep === 1) {
-            stepTitle.textContent = 'Registro nuevo empleado'; stepLabel.textContent = 'Paso 1 de 2'; progress.style.width = '50%';
-        } else {
-            stepTitle.textContent = 'Registro nuevo empleado'; stepLabel.textContent = 'Paso 2 de 2'; progress.style.width = '100%';
+            stepLabel.textContent = `Paso 1 de ${TOTAL_STEPS}`;
+            stepTitle.textContent = 'Datos de la cuenta del empleado';
+            progress.style.width = '50%';
+        } else if (currentStep === 2) {
+            stepLabel.textContent = `Paso 2 de ${TOTAL_STEPS}`;
+            stepTitle.textContent = 'Información personal y de contacto';
+            progress.style.width = '100%';
         }
-        step1.classList.toggle('hidden', currentStep!==1);
-        step2.classList.toggle('hidden', currentStep!==2);
+
+        step1.classList.toggle('hidden', currentStep !== 1);
+        step2.classList.toggle('hidden', currentStep !== 2);
+        // Oculta siempre cualquier mensaje de advertencia al cambiar de paso
         warningMsg.classList.add('hidden');
     }
 
     prevBtn.addEventListener('click', () => {
-        currentStep = Math.max(1, currentStep-1);
+        currentStep = Math.max(1, currentStep - 1);
         updateWizard();
     });
 
     nextBtn.addEventListener('click', e => {
         e.preventDefault();
-        // 1) Validar required
-        const inv = validateRequired();
-        if (inv.length) {
-            warningMsg.querySelector('#warning-text').textContent = 'Se deben rellenar los campos obligatorios';
+
+        // 1. Validar campos requeridos del paso actual
+        const invalidFields = validateRequired();
+        if (invalidFields.length > 0) {
+            warningMsg.querySelector('#warning-text').textContent = 'Debes rellenar los campos obligatorios.';
             warningMsg.classList.remove('hidden');
-            inv[0].scrollIntoView({behavior:'smooth', block:'center'});
+            invalidFields[0].focus();
             return;
         }
-        // 2) Si estamos en paso 1, validar correo y contraseñas
-        if (currentStep===1) {
-            // Validar email
+
+        // 2. Validaciones específicas del Paso 1 (email y contraseñas)
+        if (currentStep === 1) {
             if (!validateEmail()) {
-                correoField.classList.add('border-2','border-red-500');
-                warningMsg.querySelector('#warning-text').textContent = 'Dirección de correo no válida';
+                correoField.classList.add('border-2', 'border-red-500');
+                warningMsg.querySelector('#warning-text').textContent = 'La dirección de correo no es válida.';
                 warningMsg.classList.remove('hidden');
-                correoField.scrollIntoView({behavior:'smooth', block:'center'});
+                correoField.focus();
                 return;
             }
-            // Validar contraseñas
-            const ok = validatePasswords();
-            if (!ok) {
-                warningMsg.querySelector('#warning-text').textContent = 'Las contraseñas deben cumplir los requisitos';
+            if (!validatePasswords()) {
+                warningMsg.querySelector('#warning-text').textContent = 'La contraseña no cumple los requisitos.';
                 warningMsg.classList.remove('hidden');
-                document.getElementById('pwd-requirements').scrollIntoView({behavior:'smooth', block:'center'});
+                pwdField.focus();
                 return;
             }
         }
-        // 3) Avanzar paso
-        if (currentStep<3) {
+
+        // 3. Si no es el último paso, avanza
+        if (currentStep < TOTAL_STEPS) {
             currentStep++;
             updateWizard();
             return;
         }
-        // 4) Envío final
-        const data = Object.fromEntries(new FormData(form));
+
+        // 4. Si es el último paso, enviar el formulario
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+        // Ya no se envían preferencias ni términos
+
+        console.log("Enviando datos del empleado:", data);
+
         fetch(form.action, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         })
-        .then(async r => {
-            if (!r.ok) throw new Error();
-            const res = await r.json();
-            localStorage.setItem('token', res.token); // guarda el token
-            window.location = '/'; // redirige a home
+        .then(async response => {
+            if (!response.ok) {
+                // Intenta leer el mensaje de error del servidor
+                const errorData = await response.json().catch(() => ({ message: 'Error desconocido en el servidor.' }));
+                throw new Error(errorData.message);
+            }
+            return response.json();
         })
-        .catch(() => {
-            alert('Error al registrarse, por favor inténtalo de nuevo.');
+        .then(result => {
+            console.log("Respuesta exitosa:", result);
+            alert('¡Empleado registrado con éxito!');
+            // Redirige a la página de login o a donde indique el formulario
+            window.location.href = form.dataset.successRedirect || `${window.contextPath}/auth/login`;
+        })
+        .catch(error => {
+            console.error('Error en el registro:', error);
+            alert(`Error al registrar el empleado: ${error.message}`);
         });
     });
 
-    // Inicializar wizard
+    // Inicializar el asistente en el primer paso
     updateWizard();
 });

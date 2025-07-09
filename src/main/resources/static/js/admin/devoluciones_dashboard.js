@@ -1,5 +1,5 @@
 (function() {
-    debugger
+    
     let isInitialized = false;
 
     function initializePage() {

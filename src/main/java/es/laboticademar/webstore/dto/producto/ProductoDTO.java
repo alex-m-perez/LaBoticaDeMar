@@ -1,4 +1,4 @@
-package es.laboticademar.webstore.dto;
+package es.laboticademar.webstore.dto.producto;
 
 import java.math.BigDecimal;
 

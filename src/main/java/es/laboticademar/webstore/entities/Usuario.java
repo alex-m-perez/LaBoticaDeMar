@@ -56,6 +56,9 @@ public class Usuario {
     @Column(name = "fecha_nacimiento", nullable = false)
     private Date fechaNac;
 
+    @Column(name = "activo", nullable = false)
+    private Boolean activo;
+
     @Column(name = "genero", nullable = false)
     private Integer genero;
 

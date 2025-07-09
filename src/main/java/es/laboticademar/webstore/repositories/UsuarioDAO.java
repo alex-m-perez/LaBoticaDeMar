@@ -3,6 +3,7 @@ package es.laboticademar.webstore.repositories;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -22,4 +23,6 @@ public interface UsuarioDAO extends JpaRepository<Usuario, Long> {
            "LOWER(CONCAT(u.apellido1, ' ', u.apellido2)) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
            "LOWER(CONCAT(u.nombre, ' ', u.apellido1)) LIKE LOWER(CONCAT('%', :query, '%'))")
     List<Usuario> findByNombreFlexible(@Param("query") String query, Pageable pageable);
+
+    Page<Usuario> findByRolesContaining(String rol, Pageable pageable);
 }

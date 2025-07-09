@@ -13,26 +13,26 @@
                 <table id="tablaTopCompradores" class="min-w-full text-sm">
                     <thead class="text-gray-500 border-b">
                         <tr>
-                            <th class="px-4 py-2 text-left">Usuario</th>
+                            <th class="px-4 py-2 text-left">ID</th>
                             <th class="px-4 py-2 text-left">Cantidad</th>
-                            <th class="px-4 py-2 text-left">Ticket medio (€)</th>
+                            <th class="px-4 py-2 text-left">Promedio</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td class="px-4 py-2">carlos89@mail.com</td>
+                            <td class="px-4 py-2">1</td>
                             <td class="px-4 py-2">8</td>
-                            <td class="px-4 py-2">8.10</td>
+                            <td class="px-4 py-2">8.10 €</td>
                         </tr>
                         <tr>
-                            <td class="px-4 py-2">lucia.g@mail.com</td>
+                            <td class="px-4 py-2">2</td>
                             <td class="px-4 py-2">6</td>
-                            <td class="px-4 py-2">7.95</td>
+                            <td class="px-4 py-2">7.95 €</td>
                         </tr>
                         <tr>
-                            <td class="px-4 py-2">martaruiz@mail.com</td>
+                            <td class="px-4 py-2">3</td>
                             <td class="px-4 py-2">4</td>
-                            <td class="px-4 py-2">8.00</td>
+                            <td class="px-4 py-2">8.00 €</td>
                         </tr>
                     </tbody>
                 </table>
@@ -41,27 +41,31 @@
 
         <!-- Últimos registrados -->
         <div class="bg-white p-6 rounded-2xl shadow border">
-            <h2 class="text-lg font-semibold mb-4">Últimos usuarios registrados</h2>
+            <h2 class="text-lg font-semibold mb-4">Usuarios con más gasto</h2>
             <div class="overflow-auto">
                 <table id="tablaUltimosUsuarios" class="min-w-full text-sm">
                     <thead class="text-gray-500 border-b">
                         <tr>
-                            <th class="px-4 py-2 text-left">ID Usuario</th>
-                            <th class="px-4 py-2 text-left">Fecha Registro</th>
+                            <th class="px-4 py-2 text-left">ID</th>
+                            <th class="px-4 py-2 text-left">Pedidos</th>
+                            <th class="px-4 py-2 text-left">Total</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td class="px-4 py-2">U1003</td>
-                            <td class="px-4 py-2">05/06/2025</td>
+                            <td class="px-4 py-2">1</td>
+                            <td class="px-4 py-2">8</td>
+                            <td class="px-4 py-2">8.10 €</td>
                         </tr>
                         <tr>
-                            <td class="px-4 py-2">U1002</td>
-                            <td class="px-4 py-2">02/06/2025</td>
+                            <td class="px-4 py-2">2</td>
+                            <td class="px-4 py-2">6</td>
+                            <td class="px-4 py-2">7.95 €</td>
                         </tr>
                         <tr>
-                            <td class="px-4 py-2">U1001</td>
-                            <td class="px-4 py-2">29/05/2025</td>
+                            <td class="px-4 py-2">3</td>
+                            <td class="px-4 py-2">4</td>
+                            <td class="px-4 py-2">8.00 €</td>
                         </tr>
                     </tbody>
                 </table>
@@ -75,24 +79,24 @@
                 <table id="tablaTopDevoluciones" class="min-w-full text-sm">
                     <thead class="text-gray-500 border-b">
                         <tr>
-                            <th class="px-4 py-2 text-left">Usuario</th>
+                            <th class="px-4 py-2 text-left">Id</th>
                             <th class="px-4 py-2 text-left">Cantidad</th>
-                            <th class="px-4 py-2 text-left">Ticket medio (€)</th>
+                            <th class="px-4 py-2 text-left">Promedio</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td class="px-4 py-2">lucia.g@mail.com</td>
+                            <td class="px-4 py-2">1</td>
                             <td class="px-4 py-2">7</td>
                             <td class="px-4 py-2">7.80</td>
                         </tr>
                         <tr>
-                            <td class="px-4 py-2">carlos89@mail.com</td>
+                            <td class="px-4 py-2">2</td>
                             <td class="px-4 py-2">5</td>
                             <td class="px-4 py-2">8.20</td>
                         </tr>
                         <tr>
-                            <td class="px-4 py-2">martaruiz@mail.com</td>
+                            <td class="px-4 py-2">3</td>
                             <td class="px-4 py-2">3</td>
                             <td class="px-4 py-2">8.00</td>
                         </tr>
@@ -110,44 +114,36 @@
                 <thead class="text-gray-500 border-b">
                     <tr>
                         <th class="px-4 py-2 text-left">ID</th>
-                        <th class="px-4 py-2 text-left">Nombre</th>
-                        <th class="px-4 py-2 text-left">Apellido1</th>
-                        <th class="px-4 py-2 text-left">Apellido2</th>
-                        <th class="px-4 py-2 text-left">Puntos</th>
-                        <th class="px-4 py-2 text-left">Correo</th>
+                        <th class="px-4 py-2 text-left">Nombre completo</th>
+                        <th class="px-4 py-2 text-left">Fecha nacimiento</th>
                         <th class="px-4 py-2 text-left">Dirección</th>
+                        <th class="px-4 py-2 text-left">Correo</th>
                         <th class="px-4 py-2 text-left">Teléfono</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td class="px-4 py-2">U1001</td>
-                        <td class="px-4 py-2">Carlos</td>
-                        <td class="px-4 py-2">Gómez</td>
-                        <td class="px-4 py-2">Martínez</td>
-                        <td class="px-4 py-2">320</td>
+                        <td class="px-4 py-2">Carlos Gomez Martinez</td>
+                        <td class="px-4 py-2">DD/MM/AAAA</td>
+                        <td class="px-4 py-2">Calle Ejmplo 1</td>
                         <td class="px-4 py-2">carlos89@mail.com</td>
-                        <td class="px-4 py-2">Calle Mayor 12</td>
                         <td class="px-4 py-2">612345678</td>
                     </tr>
                     <tr>
                         <td class="px-4 py-2">U1002</td>
                         <td class="px-4 py-2">Lucía</td>
-                        <td class="px-4 py-2">González</td>
-                        <td class="px-4 py-2">Pérez</td>
-                        <td class="px-4 py-2">280</td>
+                        <td class="px-4 py-2">DD/MM/AAAA</td>
+                        <td class="px-4 py-2">Calle Ejmplo 1</td>
                         <td class="px-4 py-2">lucia.g@mail.com</td>
-                        <td class="px-4 py-2">Avda. del Sol 7</td>
                         <td class="px-4 py-2">622334455</td>
                     </tr>
                     <tr>
                         <td class="px-4 py-2">U1003</td>
                         <td class="px-4 py-2">Marta</td>
-                        <td class="px-4 py-2">Ruiz</td>
-                        <td class="px-4 py-2">Domínguez</td>
-                        <td class="px-4 py-2">150</td>
+                        <td class="px-4 py-2">DD/MM/AAAA</td>
+                        <td class="px-4 py-2">Calle Ejmplo 1</td>
                         <td class="px-4 py-2">martaruiz@mail.com</td>
-                        <td class="px-4 py-2">C/ Luna 25</td>
                         <td class="px-4 py-2">600112233</td>
                     </tr>
                 </tbody>

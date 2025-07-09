@@ -3,6 +3,7 @@ package es.laboticademar.webstore.services.impl;
 import java.util.Set;
 
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -97,12 +98,16 @@ public class AuthenticationService {
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
-                request.getCorreo(), 
+                request.getCorreo(),
                 request.getPassword()
             )
         );
 
         var usuario = usuarioDAO.getByCorreo(request.getCorreo()).orElseThrow();
+
+        if (!usuario.getActivo()) {
+            throw new DisabledException("El perfil de este usuario ha sido desactivado.");
+        }
         var usuarioPrincipal = new UsuarioPrincipal(usuario);
         var jwtToken = jwtService.generateToken(usuarioPrincipal);
         return AuthenticationResponse.builder().token(jwtToken).build();

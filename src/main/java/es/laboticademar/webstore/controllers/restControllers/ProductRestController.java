@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import es.laboticademar.webstore.dto.ProductPageDTO;
-import es.laboticademar.webstore.dto.ProductoDTO;
+import es.laboticademar.webstore.dto.BreadcrumbDTO;
+import es.laboticademar.webstore.dto.producto.ProductPageDTO;
+import es.laboticademar.webstore.dto.producto.ProductoDTO;
 import es.laboticademar.webstore.services.interfaces.CategoriaService;
 import es.laboticademar.webstore.services.interfaces.FamiliaService;
 import es.laboticademar.webstore.services.interfaces.ProductService;
 import es.laboticademar.webstore.services.interfaces.SubcategoriaService;
 import es.laboticademar.webstore.utils.BreadcrumbUtils;
-import es.laboticademar.webstore.utils.objects.Breadcrumb;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
@@ -56,7 +56,7 @@ import lombok.RequiredArgsConstructor;
             laboratorio, stock, precioMin, precioMax
         );
 
-        List<Breadcrumb> crumbs = BreadcrumbUtils.generarBreadcrumbs(
+        List<BreadcrumbDTO> crumbs = BreadcrumbUtils.generarBreadcrumbs(
             request, page, size,
             familia, categoria, subCategoria,
             familiaService, categoriaService, subcategoriaService

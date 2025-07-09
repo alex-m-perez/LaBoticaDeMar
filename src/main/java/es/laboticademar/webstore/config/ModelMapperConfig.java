@@ -1,5 +1,15 @@
 package es.laboticademar.webstore.config;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
@@ -7,21 +17,12 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import es.laboticademar.webstore.dto.producto.ProductoDTO;
+import es.laboticademar.webstore.dto.usuario.EmpleadoDTO;
+import es.laboticademar.webstore.dto.usuario.UsuarioDTO;
+import es.laboticademar.webstore.dto.usuario.UsuarioPersonalDataDTO;
 import es.laboticademar.webstore.entities.Producto;
-import es.laboticademar.webstore.dto.ProductoDTO;
 import es.laboticademar.webstore.entities.Usuario;
-import es.laboticademar.webstore.dto.UsuarioDTO;
-import es.laboticademar.webstore.dto.UsuarioPersonalDataDTO;
-
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Configuration
 public class ModelMapperConfig {
@@ -37,42 +38,42 @@ public class ModelMapperConfig {
         Converter<Date, LocalDate> dateToLocalDate = ctx -> {
             Date d = ctx.getSource();
             return (d == null)
-                ? null
-                : Instant.ofEpochMilli(d.getTime())
-                         .atZone(ZoneId.systemDefault())
-                         .toLocalDate();
+                    ? null
+                    : Instant.ofEpochMilli(d.getTime())
+                            .atZone(ZoneId.systemDefault())
+                            .toLocalDate();
         };
 
         // Converter LocalDate → Date
         Converter<LocalDate, Date> localDateToDate = ctx -> {
             LocalDate ld = ctx.getSource();
             return (ld == null)
-                ? null
-                : Date.from(ld.atStartOfDay(ZoneId.systemDefault()).toInstant());
+                    ? null
+                    : Date.from(ld.atStartOfDay(ZoneId.systemDefault()).toInstant());
         };
 
         // Producto → ProductoDTO
         TypeMap<Producto, ProductoDTO> prodMap = mapper.createTypeMap(Producto.class, ProductoDTO.class);
         prodMap.addMapping(src -> src.getCategoria() != null ? src.getCategoria().getNombre() : null,
-                           ProductoDTO::setCategoriaNombre);
+                ProductoDTO::setCategoriaNombre);
         prodMap.addMapping(src -> src.getFamilia() != null ? src.getFamilia().getNombre() : null,
-                           ProductoDTO::setFamiliaNombre);
+                ProductoDTO::setFamiliaNombre);
         prodMap.addMapping(src -> src.getSubCategoria() != null ? src.getSubCategoria().getNombre() : null,
-                           ProductoDTO::setSubCategoriaNombre);
+                ProductoDTO::setSubCategoriaNombre);
         prodMap.addMapping(src -> src.getLaboratorio() != null ? src.getLaboratorio().getNombre() : null,
-                           ProductoDTO::setLaboratorioNombre);
+                ProductoDTO::setLaboratorioNombre);
         prodMap.addMapping(src -> src.getTipo() != null ? src.getTipo().getNombre() : null,
-                           ProductoDTO::setTipoNombre);
+                ProductoDTO::setTipoNombre);
 
         // Usuario → UsuarioDTO
         TypeMap<Usuario, UsuarioDTO> userMap = mapper.createTypeMap(Usuario.class, UsuarioDTO.class);
         userMap.addMapping(Usuario::getNombre,    UsuarioDTO::setNombre);
         userMap.addMapping(Usuario::getApellido1, UsuarioDTO::setApellido1);
         userMap.addMapping(Usuario::getApellido2, UsuarioDTO::setApellido2);
-        userMap.addMapping(Usuario::getCorreo,    UsuarioDTO::setCorreo);
-        userMap.addMapping(Usuario::getPasswd,    UsuarioDTO::setPasswd);
+        userMap.addMapping(Usuario::getCorreo,     UsuarioDTO::setCorreo);
+        userMap.addMapping(Usuario::getPasswd,     UsuarioDTO::setPasswd);
         userMap.addMappings(m -> m.using(dateToLocalDate)
-                                   .map(Usuario::getFechaNac, UsuarioDTO::setFechaNac));
+                .map(Usuario::getFechaNac, UsuarioDTO::setFechaNac));
         userMap.addMapping(Usuario::getGenero,   UsuarioDTO::setGenero);
         userMap.addMapping(Usuario::getTelefono, UsuarioDTO::setTelefono);
         userMap.addMapping(Usuario::getAceptaPromociones, UsuarioDTO::setAceptaPromociones);
@@ -82,13 +83,13 @@ public class ModelMapperConfig {
 
         // Usuario → UsuarioPersonalDataDTO
         TypeMap<Usuario, UsuarioPersonalDataDTO> personalMap = mapper.createTypeMap(Usuario.class, UsuarioPersonalDataDTO.class);
-        personalMap.addMapping(Usuario::getNombre,    UsuarioPersonalDataDTO::setNombre);
+        personalMap.addMapping(Usuario::getNombre,     UsuarioPersonalDataDTO::setNombre);
         personalMap.addMapping(Usuario::getApellido1, UsuarioPersonalDataDTO::setApellido1);
         personalMap.addMapping(Usuario::getApellido2, UsuarioPersonalDataDTO::setApellido2);
-        personalMap.addMapping(Usuario::getCorreo,    UsuarioPersonalDataDTO::setCorreo);
-        personalMap.addMapping(Usuario::getTelefono,  UsuarioPersonalDataDTO::setTelefono);
+        personalMap.addMapping(Usuario::getCorreo,     UsuarioPersonalDataDTO::setCorreo);
+        personalMap.addMapping(Usuario::getTelefono,   UsuarioPersonalDataDTO::setTelefono);
         personalMap.addMappings(m -> m.using(dateToLocalDate)
-                                       .map(Usuario::getFechaNac, UsuarioPersonalDataDTO::setFechaNac));
+                .map(Usuario::getFechaNac, UsuarioPersonalDataDTO::setFechaNac));
         personalMap.addMapping(Usuario::getGenero,     UsuarioPersonalDataDTO::setGenero);
         personalMap.addMapping(Usuario::getPuntos,     UsuarioPersonalDataDTO::setPuntos);
         personalMap.addMapping(Usuario::getPreferencias, UsuarioPersonalDataDTO::setPreferencias);
@@ -100,9 +101,9 @@ public class ModelMapperConfig {
             String dir = src.getDireccionPostal();
             if (dir != null && !dir.trim().isEmpty()) {
                 List<String> parts = Arrays.stream(dir.split(","))
-                                           .map(String::trim)
-                                           .filter(s -> !s.isEmpty())
-                                           .collect(Collectors.toList());
+                        .map(String::trim)
+                        .filter(s -> !s.isEmpty())
+                        .collect(Collectors.toList());
                 if (parts.size() > 0) {
                     String[] mainTokens = parts.get(0).split(" ");
                     if (mainTokens.length >= 2) {
@@ -133,17 +134,38 @@ public class ModelMapperConfig {
             }
             return dst;
         });
+        
+
+        // Usuario → EmpleadoDTO
+        TypeMap<Usuario, EmpleadoDTO> empleadoMap = mapper.createTypeMap(Usuario.class, EmpleadoDTO.class);
+        empleadoMap.addMappings(m -> m.using(dateToLocalDate).map(Usuario::getFechaNac, EmpleadoDTO::setFechaNac));
+        empleadoMap.addMappings(m -> m.skip(EmpleadoDTO::setPassword)); // Nunca enviar la contraseña hasheada al frontend
+        empleadoMap.setPostConverter(context -> {
+            Usuario source = context.getSource();
+            EmpleadoDTO destination = context.getDestination();
+            String apellido2 = source.getApellido2() != null ? " " + source.getApellido2() : "";
+            destination.setNombreCompleto((source.getNombre() + " " + source.getApellido1() + apellido2).trim());
+            return destination;
+        });
+
+        // EmpleadoDTO -> Usuario
+        TypeMap<EmpleadoDTO, Usuario> toUsuarioEntityMap = mapper.createTypeMap(EmpleadoDTO.class, Usuario.class);
+        toUsuarioEntityMap.addMappings(m -> m.using(localDateToDate).map(EmpleadoDTO::getFechaNac, Usuario::setFechaNac));
+        toUsuarioEntityMap.addMappings(m -> m.when(ctx -> ctx.getSource() != null && ((EmpleadoDTO)ctx.getSource()).getPassword() != null && !((EmpleadoDTO)ctx.getSource()).getPassword().isEmpty())
+                                            .map(EmpleadoDTO::getPassword, Usuario::setPasswd));
+
+
 
         // DTO → Usuario (inverso)
         TypeMap<UsuarioPersonalDataDTO, Usuario> toEntity =
-            mapper.createTypeMap(UsuarioPersonalDataDTO.class, Usuario.class);
-        toEntity.addMapping(UsuarioPersonalDataDTO::getNombre,    Usuario::setNombre);
+                mapper.createTypeMap(UsuarioPersonalDataDTO.class, Usuario.class);
+        toEntity.addMapping(UsuarioPersonalDataDTO::getNombre,     Usuario::setNombre);
         toEntity.addMapping(UsuarioPersonalDataDTO::getApellido1, Usuario::setApellido1);
         toEntity.addMapping(UsuarioPersonalDataDTO::getApellido2, Usuario::setApellido2);
-        toEntity.addMapping(UsuarioPersonalDataDTO::getTelefono,  Usuario::setTelefono);
+        toEntity.addMapping(UsuarioPersonalDataDTO::getTelefono,   Usuario::setTelefono);
         toEntity.addMappings(m -> m.using(localDateToDate)
-                                      .map(UsuarioPersonalDataDTO::getFechaNac, Usuario::setFechaNac));
-        toEntity.addMapping(UsuarioPersonalDataDTO::getGenero,     Usuario::setGenero);
+                .map(UsuarioPersonalDataDTO::getFechaNac, Usuario::setFechaNac));
+        toEntity.addMapping(UsuarioPersonalDataDTO::getGenero,      Usuario::setGenero);
         toEntity.addMapping(UsuarioPersonalDataDTO::getPreferencias, Usuario::setPreferencias);
         toEntity.setPostConverter(ctx -> {
             UsuarioPersonalDataDTO dto = ctx.getSource();
@@ -169,6 +191,10 @@ public class ModelMapperConfig {
     }
 
     private Integer parseInt(String s) {
-        try { return Integer.valueOf(s); } catch (NumberFormatException e) { return null; }
+        try {
+            return Integer.valueOf(s);
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 }

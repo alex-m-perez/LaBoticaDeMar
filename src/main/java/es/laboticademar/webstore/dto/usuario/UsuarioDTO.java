@@ -1,4 +1,4 @@
-package es.laboticademar.webstore.dto;
+package es.laboticademar.webstore.dto.usuario;
 
 import lombok.Data;
 import java.io.Serializable;

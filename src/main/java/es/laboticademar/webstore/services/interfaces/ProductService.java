@@ -7,7 +7,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
-import es.laboticademar.webstore.dto.ProductoDTO;
+import es.laboticademar.webstore.dto.producto.ProductoDTO;
 import es.laboticademar.webstore.entities.Producto;
 
 public interface ProductService {

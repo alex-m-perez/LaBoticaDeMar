@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import es.laboticademar.webstore.dto.BreadcrumbDTO;
 import es.laboticademar.webstore.entities.Producto;
 import es.laboticademar.webstore.services.interfaces.CategoriaService;
 import es.laboticademar.webstore.services.interfaces.DestacadoService;
@@ -19,7 +20,6 @@ import es.laboticademar.webstore.services.interfaces.LaboratorioService;
 import es.laboticademar.webstore.services.interfaces.ProductService;
 import es.laboticademar.webstore.services.interfaces.SubcategoriaService;
 import es.laboticademar.webstore.utils.BreadcrumbUtils;
-import es.laboticademar.webstore.utils.objects.Breadcrumb;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
@@ -45,7 +45,7 @@ public class ProductController {
         model.addAttribute("destacados", destacadoService.getAllDestacados());
 
         // 2) Genera migas con el nuevo método
-        List<Breadcrumb> crumbs = BreadcrumbUtils.generarParaProducto(
+        List<BreadcrumbDTO> crumbs = BreadcrumbUtils.generarParaProducto(
             request,
             productoOptional.get(),
             familiaService,
@@ -90,7 +90,7 @@ public class ProductController {
         model.addAttribute("todosLosLaboratorios",   laboratorioService.findAll());
 
         // — generamos migas de pan
-        List<Breadcrumb> crumbs = BreadcrumbUtils.generarBreadcrumbs(
+        List<BreadcrumbDTO> crumbs = BreadcrumbUtils.generarBreadcrumbs(
             request, page, size,
             familia, categoria, subCategoria,
             familiaService, categoriaService, subcategoriaService

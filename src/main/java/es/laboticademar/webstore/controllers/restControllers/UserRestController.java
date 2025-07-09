@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import es.laboticademar.webstore.dto.UsuarioPersonalDataDTO;
+import es.laboticademar.webstore.dto.usuario.UsuarioPersonalDataDTO;
 import es.laboticademar.webstore.services.interfaces.UsuarioService;
 import lombok.RequiredArgsConstructor;
 

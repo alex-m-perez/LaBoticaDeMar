@@ -31,7 +31,7 @@
             }
 
             // 4) Cargar dinámicamente el JS de la sección:
-            debugger
+            
             const section = url.split('/').pop();          // e.g. "products"
             const scriptId = 'section-script';
             // eliminar posible script anterior
