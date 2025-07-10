@@ -83,4 +83,11 @@ public class Usuario {
     @CollectionTable(name = "usuario_roles", joinColumns = @JoinColumn(name = "usuario_id"))
     @Column(name = "rol")
     private Set<String> roles = new HashSet<>();
+
+    public String getNombreCompleto() {
+        String n = this.nombre != null ? this.nombre : "";
+        String a1 = this.apellido1 != null ? this.apellido1 : "";
+        String a2 = this.apellido2 != null ? this.apellido2 : "";
+        return (n + " " + a1 + " " + a2).trim().replaceAll("\\s+", " ");
+    }
 }

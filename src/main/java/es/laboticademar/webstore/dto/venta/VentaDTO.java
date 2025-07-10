@@ -17,5 +17,7 @@ public class VentaDTO {
     private LocalDateTime fechaVenta;
     private Float montoTotal;
     private Integer puntosUtilizados;
+    private Integer estadoId;
+    private String estado;
     private List<DetalleVentaDTO> productos; // List of products in the sale
 }

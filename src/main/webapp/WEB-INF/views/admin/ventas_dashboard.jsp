@@ -35,6 +35,11 @@
                     <input type="number" id="precioMax" name="precioMax" step="0.01" placeholder="Ej: 50.00" class="w-28 border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-pistachio focus:border-pistachio" />
                 </div>
                 <div class="flex flex-col">
+                    <label for="estadoFiltro" class="text-gray-600">Estado</label>
+                    <select id="estadoFiltro" name="estadoId" class="w-40 border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-pistachio focus:border-pistachio">
+                        </select>
+                </div>
+                <div class="flex flex-col">
                     <label for="numProductos" class="text-gray-600">Nº Productos</label>
                     <input type="number" id="numProductos" name="numProductos" placeholder="Ej: 3" class="w-28 border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-pistachio focus:border-pistachio" />
                 </div>
@@ -76,9 +81,8 @@
                         <th class="px-4 py-2 text-left">ID Cliente</th>
                         <th class="px-4 py-2 text-left">Nombre Cliente</th>
                         <th class="px-4 py-2 text-left">Fecha</th>
-                        <th class="px-4 py-2 text-center">Nº Productos</th>
+                        <th class="px-4 py-2 text-center">Estado</th>
                         <th class="px-4 py-2 text-right">Total</th>
-                        <th class="px-4 py-2 text-left">Canal</th>
                         <th class="px-4 py-2 text-center">Acciones</th>
                     </tr>
                 </thead>
@@ -123,11 +127,6 @@
                 <div>
                     <label for="statusSelect" class="block mb-2 text-sm font-medium text-gray-900">Nuevo estado:</label>
                     <select id="statusSelect" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                        <option value="PREPARANDO">Preparando</option>
-                        <option value="LISTO_PARA_ENVIAR">Listo para enviar</option>
-                        <option value="ENVIADO">Enviado</option>
-                        <option value="ENTREGADO">Entregado</option>
-                        <option value="CANCELADO">Cancelado</option>
                     </select>
                 </div>
                 <div class="text-right">

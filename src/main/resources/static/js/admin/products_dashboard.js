@@ -57,6 +57,7 @@
 		function toggleBtn(btn, isDisabled) {
 			btn.disabled = isDisabled;
 			btn.classList.toggle('opacity-50', isDisabled);
+            btn.classList.toggle('cursor-not-allowed', isDisabled);
 			btn.classList.toggle('hover:bg-gray-300', !isDisabled);
 		}
 

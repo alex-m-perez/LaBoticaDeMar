@@ -18,4 +18,5 @@ public class VentaAdminResumenDTO {
     private Integer totalItems;
     private Long clienteId;
     private String clienteNombre;
+    private String estado; 
 }

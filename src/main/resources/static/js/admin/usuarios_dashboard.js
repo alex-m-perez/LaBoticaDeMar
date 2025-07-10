@@ -14,6 +14,13 @@
     const formatCurrency = (value, currency = 'EUR') => new Intl.NumberFormat('es-ES', { style: 'currency', currency }).format(value || 0);
     const get = (id) => document.getElementById(id); // Alias corto
 
+    function toggleBtn(btn, isDisabled) {
+        btn.disabled = isDisabled;
+        btn.classList.toggle('opacity-50', isDisabled);
+        btn.classList.toggle('cursor-not-allowed', isDisabled);
+        btn.classList.toggle('hover:bg-gray-300', !isDisabled);
+    }
+
     // --- Lógica de Renderizado ---
     function renderMainTable(pageData) { // 1. Cambiamos el nombre del parámetro para más claridad
         const tbody = get('usuariosTbody');
@@ -121,18 +128,23 @@
     // --- Lógica de Paginación y Carga ---
     function updatePaginationControls(type, state) {
         const isMain = type === 'main';
-        const prefix = isMain ? 'main-' : `kpi-${type}-`;
-        const container = isMain ? document : get(`kpi-${type}-pagination`);
-        
+
         if (isMain) {
+            // Lógica para la paginación principal
             get('main-pageInfo').textContent = `Página ${state.totalPages > 0 ? state.currentPage + 1 : 0} de ${state.totalPages || 1}`;
-            get('main-prevBtn').disabled = state.currentPage === 0;
-            get('main-nextBtn').disabled = state.currentPage + 1 >= state.totalPages;
+            toggleBtn(get('main-prevBtn'), state.currentPage === 0);
+            toggleBtn(get('main-nextBtn'), state.currentPage + 1 >= state.totalPages);
+
         } else {
-             container.innerHTML = `
-                <button data-type="${type}" data-action="prev" class="bg-gray-200 px-2 py-0.5 rounded hover:bg-gray-300" ${state.currentPage === 0 ? 'disabled' : ''}>‹</button>
-                <span>${state.totalPages > 0 ? state.currentPage + 1 : 0} / ${state.totalPages || 1}</span>
-                <button data-type="${type}" data-action="next" class="bg-gray-200 px-2 py-0.5 rounded hover:bg-gray-300" ${state.currentPage + 1 >= state.totalPages ? 'disabled' : ''}>›</button>
+            // Lógica para la paginación de los KPIs (con estilo unificado)
+            const container = get(`kpi-${type}-pagination`);
+            const prevDisabled = state.currentPage === 0;
+            const nextDisabled = state.currentPage + 1 >= state.totalPages;
+
+            container.innerHTML = `
+                <button data-type="${type}" data-action="prev" class="bg-gray-200 text-gray-700 px-3 py-1 rounded-md transition-colors ${prevDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-300'}" ${prevDisabled ? 'disabled' : ''}>Anterior</button>
+                <span class="px-4 text-gray-600 font-semibold">${state.totalPages > 0 ? state.currentPage + 1 : 0} / ${state.totalPages || 1}</span>
+                <button data-type="${type}" data-action="next" class="bg-gray-200 text-gray-700 px-3 py-1 rounded-md transition-colors ${nextDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-300'}" ${nextDisabled ? 'disabled' : ''}>Siguiente</button>
             `;
         }
     }

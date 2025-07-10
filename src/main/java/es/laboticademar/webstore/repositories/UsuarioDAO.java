@@ -35,6 +35,7 @@ public interface UsuarioDAO extends JpaRepository<Usuario, Long> {
     @Query("SELECT new es.laboticademar.webstore.dto.usuario.TopGastadorDTO(" +
            "u.id, CONCAT(u.nombre, ' ', u.apellido1), COUNT(v.id), SUM(v.montoTotal)) " +
            "FROM Venta v JOIN v.cliente u " +
+           "WHERE v.estado != es.laboticademar.webstore.enumerations.VentaEstadoEnum.DEVOLUCION " + 
            "GROUP BY u.id, u.nombre, u.apellido1 " +
            "ORDER BY SUM(v.montoTotal) DESC")
     Page<TopGastadorDTO> findTopGastadores(Pageable pageable);

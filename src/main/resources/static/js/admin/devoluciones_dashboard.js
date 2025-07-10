@@ -41,6 +41,13 @@
         const formatCurrency = value => new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(value || 0);
         const formatDateTime = dateStr => new Date(dateStr).toLocaleString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
 
+        function toggleBtn(btn, isDisabled) {
+            btn.disabled = isDisabled;
+            btn.classList.toggle('opacity-50', isDisabled);
+            btn.classList.toggle('cursor-not-allowed', isDisabled);
+            btn.classList.toggle('hover:bg-gray-300', !isDisabled);
+        }
+
         function setDefaultDateRange() {
             const now = new Date();
             const year = now.getFullYear();
@@ -141,7 +148,12 @@
         }
         
         // --- Funciones de apoyo y listeners ---
-        function updateControls() { pageNumEl.textContent = totalPages > 0 ? currentPage + 1 : 0; totalPagesEl.textContent = totalPages > 0 ? totalPages : 1; prevBtn.disabled = (currentPage === 0); nextBtn.disabled = (currentPage + 1 >= totalPages); }
+        function updateControls() {
+            pageNumEl.textContent    = totalPages > 0 ? currentPage + 1 : 0;
+            totalPagesEl.textContent = totalPages > 0 ? totalPages : 1;
+            toggleBtn(prevBtn, currentPage === 0);
+            toggleBtn(nextBtn, currentPage + 1 >= totalPages);
+        }
         function hideModal() { modal.classList.add('hidden'); }
         
         // Al enviar el formulario, previene el comportamiento por defecto y carga la primera página y los KPIs.

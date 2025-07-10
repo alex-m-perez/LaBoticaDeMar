@@ -193,16 +193,9 @@
 
         <!-- Paginación -->
         <div id="pagination" class="flex justify-between items-center mt-4">
-            <button id="prevBtn"
-                    class="bg-gray-200 text-gray-700 font-medium px-4 py-1.5 rounded-md hover:bg-gray-300 transition"
-                    disabled>
-                Anterior
-            </button>
+            <button id="prevBtn" class="bg-gray-200 text-gray-700 px-3 py-1 rounded-md hover:bg-gray-300 transition-colors">Anterior</button>
             <span>Página <span id="pageNum">1</span> de <span id="totalPages">1</span></span>
-            <button id="nextBtn"
-                    class="bg-gray-200 text-gray-700 font-medium px-4 py-1.5 rounded-md hover:bg-gray-300 transition">
-                Siguiente
-            </button>
+            <button id="nextBtn" class="bg-gray-200 text-gray-700 px-3 py-1 rounded-md hover:bg-gray-300 transition-colors">Siguiente</button>
         </div>
     </div>
 

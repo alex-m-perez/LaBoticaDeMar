@@ -30,6 +30,13 @@
         // --- Funciones de Utilidad ---
         const formatDate = dateStr => dateStr ? new Date(dateStr).toLocaleDateString('es-ES') : 'N/A';
 
+        function toggleBtn(btn, isDisabled) {
+            btn.disabled = isDisabled;
+            btn.classList.toggle('opacity-50', isDisabled);
+            btn.classList.toggle('cursor-not-allowed', isDisabled);
+            btn.classList.toggle('hover:bg-gray-300', !isDisabled);
+        }
+
         // --- Lógica de Renderizado ---
         function renderToggle(id, isActivo) {
             const baseClasses = 'relative inline-flex items-center h-6 rounded-full w-11 cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pistachio';
@@ -68,14 +75,10 @@
         }
 
         function updateControls() {
-            const hasResults = totalPages > 0;
-            const isFirstPage = currentPage === 0;
-            const isLastPage = currentPage + 1 >= totalPages;
-
-            pageNumEl.textContent = hasResults ? currentPage + 1 : 0;
-            totalPagesEl.textContent = hasResults ? totalPages : 1;
-            prevBtn.disabled = isFirstPage;
-            nextBtn.disabled = isLastPage;
+            pageNumEl.textContent    = totalPages > 0 ? currentPage + 1 : 0;
+            totalPagesEl.textContent = totalPages > 0 ? totalPages : 1;
+            toggleBtn(prevBtn, currentPage === 0);
+            toggleBtn(nextBtn, currentPage + 1 >= totalPages);
         }
 
         function loadPage(page = 0) {

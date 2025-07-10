@@ -32,6 +32,7 @@ import es.laboticademar.webstore.entities.Producto;
 import es.laboticademar.webstore.entities.Usuario;
 import es.laboticademar.webstore.entities.Venta;
 import es.laboticademar.webstore.enumerations.DevolucionEnum;
+import es.laboticademar.webstore.enumerations.VentaEstadoEnum;
 import es.laboticademar.webstore.repositories.DevolucionDAO;
 import es.laboticademar.webstore.services.interfaces.DevolucionService;
 import es.laboticademar.webstore.services.interfaces.UsuarioService;
@@ -63,6 +64,7 @@ public class DevolucionServiceImpl implements DevolucionService {
         if (!venta.getCliente().getId().equals(cliente.getId())) {
             throw new AccessDeniedException("No tienes permiso para solicitar una devolución para esta venta.");
         }
+        venta.setEstado(VentaEstadoEnum.DEVOLUCION);
         
         // 4. (Opcional) Verificar si ya existe una devolución para esta venta
         if (devolucionDAO.existsByVentaId(ventaId)) {
@@ -98,7 +100,7 @@ public class DevolucionServiceImpl implements DevolucionService {
 
         devolucion.setDetalles(detallesDevolucion);
 
-    // 7. Guardar la devolución (guarda la devolución y actualiza el stock de los productos en la misma transacción)
+        // 7. Guardar la devolución (guarda la devolución y actualiza el stock de los productos en la misma transacción)
         devolucionDAO.save(devolucion);
     }
 

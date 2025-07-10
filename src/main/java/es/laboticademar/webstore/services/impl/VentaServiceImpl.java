@@ -6,6 +6,7 @@ import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -23,6 +24,7 @@ import es.laboticademar.webstore.dto.PaymentDTO;
 import es.laboticademar.webstore.dto.venta.DetalleVentaDTO;
 import es.laboticademar.webstore.dto.venta.VentaAdminResumenDTO;
 import es.laboticademar.webstore.dto.venta.VentaDTO;
+import es.laboticademar.webstore.dto.venta.VentaEstadoDTO;
 import es.laboticademar.webstore.dto.venta.VentaKpisDTO;
 import es.laboticademar.webstore.dto.venta.VentaPageDTO;
 import es.laboticademar.webstore.dto.venta.VentaResumenDTO;
@@ -41,8 +43,6 @@ import es.laboticademar.webstore.services.interfaces.UsuarioService;
 import es.laboticademar.webstore.services.interfaces.VentaService;
 import es.laboticademar.webstore.utils.CreditCardUtils;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.criteria.Expression;
-import jakarta.persistence.criteria.Join;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -241,6 +241,9 @@ public class VentaServiceImpl implements VentaService {
                 .fechaVenta(venta.getFechaVenta())
                 .montoTotal(venta.getMontoTotal())
                 .puntosUtilizados(venta.getPuntosUtilizados())
+                // Añadimos el ID y la etiqueta del estado al DTO
+                .estadoId(venta.getEstado() != null ? venta.getEstado().getId() : null)
+                .estado(venta.getEstado() != null ? venta.getEstado().getEtiqueta() : "Desconocido")
                 .productos(venta.getDetalles().stream()
                         .map(this::convertToProductoVentaDTO)
                         .collect(Collectors.toList()))
@@ -267,8 +270,8 @@ public class VentaServiceImpl implements VentaService {
     @Override
     @Transactional(readOnly = true)
     public Page<VentaAdminResumenDTO> findAllVentasFiltered(
-            int page, int size, Long clienteId, Long idUsuario, LocalDate fechaInicio,
-            LocalDate fechaFin, Float precioMin, Float precioMax, Integer numProductos) {
+            int page, int size, Long clienteId, Long idUsuario, LocalDate fechaInicio, LocalDate fechaFin,
+            Float precioMin, Float precioMax, Integer estadoId, Integer numProductos) {
 
         if (clienteId != null && idUsuario != null && !clienteId.equals(idUsuario)) {
             return Page.empty();
@@ -293,14 +296,16 @@ public class VentaServiceImpl implements VentaService {
         if (precioMax != null) {
             spec = spec.and((root, query, cb) -> cb.le(root.get("montoTotal"), precioMax));
         }
+        if (estadoId != null) {
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("estado"), estadoId));
+        }
         if (numProductos != null) {
             spec = spec.and((root, query, cb) -> cb.equal(cb.size(root.get("detalles")), numProductos));
         }
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("fechaVenta").descending());
-
         return ventaDAO.findAll(spec, pageable).map(this::mapToVentaAdminResumenDTO);
-    }
+        }
 
 
     @Override
@@ -309,7 +314,7 @@ public class VentaServiceImpl implements VentaService {
         Venta venta = ventaDAO.findById(ventaId)
                 .orElseThrow(() -> new EntityNotFoundException("Venta no encontrada con ID: " + ventaId));
 
-        // Reutilizamos el mapper que ya tenías para convertir la entidad a un DTO de detalle
+        // Llama al nuevo método conversor que crearemos a continuación
         return convertToVentaDetalleDTO(venta);
     }
 
@@ -318,19 +323,31 @@ public class VentaServiceImpl implements VentaService {
      * Este DTO incluye información del cliente.
      */
     private VentaAdminResumenDTO mapToVentaAdminResumenDTO(Venta venta) {
-        Usuario cliente = venta.getCliente();
-        String apellido2 = cliente.getApellido2() != null ? cliente.getApellido2() : ""  ;
-        String nombreCompleto = (cliente.getNombre() + " " + cliente.getApellido1() + " " + apellido2).trim();
-        
-
+        // Usamos el patrón builder para una construcción más limpia y fluida
         return VentaAdminResumenDTO.builder()
                 .id(venta.getId())
                 .fechaVenta(venta.getFechaVenta())
                 .montoTotal(venta.getMontoTotal())
+
+                // Llama al método getNombreCompleto() del cliente para evitar lógica repetida
+                .clienteId(venta.getCliente() != null ? venta.getCliente().getId() : null)
+                .clienteNombre(venta.getCliente() != null ? venta.getCliente().getNombreCompleto() : "N/A")
+
+                // Convierte el Enum del estado a su etiqueta de texto
+                .estado(venta.getEstado() != null ? venta.getEstado().getEtiqueta() : "Desconocido")
+
+                // Calcula el total de items de forma segura
                 .totalItems(venta.getDetalles() != null ? venta.getDetalles().stream().mapToInt(DetalleVenta::getCantidad).sum() : 0)
-                .clienteId(cliente.getId())
-                .clienteNombre(nombreCompleto)
+
                 .build();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<VentaEstadoDTO> getAllVentaEstados() {
+        return Arrays.stream(VentaEstadoEnum.values())
+                .map(estado -> new VentaEstadoDTO(estado.getId(), estado.getEtiqueta()))
+                .collect(Collectors.toList());
     }
 
 
@@ -387,6 +404,19 @@ public class VentaServiceImpl implements VentaService {
         // ... etc para los otros filtros
         
         return spec;
+    }
+
+
+    @Override
+    @Transactional
+    public void updateVentaStatus(Long ventaId, Integer nuevoEstadoId) {
+        Venta venta = ventaDAO.findById(ventaId)
+                .orElseThrow(() -> new EntityNotFoundException("Venta no encontrada con ID: " + ventaId));
+
+        VentaEstadoEnum estado = VentaEstadoEnum.fromId(nuevoEstadoId);
+        venta.setEstado(estado); // Asumiendo que Venta.estado es de tipo Integer
+
+        ventaDAO.save(venta);
     }
 
 
