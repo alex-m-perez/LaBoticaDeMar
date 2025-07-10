@@ -195,7 +195,7 @@ function handleQuantityChange(btn, delta) {
             localStorage.setItem(GUEST_CART_KEY, JSON.stringify(guestCart));
             row.find('.qty-input').val(newQty); // Actualiza el input visualmente
             updateUI();
-            window.dispatchEvent(new CustomEvent('cartUpdated'));
+            window.dispatchEvent(new CustomEvent('cartUpdated', { detail: { newState: guestCart } }));
         }
     }
 }
@@ -211,7 +211,14 @@ function sendIncrementalUpdate(productId, isAdding) {
         success: () => {
             const input = row.querySelector('.qty-input');
             input.value = isAdding ? parseInt(input.value) + 1 : parseInt(input.value) - 1;
-            window.dispatchEvent(new CustomEvent('cartUpdated'));
+
+            const currentState = JSON.parse(localStorage.getItem(GUEST_CART_KEY) || '{}');
+            const productId = row.getAttribute('data-product-id');
+            currentState[productId] = parseInt(input.value);
+
+            cartState[productId] = parseInt(input.value);
+            window.dispatchEvent(new CustomEvent('cartUpdated', { detail: { newState: cartState } }));
+
             updateUI();
         },
         error: () => alert('Error al actualizar la cantidad.'),
@@ -246,7 +253,7 @@ function handleDeleteItem(productId, button) {
             $(this).remove();
             if (Object.keys(guestCart).length === 0) renderGuestCart({ items: [] });
             updateUI();
-            window.dispatchEvent(new CustomEvent('cartUpdated'));
+            window.dispatchEvent(new CustomEvent('cartUpdated', { detail: { newState: guestCart  } }));
         });
     }
 }
@@ -261,7 +268,8 @@ function eliminarDelCarrito(productoId, buttonElement) {
         success: () => {
             $(buttonElement).closest('.cart-item-row').fadeOut(300, function() {
                 $(this).remove();
-                window.dispatchEvent(new CustomEvent('cartUpdated'));
+                delete cartState[productoId];
+                window.dispatchEvent(new CustomEvent('cartUpdated', { detail: { newState: cartState } }));
                 if (document.querySelectorAll('.cart-item-row').length === 0) {
                     window.location.reload();
                 } else {
@@ -422,55 +430,78 @@ function procesarPago() {
  */
 function renderGuestCart(cartData) {
     const tbody = $('#cart-items-body');
-    tbody.empty();
+    tbody.empty(); // Limpia filas anteriores
 
+    // 1. Añade la clase para las líneas divisorias al tbody, igual que en el JSP
+    tbody.addClass('divide-y divide-gray-100');
+
+    // Si el carrito está vacío, muestra el mensaje y termina
     if (!cartData.items || cartData.items.length === 0) {
+        tbody.prev('thead').remove(); // Si se queda una cabecera huérfana, la quitamos
         tbody.html(`<tr><td colspan="4" class="text-center p-12"><p class="text-gray-600 text-2xl font-bold mb-4">Tu carrito está vacío.</p><a href="${window.contextPath || ''}/" class="inline-block bg-pistachio text-white px-6 py-2 rounded hover:bg-dark-pistachio">Continuar Comprando</a></td></tr>`);
         return;
     }
+    
+    // 2. CREA LA CABECERA SI NO EXISTE (clave para el carrito de invitado)
+    if (tbody.prev('thead').length === 0) {
+        const theadHtml = `
+            <thead class="bg-white">
+                <tr class="border-b border-gray-200">
+                    <th class="py-3 px-4 text-left">Producto</th>
+                    <th class="py-3 px-4 text-center">Cantidad</th>
+                    <th class="py-3 px-4 text-center">Precio</th>
+                    <th class="py-3 px-4 text-center">Total</th>
+                </tr>
+            </thead>
+        `;
+        tbody.before(theadHtml);
+    }
 
+
+    // 3. Itera y crea cada fila con las clases CSS exactas del JSP
     cartData.items.forEach(item => {
         const product = item.producto;
         const effectivePrice = product.discount > 0 ? product.price * (1 - product.discount / 100) : product.price;
 
-        // --- NUEVA LÓGICA PARA LA CELDA DE PRECIO ---
+        // Lógica para la imagen (ya era correcta)
+        let imageHtml;
+        if (product.imagenData) {
+            imageHtml = `<img src="${window.contextPath || ''}/api/images/${product.id}" alt="${product.nombre}" class="h-16 w-16 object-contain rounded mr-4" />`;
+        } else {
+            imageHtml = `<div class="h-16 w-16 bg-gray-200 flex items-center justify-center rounded mr-4"><svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h4l2-3h6l2 3h4v13H3V7z"/><circle cx="12" cy="13" r="4" stroke="currentColor" stroke-width="2"/></svg></div>`;
+        }
+
+        // Lógica para el precio (ya era correcta)
         let priceCellHtml;
         if (product.discount > 0) {
-            // Si hay descuento, crea la estructura con el precio tachado y el nuevo en rojo
-            priceCellHtml = `
-                <div class="flex flex-col items-center">
-                    <span class="text-xs text-gray-400 line-through">${formatCurrency(product.price)}</span>
-                    <span class="text-red-600 font-semibold">${formatCurrency(effectivePrice)}</span>
-                </div>
-            `;
+            priceCellHtml = `<div class="flex flex-col items-center"><span class="text-xs text-gray-400 line-through">${formatCurrency(product.price)}</span><span class="text-red-600 font-semibold">${formatCurrency(effectivePrice)}</span></div>`;
         } else {
-            // Si no hay descuento, muestra solo el precio normal
             priceCellHtml = formatCurrency(product.price);
         }
-        // --- FIN DE LA NUEVA LÓGICA ---
 
+        // Plantilla de la fila, AHORA CON LAS CLASES IDÉNTICAS AL JSP
         const rowHTML = `
             <tr class="cart-item-row" data-price="${product.price}" data-product-id="${product.id}" data-discount="${product.discount || 0}" data-stock="${product.stock}">
                 <td class="py-4 px-4">
                     <div class="flex items-center">
-                        <img src="${window.contextPath || ''}${product.imagenPath}" alt="${product.nombre}" class="h-16 w-16 object-cover rounded mr-4" />
+                        ${imageHtml}
                         <div class="flex-grow">
                             <p class="font-semibold">${product.nombre}</p>
                             <p class="text-xs text-gray-500">${product.laboratorioNombre}</p>
                         </div>
                         <button type="button" class="delete-btn p-2 ml-4 hover:bg-red-100 rounded">
-                            <img src="${window.contextPath || ''}/images/bin.svg" alt="Eliminar" class="h-5 w-5 pointer-events-none"/>
+                            <img src="${window.contextPath || ''}/images/bin.svg" alt="Eliminar" class="h-5 w-5"/>
                         </button>
                     </div>
                 </td>
                 <td class="py-4 px-4 text-center">
                     <div class="quantity-control inline-flex border border-gray-200 rounded overflow-hidden">
                         <button type="button" class="minus-btn px-3 py-1 bg-gray-100 hover:bg-gray-200">−</button>
-                        <input type="number" value="${item.cantidad}" class="qty-input w-12 text-center no-spinner" readonly/>
+                        <input type="number" value="${item.cantidad}" class="qty-input w-12 text-center no-spinner focus:outline-none" readonly/>
                         <button type="button" class="plus-btn px-3 py-1 bg-gray-100 hover:bg-gray-200">+</button>
                     </div>
                 </td>
-                <td class="py-4 px-4 text-center">${priceCellHtml}</td> {/* <-- Se usa la variable con el HTML correcto */}
+                <td class="py-4 px-4 text-center">${priceCellHtml}</td>
                 <td class="py-4 px-4 font-semibold text-center line-total">${formatCurrency(effectivePrice * item.cantidad)}</td>
             </tr>`;
         tbody.append(rowHTML);
@@ -486,6 +517,7 @@ function renderGuestCart(cartData) {
 function initializeApp() {
     const isAuthenticated = document.body.dataset.authenticated === 'true';
     setupEventListeners();
+    window.dispatchEvent(new CustomEvent('cartUpdated', { detail: { newState: cartState } }));
 
     if (isAuthenticated) {
         if (document.querySelectorAll('.cart-item-row').length > 0) updateUI();

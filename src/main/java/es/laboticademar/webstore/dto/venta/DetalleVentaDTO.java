@@ -15,7 +15,7 @@ public class DetalleVentaDTO {
     // From ProductoDTO
     private BigDecimal id;
     private String nombre;
-    private String imagenPath;
+    private byte[] imagenData;
     private String laboratorioNombre;
 
     // From DetalleVenta

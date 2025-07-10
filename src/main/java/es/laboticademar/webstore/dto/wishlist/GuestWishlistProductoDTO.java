@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 public class GuestWishlistProductoDTO {
     private String id;
     private String nombre;
-    private String imagenPath;
+    private byte[] imagenData;
     private Float price;
     private Float discount;
     private Integer stock;
@@ -22,7 +22,7 @@ public class GuestWishlistProductoDTO {
         GuestWishlistProductoDTO dto = new GuestWishlistProductoDTO();
         dto.setId(producto.getId().toString());
         dto.setNombre(producto.getNombre());
-        dto.setImagenPath(producto.getImagenPath());
+        dto.setImagenData(producto.getImagenData());
         dto.setPrice(producto.getPrice());
         dto.setDiscount(producto.getDiscount());
         dto.setStock(producto.getStock());

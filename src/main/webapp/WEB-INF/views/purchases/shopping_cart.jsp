@@ -84,7 +84,25 @@
 
                                                 <td class="py-4 px-4">
                                                     <div class="flex items-center">
-                                                        <img src="${pageContext.request.contextPath}${item.producto.imagenPath}" alt="${item.producto.nombre}" class="h-16 w-16 object-cover rounded mr-4" />
+                                                        <c:choose>
+                                                            <%-- Si el producto tiene datos de imagen... --%>
+                                                            <c:when test="${not empty item.producto.imagenData}">
+                                                                <%-- ...mostramos la imagen llamando a nuestra API --%>
+                                                                <img src="<c:url value='/api/images/${item.producto.id}'/>"
+                                                                     alt="${item.producto.nombre}"
+                                                                     class="h-16 w-16 object-contain rounded mr-4" />
+                                                            </c:when>
+                                                            <%-- Si no tiene imagen... --%>
+                                                            <c:otherwise>
+                                                                <%-- ...mostramos un placeholder --%>
+                                                                <div class="h-16 w-16 bg-gray-200 flex items-center justify-center rounded mr-4">
+                                                                    <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h4l2-3h6l2 3h4v13H3V7z"/>
+                                                                        <circle cx="12" cy="13" r="4" stroke="currentColor" stroke-width="2"/>
+                                                                    </svg>
+                                                                </div>
+                                                            </c:otherwise>
+                                                        </c:choose>
                                                         <div class="flex-grow">
                                                             <p class="font-semibold">${item.producto.nombre}</p>
                                                             <p class="text-xs text-gray-500">${item.producto.laboratorio.nombre}</p>

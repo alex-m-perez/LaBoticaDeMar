@@ -1,11 +1,9 @@
 package es.laboticademar.webstore.controllers.restControllers.admin;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import es.laboticademar.webstore.dto.producto.ProductPageDTO;
 import es.laboticademar.webstore.dto.producto.ProductoDTO;
 import es.laboticademar.webstore.services.interfaces.ProductService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -43,18 +40,33 @@ public class AdminProdcutRestController {
         @RequestParam(required = false) Boolean activo,
         @RequestParam(required = false) Boolean stock,
         @RequestParam(required = false) Boolean conDescuento, // <-- AÑADIR ESTA LÍNEA
-        @RequestParam(required = false) BigDecimal precioMin,
-        @RequestParam(required = false) BigDecimal precioMax
+        @RequestParam(required = false) Float precioMin,
+        @RequestParam(required = false) Float precioMax
     ) {
 
         Page<ProductoDTO> productPage = productService.getAllProducts(
-            page, size, id, nombreProducto, true, 
+            page, size, id, nombreProducto, activo, 
             familia, categoria, subCategoria, tipo,
             laboratorio, stock, conDescuento,
             precioMin, precioMax
         );
 
         return productPage;
+    }
+
+    @PostMapping(path = "/new", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    public ResponseEntity<ProductoDTO> createOrUpdateProduct(
+            // Spring mapea los campos del form a las propiedades del DTO
+            ProductoDTO productoDTO, 
+            // Capturamos el archivo de imagen
+            @RequestParam(value = "imagenFile", required = false) MultipartFile imagenFile) {
+        try {
+            ProductoDTO savedProduct = productService.saveProductWithImage(productoDTO, imagenFile);
+            return ResponseEntity.ok(savedProduct);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @PostMapping("/upload")

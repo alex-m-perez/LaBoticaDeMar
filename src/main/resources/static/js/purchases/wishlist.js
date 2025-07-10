@@ -16,33 +16,72 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderGuestWishlist(wishlistData) {
         const tbody = document.querySelector('#wishlist-items-body');
         if (!tbody) return;
-        tbody.innerHTML = ''; // Limpiamos el cuerpo de la tabla
 
-        // Si la wishlist está vacía, muestra un mensaje
+        // Limpiamos el contenido anterior y aplicamos la clase de división
+        tbody.innerHTML = '';
+        tbody.classList.add('divide-y', 'divide-gray-100');
+
+        // Si la wishlist está vacía, muestra el mensaje y termina
         if (!wishlistData.items || wishlistData.items.length === 0) {
+            // Nos aseguramos de quitar la cabecera si la lista se vacía
+            const thead = tbody.previousElementSibling;
+            if (thead && thead.tagName === 'THEAD') {
+                thead.remove();
+            }
             tbody.innerHTML = `<tr><td colspan="3" class="text-center p-12"><p class="text-gray-600 text-2xl font-bold mb-4">Tu lista de deseos está vacía.</p><a href="${contextPath}/" class="inline-block bg-pistachio text-white px-6 py-2 rounded hover:bg-dark-pistachio">Descubrir productos</a></td></tr>`;
             return;
         }
 
-        // Si hay items, crea una fila para cada uno
-        wishlistData.items.forEach(item => {
-            const product = item; // En la wishlist, el item es directamente el producto
+        // CREA LA CABECERA SI NO EXISTE (clave para el invitado)
+        if (!tbody.previousElementSibling || tbody.previousElementSibling.tagName !== 'THEAD') {
+            const theadHtml = `
+                <thead class="bg-white">
+                    <tr class="border-b border-gray-200">
+                        <th class="py-3 px-4 text-left">Producto</th>
+                        <th class="py-3 px-4 text-center">Precio</th>
+                        <th class="py-3 px-4 text-center">Acciones</th>
+                    </tr>
+                </thead>
+            `;
+            tbody.insertAdjacentHTML('beforebegin', theadHtml);
+        }
+
+        // Itera y crea cada fila con las clases y estructura idénticas al JSP
+        wishlistData.items.forEach(product => {
+            // Lógica para la imagen (replicando clases del JSP)
+            let imageHtml;
+            if (product.imagenData) {
+                imageHtml = `<img src="${contextPath}/api/images/${product.id}" alt="${product.nombre}" class="h-16 w-16 object-contain rounded mr-4" />`;
+            } else {
+                imageHtml = `<div class="h-16 w-16 bg-gray-200 flex items-center justify-center rounded mr-4"><svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h4l2-3h6l2 3h4v13H3V7z"/><circle cx="12" cy="13" r="4" stroke="currentColor" stroke-width="2"/></svg></div>`;
+            }
+
+            // Lógica para el precio (incluyendo descuentos)
+            let priceCellHtml;
+            if (product.discount > 0) {
+                const effectivePrice = product.price * (1 - product.discount / 100);
+                priceCellHtml = `<div class="flex flex-col items-center"><span class="text-xs text-gray-400 line-through">${new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(product.price)}</span><span class="text-red-600">${new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(effectivePrice)}</span></div>`;
+            } else {
+                priceCellHtml = new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(product.price);
+            }
+
+            // Plantilla de la fila, AHORA CON LAS CLASES IDÉNTICAS AL JSP
             const rowHTML = `
-                <tr class="wishlist-item-row border-b" data-product-id="${product.id}">
-                    <td class="py-4 px-2 md:px-4">
-                        <div class="flex items-center space-x-4">
-                            <img src="${contextPath}${product.imagenPath}" alt="${product.nombre}" class="h-20 w-20 object-cover rounded-lg">
+                <tr class="wishlist-item-row" data-product-id="${product.id}">
+                    <td class="py-4 px-4">
+                        <div class="flex items-center">
+                            ${imageHtml}
                             <div>
-                                <p class="font-bold text-base">${product.nombre}</p>
-                                <p class="text-sm text-gray-500">${product.laboratorioNombre}</p>
+                                <p class="font-semibold">${product.nombre}</p>
+                                <p class="text-xs text-gray-500">${product.laboratorioNombre || ''}</p>
                             </div>
                         </div>
                     </td>
-                    <td class="py-4 px-2 md:px-4 text-center">
-                        <span class="font-semibold text-lg">${new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(product.price)}</span>
+                    <td class="py-4 px-4 text-center font-semibold">
+                        ${priceCellHtml}
                     </td>
-                    <td class="py-4 px-2 md:px-4">
-                        <div class="flex flex-col md:flex-row items-center justify-center gap-2">
+                    <td class="py-4 px-4 text-center">
+                        <div class="flex justify-center items-center gap-3">
                             <div class="cart-button-container"></div>
                             <div class="wishlist-button-container"></div>
                         </div>
@@ -51,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
             tbody.insertAdjacentHTML('beforeend', rowHTML);
         });
 
-        // IMPORTANTE: Una vez renderizadas las filas, inicializa sus controles
+        // IMPORTANTE: Tu lógica para inicializar los botones se mantiene
         wishlistData.items.forEach(item => {
             renderRowControls(item.id);
         });
@@ -123,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }).done(() => {
                 cartState[productId] = (cartState[productId] || 0) + 1;
                 renderRowControls(productId);
-                window.dispatchEvent(new CustomEvent('cartUpdated'));
+                window.dispatchEvent(new CustomEvent('cartUpdated', { detail: { newState: cartState } }));
             }).fail(() => {
                 alert('Error al añadir el producto al carrito.');
             });
@@ -131,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
             cartState[productId] = (cartState[productId] || 0) + 1;
             localStorage.setItem('cart', JSON.stringify(cartState));
             renderRowControls(productId);
-            window.dispatchEvent(new CustomEvent('cartUpdated'));
+            window.dispatchEvent(new CustomEvent('cartUpdated', { detail: { newState: cartState } }));
         }
     }
     
@@ -148,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }).done(() => {
                 const index = wishlistState.indexOf(productId.toString());
                 if (index > -1) wishlistState.splice(index, 1);
-                window.dispatchEvent(new CustomEvent('cartUpdated'));
+                window.dispatchEvent(new CustomEvent('cartUpdated', { detail: { newState: cartState } }));
                 rowToRemove.fadeOut(400, () => {
                     rowToRemove.remove();
                     if ($('.wishlist-item-row').length === 0) window.location.reload();
@@ -206,6 +245,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 renderGuestWishlist({ items: [] });
             }
         }
+        window.dispatchEvent(new CustomEvent('cartUpdated', { detail: { newState: cartState } }));
     }
 
     // Arrancamos la aplicación

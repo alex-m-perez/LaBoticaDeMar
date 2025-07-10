@@ -35,7 +35,7 @@ public class GuestCartProductoDTO {
     private Boolean     activo;
     private Float       price;
     private Float       discount;
-    private String      imagenPath;
+    private byte[]      imagenData;
     private Integer     rating;
     private Integer     ratingCount;
 
@@ -65,7 +65,7 @@ public class GuestCartProductoDTO {
             .activo(p.getActivo())
             .price(p.getPrice())
             .discount(p.getDiscount())
-            .imagenPath(p.getImagenPath())
+            .imagenData(p.getImagenData())
             .rating(p.getRating())
             .ratingCount(p.getRatingCount())
             .build();

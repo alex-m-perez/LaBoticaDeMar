@@ -74,7 +74,7 @@ public class Producto {
     private Float discount;
 
     @Lob
-    @Column(name = "IMAGEN_DATA") // Cambia el nombre para evitar confusión
+    @Column(name = "IMAGEN_DATA", columnDefinition="LONGBLOB") 
     private byte[] imagenData;
 
     @Column(name = "RATING", nullable = true)

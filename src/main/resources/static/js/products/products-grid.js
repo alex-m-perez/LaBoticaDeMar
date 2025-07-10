@@ -260,16 +260,23 @@ function renderGrid(items) {
                 card.appendChild(badge);
             }
 
-            if (p.imagenPath) {
+            if (p.imagenData) {
                 var wrapImg = document.createElement('div');
                 wrapImg.className = 'p-2 cursor-pointer';
                 var img = document.createElement('img');
-                img.src       = window.contextPath + p.imagenPath;
-                img.alt       = p.nombre;
-                img.className = 'h-40 w-full object-cover rounded';
+
+                // --- LÍNEA CORREGIDA ---
+                // Construimos la URL manualmente usando el ID del producto
+                img.src = `${window.contextPath || ''}/api/images/${p.id}`;
+                // --- FIN DE LA CORRECCIÓN ---
+
+                img.alt     = p.nombre;
+                img.className = 'h-40 w-full object-contain rounded';
+
                 wrapImg.addEventListener('click', function() {
-                    window.location.href = window.contextPath + '/product/' + p.id;
+                    window.location.href = `${window.contextPath || ''}/product/${p.id}`;
                 });
+
                 wrapImg.appendChild(img);
                 card.appendChild(wrapImg);
             } else { 

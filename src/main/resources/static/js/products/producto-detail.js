@@ -14,7 +14,7 @@ function saveCartState() {
     if (!isAuthenticated) {
         localStorage.setItem('cart', JSON.stringify(cartState));
     }
-    window.dispatchEvent(new CustomEvent('cartUpdated'));
+    window.dispatchEvent(new CustomEvent('cartUpdated', { detail: { newState: cartState } }));
 }
 
 function saveWishlist() {
@@ -210,7 +210,7 @@ function renderCarouselCartControls(container, product) {
                     updateServerCart(product.id, true).done(() => {
                         cartState[product.id] = (cartState[product.id] || 0) + 1;
                         renderCarouselCartControls(container, product);
-                        window.dispatchEvent(new CustomEvent('cartUpdated'));
+                        window.dispatchEvent(new CustomEvent('cartUpdated', { detail: { newState: cartState } }));
                     });
                 } else {
                     cartState[product.id] = 1;
@@ -235,13 +235,13 @@ function renderCarouselCartControls(container, product) {
                     updateServerCart(product.id, false).done(() => {
                         cartState[product.id]--;
                         renderCarouselCartControls(container, product);
-                        window.dispatchEvent(new CustomEvent('cartUpdated'));
+                        window.dispatchEvent(new CustomEvent('cartUpdated', { detail: { newState: cartState } }));
                     });
                 } else {
                     deleteFromServerCart(product.id).done(() => {
                         delete cartState[product.id];
                         renderCarouselCartControls(container, product);
-                        window.dispatchEvent(new CustomEvent('cartUpdated'));
+                        window.dispatchEvent(new CustomEvent('cartUpdated', { detail: { newState: cartState } }));
                     });
                 }
             } else {
@@ -271,7 +271,7 @@ function renderCarouselCartControls(container, product) {
                 updateServerCart(product.id, true).done(() => {
                     cartState[product.id]++;
                     renderCarouselCartControls(container, product);
-                    window.dispatchEvent(new CustomEvent('cartUpdated'));
+                    window.dispatchEvent(new CustomEvent('cartUpdated', { detail: { newState: cartState } }));
                 });
             } else {
                 cartState[product.id]++;
@@ -313,6 +313,7 @@ function syncUI() {
     
     // El resto es la lógica que ya tenías
     initializeMainProductControls();
+    window.dispatchEvent(new CustomEvent('cartUpdated', { detail: { newState: cartState } }));
 
     document.querySelectorAll('.product-card').forEach(card => {
         try {

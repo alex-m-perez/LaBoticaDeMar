@@ -39,7 +39,7 @@ public class ProductoDTO {
     private Boolean     activo;
     private Float       price;
     private Float       discount;
-    private String      imagenPath;
+    private byte[]      imagenData;
     private Integer     rating;
     private Integer     ratingCount;
 
@@ -73,7 +73,7 @@ public class ProductoDTO {
             .activo(p.getActivo())
             .price(p.getPrice())
             .discount(p.getDiscount())
-            .imagenPath(p.getImagenPath())
+            .imagenData(p.getImagenData())
             .rating(p.getRating())
             .ratingCount(p.getRatingCount())
             .build();
@@ -105,7 +105,7 @@ public class ProductoDTO {
             .activo(p.getActivo())
             .price(p.getPrice())
             .discount(p.getDiscount())
-            .imagenPath(p.getImagenPath())
+            .imagenData(p.getImagenData())
             .rating(p.getRating())
             .ratingCount(p.getRatingCount())
             .build();

@@ -116,6 +116,9 @@
 	const modal        = document.getElementById('nuevoModal');
 	const closeModal   = document.getElementById('closeModal');
 	const nuevoForm    = document.getElementById('nuevoForm');
+    const imagenInput      = document.getElementById('imagenInput');
+    const imagePreview     = document.getElementById('imagePreview');
+    const imagePlaceholder = document.getElementById('imagePlaceholder');
 
 	function openModal() {
 		overlay.classList.remove('hidden');
@@ -127,7 +130,23 @@
 		modal.classList.add('hidden');
 		document.body.classList.remove('overflow-hidden');
 		nuevoForm.reset();
+
+        imagePreview.src = '';
+        imagePreview.classList.add('hidden');
+        imagePlaceholder.classList.remove('hidden');
 	}
+
+    imagenInput.addEventListener('change', function() {
+        if (this.files && this.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                imagePreview.src = e.target.result;
+                imagePreview.classList.remove('hidden');
+                imagePlaceholder.classList.add('hidden');
+            }
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
 
 	nuevoBtn.addEventListener('click', openModal);
 	closeModal.addEventListener('click', hideModal);
@@ -136,7 +155,7 @@
 	nuevoForm.addEventListener('submit', e => {
 		e.preventDefault();
 		const formData = new FormData(nuevoForm);
-		fetch(`${window.contextPath}/admin/products`, {
+		fetch(`${window.contextPath}/admin/api/products/new`, {
 			method: 'POST',
 			body: formData,
 			headers: { 'X-Requested-With': 'XMLHttpRequest' }
@@ -179,6 +198,19 @@
         // Activo / Destacado
         document.getElementById('newActivo').value       = prod.activo != null ? String(prod.activo) : 'true';
         document.getElementById('newDestacado').value    = prod.destacado != null ? String(prod.destacado) : 'false';
+
+        // imagenes
+        if (prod.imagenData) {
+            // Construimos la URL correcta apuntando a nuestro ImagenRestController
+            imagePreview.src = `${window.contextPath}/api/products/${prod.id}/image?t=${new Date().getTime()}`;
+            imagePreview.classList.remove('hidden');
+            imagePlaceholder.classList.add('hidden');
+        } else {
+            // Si no hay imagen, nos aseguramos de que se muestre el placeholder
+            imagePreview.src = '';
+            imagePreview.classList.add('hidden');
+            imagePlaceholder.classList.remove('hidden');
+        }
 
         // Mostrar modal
         overlay.classList.remove('hidden');

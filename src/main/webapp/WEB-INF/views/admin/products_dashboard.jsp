@@ -218,149 +218,115 @@
 
             <form id="nuevoForm" class="space-y-4 overflow-y-auto max-h-[80vh]">
                 <div class="grid grid-cols-2 gap-4 pr-4">
-                    <!-- Código Nacional -->
                     <div>
                         <label for="newCod" class="block text-sm text-gray-600">Cód. Nacional</label>
                         <input type="text" id="newCod" name="id" required
                             class="w-full border border-gray-300 rounded-md px-2 py-1 focus:ring-pistachio focus:border-pistachio"/>
                     </div>
-                    <!-- Nombre -->
                     <div>
                         <label for="newNombre" class="block text-sm text-gray-600">Nombre</label>
                         <input type="text" id="newNombre" name="nombre" required
                             class="w-full border border-gray-300 rounded-md px-2 py-1 focus:ring-pistachio focus:border-pistachio"/>
                     </div>
-                    <!-- Familia -->
                     <div>
                         <label for="newFamilia" class="block text-sm text-gray-600">Familia</label>
-                        <select id="newFamilia" name="familia" required
+                        <select id="newFamilia" name="familiaId" required
                             class="w-full border border-gray-300 rounded-md px-2 py-1 focus:ring-pistachio focus:border-pistachio">
                             <option value="">Selecciona</option>
-                            <c:forEach var="fam" items="${familias}">
-                                <option value="${fam.id}">${fam.nombre}</option>
-                            </c:forEach>
+                            <c:forEach var="fam" items="${familias}"><option value="${fam.id}">${fam.nombre}</option></c:forEach>
                         </select>
                     </div>
-                    <!-- Categoría -->
                     <div>
                         <label for="newCategoria" class="block text-sm text-gray-600">Categoría</label>
-                        <select id="newCategoria" name="categoria" required
+                        <select id="newCategoria" name="categoriaId" required
                             class="w-full border border-gray-300 rounded-md px-2 py-1 focus:ring-pistachio focus:border-pistachio">
                             <option value="">Selecciona</option>
-                            <c:forEach var="cat" items="${categorias}">
-                                <option value="${cat.id}">${cat.nombre}</option>
-                            </c:forEach>
+                            <c:forEach var="cat" items="${categorias}"><option value="${cat.id}">${cat.nombre}</option></c:forEach>
                         </select>
                     </div>
-                    <!-- Subcategoría -->
                     <div>
                         <label for="newSubcategoria" class="block text-sm text-gray-600">Subcategoría</label>
-                        <select id="newSubcategoria" name="subCategoria"
+                        <select id="newSubcategoria" name="subCategoriaId"
                             class="w-full border border-gray-300 rounded-md px-2 py-1 focus:ring-pistachio focus:border-pistachio">
                             <option value="">Selecciona</option>
-                            <c:forEach var="sub" items="${subcategorias}">
-                                <option value="${sub.id}">${sub.nombre}</option>
-                            </c:forEach>
+                            <c:forEach var="sub" items="${subcategorias}"><option value="${sub.id}">${sub.nombre}</option></c:forEach>
                         </select>
                     </div>
-                    <!-- Laboratorio -->
                     <div>
                         <label for="newLaboratorio" class="block text-sm text-gray-600">Laboratorio</label>
-                        <select id="newLaboratorio" name="laboratorio"
+                        <select id="newLaboratorio" name="laboratorioId"
                             class="w-full border border-gray-300 rounded-md px-2 py-1 focus:ring-pistachio focus:border-pistachio">
                             <option value="">Selecciona</option>
-                            <c:forEach var="lab" items="${laboratorios}">
-                                <option value="${lab.id}">${lab.nombre}</option>
-                            </c:forEach>
+                            <c:forEach var="lab" items="${laboratorios}"><option value="${lab.id}">${lab.nombre}</option></c:forEach>
                         </select>
                     </div>
-                    <!-- Tipo -->
                     <div>
                         <label for="newTipo" class="block text-sm text-gray-600">Tipo</label>
-                        <select id="newTipo" name="tipo"
+                        <select id="newTipo" name="tipoId"
                             class="w-full border border-gray-300 rounded-md px-2 py-1 focus:ring-pistachio focus:border-pistachio">
                             <option value="">Selecciona</option>
-                            <c:forEach var="tip" items="${tipos}">
-                                <option value="${tip.id}">${tip.nombre}</option>
-                            </c:forEach>
+                            <c:forEach var="tip" items="${tipos}"><option value="${tip.id}">${tip.nombre}</option></c:forEach>
                         </select>
                     </div>
-                    <!-- Stock -->
                     <div>
                         <label for="newStock" class="block text-sm text-gray-600">Stock</label>
                         <input type="number" id="newStock" name="stock" required
                             class="w-full border border-gray-300 rounded-md px-2 py-1 focus:ring-pistachio focus:border-pistachio"/>
                     </div>
-                    
-                    
-                    
-                    <!-- Descripción -->
                     <div class="col-span-2">
                         <label for="newDesc" class="block text-sm text-gray-600">Descripción</label>
                         <textarea id="newDesc" name="descripcion" rows="3"
                             class="w-full border border-gray-300 rounded-md px-2 py-1 focus:ring-pistachio focus:border-pistachio"></textarea>
                     </div>
-                    <!-- Descripción -->
                     <div class="col-span-2">
                         <label for="newUse" class="block text-sm text-gray-600">Uso</label>
                         <textarea id="newUse" name="use" rows="3"
                             class="w-full border border-gray-300 rounded-md px-2 py-1 focus:ring-pistachio focus:border-pistachio"></textarea>
                     </div>
-                    <!-- Descripción -->
                     <div class="col-span-2">
                         <label for="newComp" class="block text-sm text-gray-600">Composición</label>
-                        <textarea id="newComp" name="comp" rows="3"
+                        <textarea id="newComp" name="composition" rows="3"
                             class="w-full border border-gray-300 rounded-md px-2 py-1 focus:ring-pistachio focus:border-pistachio"></textarea>
                     </div>
-                    <!-- Precio -->
                     <div>
                         <label for="newPrice" class="block text-sm text-gray-600">Precio</label>
                         <input type="number" step="0.01" id="newPrice" name="price" required
                             class="w-full border border-gray-300 rounded-md px-2 py-1 focus:ring-pistachio focus:border-pistachio"/>
                     </div>
-                    <!-- Descuento -->
                     <div>
                         <label for="newDiscount" class="block text-sm text-gray-600">Descuento (%)</label>
                         <input type="number" step="0.01" id="newDiscount" name="discount"
                             class="w-full border border-gray-300 rounded-md px-2 py-1 focus:ring-pistachio focus:border-pistachio"/>
                     </div>
-                    <!--Activo-->
                     <div>
                         <label for="newActivo" class="block text-sm text-gray-600">Activo</label>
-                        <select id="newActivo" name="activo"
-                            class="w-full border border-gray-300 rounded-md px-2 py-1 focus:ring-pistachio focus:border-pistachio">
-                            <option value="">Selecciona</option>
+                        <select id="newActivo" name="activo" class="w-full border border-gray-300 rounded-md px-2 py-1 focus:ring-pistachio focus:border-pistachio">
                             <option value="true">Si</option>
                             <option value="false">No</option>
                         </select>
                     </div>
-                    <!--Destacado-->
                     <div>
                         <label for="newDestacado" class="block text-sm text-gray-600">Destacado</label>
-                        <select id="newDestacado" name="destacado"
-                            class="w-full border border-gray-300 rounded-md px-2 py-1 focus:ring-pistachio focus:border-pistachio">
-                            <option value="">Selecciona</option>
-                            <option value="true">Si</option>
+                        <select id="newDestacado" name="destacado" class="w-full border border-gray-300 rounded-md px-2 py-1 focus:ring-pistachio focus:border-pistachio">
                             <option value="false">No</option>
+                            <option value="true">Si</option>
                         </select>
                     </div>
 
-                    
-                    <!-- Imagen -->
                     <div class="col-span-2">
                         <label class="block text-sm text-gray-600 mb-1">Imagen</label>
-                        <input type="file" id="imagenInput" name="imagen" accept=".png,.jpg" class="hidden"/>
+                        <input type="file" id="imagenInput" name="imagenFile" accept=".png,.jpg,.jpeg" class="hidden"/>
                         <label for="imagenInput"
-                            class="w-full h-32 border-2 border-dashed border-gray-300 rounded-md flex items-center justify-center text-gray-500 hover:border-pistachio hover:text-pistachio cursor-pointer">
-                            Añadir imagen
+                            class="w-full h-32 border-2 border-dashed border-gray-300 rounded-md flex items-center justify-center text-gray-500 hover:border-pistachio hover:text-pistachio cursor-pointer relative overflow-hidden">
+                            <img id="imagePreview" src="" alt="Previsualización" 
+                                 class="absolute top-0 left-0 w-full h-full object-cover hidden">
+                            <span id="imagePlaceholder">Añadir imagen</span>
                         </label>
                     </div>
                 </div>
 
-                <!-- Botón Guardar -->
                 <div class="mt-6 text-center">
-                    <button type="submit"
-                        class="bg-pistachio text-white font-medium px-6 py-2 rounded-md hover:bg-dark-pistachio transition">
+                    <button type="submit" class="bg-pistachio text-white font-medium px-6 py-2 rounded-md hover:bg-dark-pistachio transition">
                         Guardar
                     </button>
                 </div>

@@ -157,7 +157,7 @@
                     const productRows = details.productos.map(p => `
                         <tr class="border-b last:border-b-0">
                             <td class="py-2 px-4 flex items-center gap-3">
-                                <img src="${p.imagenPath || `${window.contextPath}/images/placeholder.png`}" alt="${p.nombre}" class="w-12 h-12 object-cover rounded">
+                                <img src="${p.imagenData || `${window.contextPath}/images/placeholder.png`}" alt="${p.nombre}" class="w-12 h-12 object-cover rounded">
                                 <div>
                                     <p class="font-semibold">${p.nombre}</p>
                                     <p class="text-xs text-gray-500">${p.laboratorioNombre || ''}</p>

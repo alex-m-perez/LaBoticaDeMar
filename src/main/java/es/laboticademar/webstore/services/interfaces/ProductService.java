@@ -12,10 +12,10 @@ import es.laboticademar.webstore.entities.Producto;
 
 public interface ProductService {
     public Producto saveOrUpdateProducto(Producto producto);
+    public ProductoDTO saveProductWithImage(ProductoDTO dto, MultipartFile imagenFile) throws Exception;
     public Optional<Producto> findById(BigDecimal id);
     public List<Producto> findAll();
     public void deleteProductoById(BigDecimal id);
-    public Page<ProductoDTO> getAllProducts(int page, int size);
     public Page<ProductoDTO> getAllProducts(
         int page,
         int size,
@@ -29,8 +29,8 @@ public interface ProductService {
         List<Long> laboratorioIds,
         Boolean stock,
         Boolean conDescuento,
-        BigDecimal precioMin,
-        BigDecimal precioMax
+        Float precioMin,
+        Float precioMax
     );
     public List<Producto> bulkUpload(MultipartFile file) throws Exception;
     public List<String> findNamesContaining(String q);

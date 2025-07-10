@@ -70,10 +70,17 @@
                 <div class="flex gap-8 h-min-96">
                     <!-- Imágen del producto (placeholder si no hay imagen) -->
                     <div class="w-full lg:w-2/5 p-2">
-                        <div class="h-128 w-128 w-full bg-gray-200 flex items-center justify-center rounded-lg">
+                        <div class="h-128 w-128 w-full bg-white flex items-center justify-center rounded-lg">
                             <c:choose>
-                                <c:when test="${not empty producto.imagenPath}"><img src="${pageContext.request.contextPath}${producto.imagenPath}" alt="${producto.nombre}" class="w-full h-full object-cover rounded-lg"/></c:when>
-                                <c:otherwise><svg class="w-16 h-16 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h4l2-3h6l2 3h4v13H3V7z"/><circle cx="12" cy="13" r="4" stroke="currentColor" stroke-width="2"/></svg></c:otherwise>
+                                <c:when test="${not empty producto.imagenData}">
+                                    <img src="<c:url value='/api/images/${producto.id}'/>" alt="${producto.nombre}" class="w-full h-full object-contain rounded-lg"/>
+                                </c:when>
+                                <c:otherwise>
+                                    <svg class="w-16 h-16 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h4l2-3h6l2 3h4v13H3V7z"/>
+                                        <circle cx="12" cy="13" r="4" stroke="currentColor" stroke-width="2"/>
+                                    </svg>
+                                </c:otherwise>
                             </c:choose>
                         </div>
                     </div>
@@ -188,7 +195,7 @@
 
                 <!-- Sección de Productos Destacados -->
                 <section class="container mx-0 lg:mx-auto px-4 py-8 mb-4">
-                    <h2 class="text-2xl font-bold text-gray-800 text-start mb-4">Productos relacionados</h2>
+                    <h2 class="text-2xl font-bold text-gray-800 text-start mb-4">Productos destacados</h2>
                     <div class="w-full h-90 flex items-center space-x-2">
                         <button id="product-carousel-prev-relacionados" class="p-1 bg-white hover:bg-gray-100 text-gray-700 rounded-full">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -219,10 +226,10 @@
                                                 </c:if>
 
                                                 <c:choose>
-                                                    <c:when test="${not empty producto.imagenPath}">
-                                                        <img src="${pageContext.request.contextPath}${producto.imagenPath}"
+                                                    <c:when test="${not empty producto.imagenData}">
+                                                        <img src="<c:url value='/api/images/${producto.id}'/>"
                                                             alt="${producto.nombre}"
-                                                            class="h-40 w-full object-cover rounded"/>
+                                                            class="h-40 w-full object-contain rounded"/>
                                                     </c:when>
                                                     <c:otherwise>
                                                         <div class="h-40 w-full bg-gray-200 flex items-center justify-center rounded">
@@ -284,106 +291,6 @@
                         </button>
                     </div>
                 </section>
-
-                <!-- Sección de Productos Destacados -->
-                <section class="container mx-0 lg:mx-auto px-4 py-8 mb-4">
-                    <h2 class="text-2xl font-bold text-gray-800 text-start mb-4">Productos relacionados</h2>
-                    <div class="w-full h-90 flex items-center space-x-2">
-                        <button id="product-carousel-prev-destacados" class="p-1 bg-white hover:bg-gray-100 text-gray-700 rounded-full">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
-                            </svg>
-                        </button>
-
-                        <div class="swiper multiple-slide-carousel-destacados swiper-container h-full w-full relative">
-                            <div class="swiper-wrapper">
-                                <c:forEach var="producto" items="${destacados}">
-                                    <div class="swiper-slide flex justify-center">
-                                        <!-- tarjeta de producto idéntica a la anterior, ya dinámica -->
-                                        <div class="product-card relative flex flex-col overflow-hidden p-2 border border-gray-200 rounded-lg bg-white w-64! h-full"
-                                            data-product='{"id": "${producto.id}", "stock": ${producto.stock}}'>
-
-                                            <button class="wishlist-btn absolute top-2 right-2 text-gray-400 hover:text-red-500 z-10" data-id="${producto.id}">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-                                                </svg>
-                                            </button>
-
-                                            <div class="relative mb-4">
-                                                <c:if test="${producto.discount > 0}">
-                                                    <span class="absolute top-0 left-0 bg-red-600 text-white text-sm font-bold px-2 py-1 rounded-md z-10">
-                                                        -<fmt:formatNumber value="${producto.discount}" maxFractionDigits="0" />%
-                                                    </span>
-                                                </c:if>
-
-                                                <c:choose>
-                                                    <c:when test="${not empty producto.imagenPath}">
-                                                        <img src="${pageContext.request.contextPath}${producto.imagenPath}"
-                                                            alt="${producto.nombre}"
-                                                            class="h-40 w-full object-cover rounded"/>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <div class="h-40 w-full bg-gray-200 flex items-center justify-center rounded">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h4l2-3h6l2 3h4v13H3V7z"/>
-                                                                <circle cx="12" cy="13" r="4" stroke="currentColor" stroke-width="2"/>
-                                                            </svg>
-                                                        </div>
-                                                    </c:otherwise>
-                                                </c:choose>
-                                            </div>
-
-                                            <h3 onclick="window.location.href='${pageContext.request.contextPath}/product/${producto.id}'"
-                                                class="text-sm font-medium mb-2 cursor-pointer hover:text-pistachio">
-                                                ${producto.nombre}
-                                            </h3>
-
-                                            <div class="flex items-center space-x-1 mb-2">
-                                                <c:forEach var="i" begin="1" end="5">
-                                                    <svg class="w-4 h-4 ${i <= producto.rating ? 'text-yellow-400' : 'text-gray-300'}" fill="currentColor" viewBox="0 0 20 20">
-                                                        <path fill-rule="evenodd" d="M10 15l-5.09 2.676 0.974-5.678L1.364 8.324l5.72-0.832L10 2l2.916 5.492 5.72 0.832-4.52 3.674 0.974 5.678z" clip-rule="evenodd"/>
-                                                    </svg>
-                                                </c:forEach>
-                                                <span class="text-xs text-gray-500">(${producto.ratingCount})</span>
-                                            </div>
-
-                                            <span class="text-xs font-semibold mb-4 ${producto.stock > 0 ? 'text-green-600' : 'text-red-600'}">
-                                                ${producto.stock > 0 ? 'Disponible' : 'No disponible'}
-                                            </span>
-
-                                            <div class="mt-auto flex justify-between items-end">
-                                                <div class="flex flex-col">
-                                                    <c:if test="${producto.discount > 0}">
-                                                        <span class="text-sm text-gray-400 line-through">
-                                                            <fmt:formatNumber value="${producto.price}" type="currency" currencySymbol="€ "/>
-                                                        </span>
-                                                        <span class="text-lg font-bold text-gray-800">
-                                                            <fmt:formatNumber value="${producto.price * (1 - producto.discount / 100)}" type="currency" currencySymbol="€ " minFractionDigits="2" maxFractionDigits="2"/>
-                                                        </span>
-                                                    </c:if>
-                                                    <c:if test="${producto.discount == 0 || producto.discount == null}">
-                                                        <span class="text-lg font-bold text-gray-800">
-                                                            <fmt:formatNumber value="${producto.price}" type="currency" currencySymbol="€ "/>
-                                                        </span>
-                                                    </c:if>
-                                                </div>
-                                                <div class="cart-controls-container"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </c:forEach>
-                            </div>
-                        </div>
-
-                        <button id="product-carousel-next-destacados" class="p-1 bg-white hover:bg-gray-100 text-gray-700 rounded-full">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
-                            </svg>
-                        </button>
-                    </div>
-                </section>
-
             </div>
         </main>
 
@@ -395,20 +302,6 @@
                 navigation: {
                     prevEl: '#product-carousel-prev-relacionados',
                     nextEl: '#product-carousel-next-relacionados',
-                },
-                breakpoints: {
-                    0:    { slidesPerView: 2, spaceBetween: 8 },
-                    700:  { slidesPerView: 3, spaceBetween: 12 },
-                    900:  { slidesPerView: 4, spaceBetween: 16 },
-                    1280: { slidesPerView: 5, spaceBetween: 20 },
-                },
-            });
-
-            new Swiper('.multiple-slide-carousel-destacados', {
-                loop: true,
-                navigation: {
-                    prevEl: '#product-carousel-prev-destacados',
-                    nextEl: '#product-carousel-next-destacados',
                 },
                 breakpoints: {
                     0:    { slidesPerView: 2, spaceBetween: 8 },

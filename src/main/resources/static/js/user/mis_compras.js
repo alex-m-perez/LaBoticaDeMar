@@ -135,7 +135,7 @@ function initializePage() {
             return `
                 <tr class="border-b">
                     <td class="px-4 py-2 flex items-center">
-                        <img src="${p.imagenPath || '/images/placeholder.png'}" alt="${p.nombre}" class="w-12 h-12 object-cover rounded mr-3">
+                        <img src="${p.imagenData || '/images/placeholder.png'}" alt="${p.nombre}" class="w-12 h-12 object-cover rounded mr-3">
                         ${p.nombre}
                     </td>
                     <td class="px-4 py-2 text-center">${qty}</td>

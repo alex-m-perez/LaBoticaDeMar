@@ -258,7 +258,7 @@ public class VentaServiceImpl implements VentaService {
                 // Datos del producto en el momento de la compra
                 .id(detalle.getProducto().getId())
                 .nombre(detalle.getProducto().getNombre())
-                .imagenPath(detalle.getProducto().getImagenPath())
+                .imagenData(detalle.getProducto().getImagenData())
                 .laboratorioNombre(detalle.getProducto().getLaboratorio() != null ? detalle.getProducto().getLaboratorio().getNombre() : "N/D")
                 // Datos específicos de la venta
                 .cantidad(detalle.getCantidad())

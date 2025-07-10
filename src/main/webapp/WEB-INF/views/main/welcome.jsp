@@ -68,8 +68,8 @@
                                             </button>
                                             <a href="${pageContext.request.contextPath}/product/${producto.id}">
                                                 <c:choose>
-                                                    <c:when test="${not empty producto.imagenPath}">
-                                                        <img src="${pageContext.request.contextPath}${producto.imagenPath}" alt="${producto.nombre}" class="h-40 w-full object-cover rounded"/>
+                                                    <c:when test="${not empty producto.imagenData}">
+                                                        <img src="<c:url value='/api/images/${producto.id}'/>" alt="${producto.nombre}" class="h-40 w-full object-contain rounded"/>
                                                     </c:when>
                                                     <c:otherwise>
                                                         <div class="h-40 w-full bg-gray-200 flex items-center justify-center rounded">

@@ -47,8 +47,8 @@ import lombok.RequiredArgsConstructor;
         @RequestParam(required = false) Boolean activo,
         @RequestParam(required = false) Boolean stock,
         @RequestParam(required = false) Boolean conDescuento, // <-- AÑADIR ESTA LÍNEA
-        @RequestParam(required = false) BigDecimal precioMin,
-        @RequestParam(required = false) BigDecimal precioMax
+        @RequestParam(required = false) Float precioMin,
+        @RequestParam(required = false) Float precioMax
     ) {
 
         Page<ProductoDTO> productPage = productService.getAllProducts(
