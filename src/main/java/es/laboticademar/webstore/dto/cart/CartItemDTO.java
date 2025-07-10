@@ -1,4 +1,4 @@
-package es.laboticademar.webstore.dto;
+package es.laboticademar.webstore.dto.cart;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

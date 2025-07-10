@@ -40,7 +40,7 @@
                             </thead>
                         </c:if>
 
-                        <tbody class="divide-y divide-gray-100">
+                        <tbody id="wishlist-items-body" class="divide-y divide-gray-100">
                             <c:choose>
                                 <c:when test="${not empty likedProducts}">
                                     <c:forEach var="producto" items="${likedProducts}">

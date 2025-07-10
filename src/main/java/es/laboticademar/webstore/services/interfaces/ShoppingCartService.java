@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.Map;
 
-import es.laboticademar.webstore.dto.ShoppingCartDTO;
+import es.laboticademar.webstore.dto.cart.ShoppingCartDTO;
 import es.laboticademar.webstore.entities.ShoppingCart;
 
 public interface ShoppingCartService {

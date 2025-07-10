@@ -1,4 +1,4 @@
-package es.laboticademar.webstore.dto;
+package es.laboticademar.webstore.dto.cart;
 
 import java.util.List;
 

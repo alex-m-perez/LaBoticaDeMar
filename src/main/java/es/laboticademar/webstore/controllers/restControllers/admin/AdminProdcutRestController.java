@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import es.laboticademar.webstore.dto.producto.ProductPageDTO;
 import es.laboticademar.webstore.dto.producto.ProductoDTO;
 import es.laboticademar.webstore.services.interfaces.ProductService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,7 +29,7 @@ public class AdminProdcutRestController {
     private final ProductService productService;
     
     @GetMapping("/get_pagable_list")
-    public Page<ProductoDTO> list(
+    public Page<ProductoDTO> getProductosPaginados(
         HttpServletRequest request,
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "25") int size,
@@ -41,14 +42,16 @@ public class AdminProdcutRestController {
         @RequestParam(required = false) List<Long> laboratorio,
         @RequestParam(required = false) Boolean activo,
         @RequestParam(required = false) Boolean stock,
+        @RequestParam(required = false) Boolean conDescuento, // <-- AÑADIR ESTA LÍNEA
         @RequestParam(required = false) BigDecimal precioMin,
         @RequestParam(required = false) BigDecimal precioMax
     ) {
 
         Page<ProductoDTO> productPage = productService.getAllProducts(
-            page, size, id, nombreProducto, activo, 
+            page, size, id, nombreProducto, true, 
             familia, categoria, subCategoria, tipo,
-            laboratorio, stock, precioMin, precioMax
+            laboratorio, stock, conDescuento,
+            precioMin, precioMax
         );
 
         return productPage;

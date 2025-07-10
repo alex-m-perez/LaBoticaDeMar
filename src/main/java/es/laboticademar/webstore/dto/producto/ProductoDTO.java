@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ProductoDTO {
 
-    private BigDecimal  id;
+    private String      id;
     private String      nombre;
     private String      descripcion;
     private String      use;
@@ -48,7 +48,7 @@ public class ProductoDTO {
      */
     public static ProductoDTO fromEntity(Producto p) {
         return ProductoDTO.builder()
-            .id(p.getId())
+            .id(p.getId().toString())
             .nombre(p.getNombre())
             .descripcion(p.getDescripcion())
             .use(p.getUse())
@@ -82,7 +82,7 @@ public class ProductoDTO {
 
     public static ProductoDTO fromEntityToGuestCartProducto(Producto p) {
         return ProductoDTO.builder()
-            .id(p.getId())
+            .id(p.getId().toString())
             .nombre(p.getNombre())
             .descripcion(p.getDescripcion())
             // Familia

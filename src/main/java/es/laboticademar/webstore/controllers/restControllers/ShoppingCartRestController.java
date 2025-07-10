@@ -5,6 +5,7 @@ import java.security.Principal;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.laboticademar.webstore.dto.PaymentDTO;
-import es.laboticademar.webstore.dto.ShoppingCartDTO;
+import es.laboticademar.webstore.dto.cart.ShoppingCartDTO;
 import es.laboticademar.webstore.services.interfaces.ShoppingCartService;
 import es.laboticademar.webstore.services.interfaces.VentaService;
 import lombok.RequiredArgsConstructor;
@@ -54,6 +55,12 @@ public class ShoppingCartRestController {
     public ResponseEntity<Void> mergeCarts(Principal principal, @RequestBody Map<String, Integer> guestCart) {
         shoppingCartService.mergeGuestCart(principal, guestCart);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/state")
+    public ResponseEntity<Map<String, Integer>> getCartState(Principal principal) {
+        Map<String, Integer> cartState = shoppingCartService.getCartStateForUser(principal);
+        return ResponseEntity.ok(cartState);
     }
 
     @PostMapping("/buy_cart")

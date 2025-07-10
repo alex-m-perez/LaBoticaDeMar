@@ -28,6 +28,7 @@ public interface ProductService {
         List<Long> tipoIds,
         List<Long> laboratorioIds,
         Boolean stock,
+        Boolean conDescuento,
         BigDecimal precioMin,
         BigDecimal precioMax
     );

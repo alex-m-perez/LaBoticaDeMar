@@ -170,9 +170,9 @@
                         <div class="space-y-2">
                             <h2 class="font-semibold mb-2">Descuentos</h2>
                             <label class="flex items-center">
-                                <input type="checkbox" name="stock" value="true"
-                                        class="form-checkbox h-5 w-5 text-pistachio"
-                                        <c:if test="${filtroStock}">checked</c:if>/>
+                                <input type="checkbox" name="conDescuento" value="true"
+                                       class="form-checkbox h-5 w-5 text-pistachio"
+                                       <c:if test="${filtroConDescuento}">checked</c:if>/>
                                 <span class="ml-2">Oferta activa</span>
                             </label>
                         </div>

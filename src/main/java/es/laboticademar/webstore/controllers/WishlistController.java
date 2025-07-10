@@ -21,8 +21,11 @@ public class WishlistController {
 
     @GetMapping({"/", ""})
     public String goWishlist(Principal principal, Model model) {
-        model.addAttribute("likedProducts", wishlistService.getOrCreateWishlistFromPrincipal(principal).getProductos());
-        model.addAttribute("destacados", destacadoService.getAllDestacados());
+        
+        if (principal != null) {
+            model.addAttribute("likedProducts", wishlistService.getOrCreateWishlistFromPrincipal(principal).getProductos());
+            model.addAttribute("destacados", destacadoService.getAllDestacados());
+        }
 
         return "purchases/wishlist";
     }

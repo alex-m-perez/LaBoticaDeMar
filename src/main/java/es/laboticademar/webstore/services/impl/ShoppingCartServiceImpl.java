@@ -8,13 +8,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import es.laboticademar.webstore.dto.CartItemDTO;
-import es.laboticademar.webstore.dto.GuestCartProductoDTO;
-import es.laboticademar.webstore.dto.ShoppingCartDTO;
+import es.laboticademar.webstore.dto.cart.CartItemDTO;
+import es.laboticademar.webstore.dto.cart.GuestCartProductoDTO;
+import es.laboticademar.webstore.dto.cart.ShoppingCartDTO;
 import es.laboticademar.webstore.entities.CartItem;
 import es.laboticademar.webstore.entities.Producto;
 import es.laboticademar.webstore.entities.ShoppingCart;
@@ -215,7 +216,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
 
-     @Override
+    @Override
     public ShoppingCartDTO getGuestCartDetails(Map<String, Integer> guestCart) {
         ShoppingCartDTO cartDTO = new ShoppingCartDTO(new ArrayList<>());
 

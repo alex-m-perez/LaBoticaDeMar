@@ -1,18 +1,61 @@
 //wishlist.js
-// Se ejecuta cuando el DOM está completamente cargado
 document.addEventListener('DOMContentLoaded', () => {
 
     // --- 1. CONFIGURACIÓN Y ESTADO ---
     const isAuthenticated = document.body.dataset.authenticated === 'true';
     const contextPath = window.contextPath || '';
-    
-    let cartState = isAuthenticated ? userCartState : JSON.parse(localStorage.getItem('cart') || '{}');
-    let wishlistState = isAuthenticated ? userWishlistState : JSON.parse(localStorage.getItem('wishlist') || '[]');
+
+    let cartState = isAuthenticated ? (userCartState || {}) : JSON.parse(localStorage.getItem('cart') || '{}');
+    let wishlistState = isAuthenticated ? (userWishlistState || []) : JSON.parse(localStorage.getItem('wishlist') || '[]');
 
     const iconCartPath = `${contextPath}/images/shopping-cart-white.svg`;
     const iconCheckPath = `${contextPath}/images/check.svg`;
 
     // --- 2. FUNCIONES DE RENDERIZADO DE BOTONES ---
+
+    function renderGuestWishlist(wishlistData) {
+        const tbody = document.querySelector('#wishlist-items-body');
+        if (!tbody) return;
+        tbody.innerHTML = ''; // Limpiamos el cuerpo de la tabla
+
+        // Si la wishlist está vacía, muestra un mensaje
+        if (!wishlistData.items || wishlistData.items.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="3" class="text-center p-12"><p class="text-gray-600 text-2xl font-bold mb-4">Tu lista de deseos está vacía.</p><a href="${contextPath}/" class="inline-block bg-pistachio text-white px-6 py-2 rounded hover:bg-dark-pistachio">Descubrir productos</a></td></tr>`;
+            return;
+        }
+
+        // Si hay items, crea una fila para cada uno
+        wishlistData.items.forEach(item => {
+            const product = item; // En la wishlist, el item es directamente el producto
+            const rowHTML = `
+                <tr class="wishlist-item-row border-b" data-product-id="${product.id}">
+                    <td class="py-4 px-2 md:px-4">
+                        <div class="flex items-center space-x-4">
+                            <img src="${contextPath}${product.imagenPath}" alt="${product.nombre}" class="h-20 w-20 object-cover rounded-lg">
+                            <div>
+                                <p class="font-bold text-base">${product.nombre}</p>
+                                <p class="text-sm text-gray-500">${product.laboratorioNombre}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="py-4 px-2 md:px-4 text-center">
+                        <span class="font-semibold text-lg">${new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(product.price)}</span>
+                    </td>
+                    <td class="py-4 px-2 md:px-4">
+                        <div class="flex flex-col md:flex-row items-center justify-center gap-2">
+                            <div class="cart-button-container"></div>
+                            <div class="wishlist-button-container"></div>
+                        </div>
+                    </td>
+                </tr>`;
+            tbody.insertAdjacentHTML('beforeend', rowHTML);
+        });
+
+        // IMPORTANTE: Una vez renderizadas las filas, inicializa sus controles
+        wishlistData.items.forEach(item => {
+            renderRowControls(item.id);
+        });
+    }
 
     /**
      * Renderiza los botones para una fila específica.
@@ -23,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const cartContainer = row.querySelector('.cart-button-container');
         const wishlistContainer = row.querySelector('.wishlist-button-container');
-        
+
         cartContainer.innerHTML = '';
         wishlistContainer.innerHTML = '';
 
@@ -126,11 +169,45 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- 4. INICIALIZACIÓN ---
-    // (Sin cambios)
-    document.querySelectorAll('.wishlist-item-row').forEach(row => {
-        const productId = row.dataset.productId;
-        if (productId) {
-            renderRowControls(productId);
+    function initializeApp() {
+        if (isAuthenticated) {
+            // Si el usuario está autenticado, los elementos ya están en el HTML.
+            // Solo necesitamos inicializar los botones.
+            document.querySelectorAll('.wishlist-item-row').forEach(row => {
+                const productId = row.dataset.productId;
+                if (productId) {
+                    renderRowControls(productId);
+                }
+            });
+        } else {
+            // Si el usuario es un invitado, la lista está en localStorage.
+            const guestWishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+
+            if (guestWishlist.length > 0) {
+                // Hay items, llamamos a la API para obtener sus detalles
+                $.ajax({
+                    url: `${contextPath}/api/wishlist/guest-details`,
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(guestWishlist),
+                    success: (wishlistData) => {
+                        console.log("Datos recibidos del servidor:", wishlistData); 
+                        renderGuestWishlist(wishlistData);
+                    },
+                    error: (err) => {
+                        console.error("Error al cargar los detalles de la wishlist de invitado.", err);
+                        // Opcional: mostrar un error en la UI
+                        const tbody = document.querySelector('#wishlist-items-body');
+                        if (tbody) tbody.innerHTML = `<tr><td colspan="3" class="text-center p-12 text-red-500">No se pudo cargar tu lista. Inténtalo de nuevo.</td></tr>`;
+                    }
+                });
+            } else {
+                // No hay items, simplemente renderizamos el estado vacío
+                renderGuestWishlist({ items: [] });
+            }
         }
-    });
+    }
+
+    // Arrancamos la aplicación
+    initializeApp();
 });

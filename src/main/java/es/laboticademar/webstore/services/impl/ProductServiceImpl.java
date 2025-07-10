@@ -11,6 +11,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -61,7 +62,7 @@ public class ProductServiceImpl implements ProductService {
         return entities.map(ent -> {
             ProductoDTO dto = new ProductoDTO();
             // Copiamos propiedades sencillas
-            org.springframework.beans.BeanUtils.copyProperties(ent, dto);
+            BeanUtils.copyProperties(ent, dto);
             // Ajuste para la etiqueta de categoría
             dto.setCategoriaNombre(
                 ent.getCategoria() != null
@@ -85,24 +86,26 @@ public class ProductServiceImpl implements ProductService {
             List<Long> tipoIds,
             List<Long> laboratorioIds,
             Boolean stock,
+            Boolean conDescuento,
             BigDecimal precioMin,
             BigDecimal precioMax
     ) {
         Specification<Producto> spec = Specification.where(null);
 
-        // Filtro por defecto para productos ACTIVOS, a menos que se especifique lo contrario
         if (activo == null || activo) {
             spec = spec.and((r, q, cb) -> cb.isTrue(r.get("activo")));
         } else {
-            // Opcional: si quisieras tener un filtro para ver inactivos
             spec = spec.and((r, q, cb) -> cb.isFalse(r.get("activo")));
         }
 
-        // El resto de la lógica de tu spec...
-        if (id != null && !id.isBlank()) { /* ... */ }
-        if (nombreProducto != null && !nombreProducto.isBlank()) { /* ... */ }
+        if (id != null && !id.isBlank()) {
+            spec = spec.and((r, q, cb) -> cb.like(r.get("id").as(String.class), "%" + id + "%"));
+        }
 
-        // Filtros de listas
+        if (nombreProducto != null && !nombreProducto.isBlank()) {
+            spec = spec.and((r, q, cb) -> cb.like(cb.lower(r.get("nombre")), "%" + nombreProducto.toLowerCase() + "%"));
+        }
+
         if (familiaIds != null && !familiaIds.isEmpty()) {
             spec = spec.and((r, q, cb) -> r.get("familia").get("id").in(familiaIds));
         }
@@ -119,22 +122,32 @@ public class ProductServiceImpl implements ProductService {
             spec = spec.and((r, q, cb) -> r.get("laboratorio").get("id").in(laboratorioIds));
         }
 
-        // Filtros de boolean y rangos
+        // Filtro de stock
         if (stock != null && stock) {
             spec = spec.and((r, q, cb) -> cb.greaterThan(r.get("stock"), 0));
         }
+
+        // 4. Lógica para filtrar por productos CON DESCUENTO
+        if (conDescuento != null && conDescuento) {
+            spec = spec.and((r, q, cb) -> 
+                cb.and(
+                    cb.isNotNull(r.get("discount")),
+                    cb.greaterThan(r.get("discount"), 0f)
+                )
+            );
+        }
+
+        // Filtros de rango de precio
         if (precioMin != null) {
-            spec = spec.and((r, q, cb) ->
-                cb.ge(r.get("price"), precioMin));
+            spec = spec.and((r, q, cb) -> cb.ge(r.get("price"), precioMin));
         }
         if (precioMax != null) {
-            spec = spec.and((r, q, cb) ->
-                cb.le(r.get("price"), precioMax));
+            spec = spec.and((r, q, cb) -> cb.le(r.get("price"), precioMax));
         }
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("nombre"));
         return productDAO.findAll(spec, pageable)
-                   .map(ProductoDTO::fromEntity);
+                       .map(ProductoDTO::fromEntity);
     }
 
     @Override

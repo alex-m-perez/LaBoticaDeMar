@@ -44,8 +44,9 @@ import lombok.RequiredArgsConstructor;
         @RequestParam(required = false) List<Long> subCategoria,
         @RequestParam(required = false) List<Long> tipo,
         @RequestParam(required = false) List<Long> laboratorio,
-        @RequestParam(required = false) Boolean activo, // Asegúrate de recibir este parámetro
+        @RequestParam(required = false) Boolean activo,
         @RequestParam(required = false) Boolean stock,
+        @RequestParam(required = false) Boolean conDescuento, // <-- AÑADIR ESTA LÍNEA
         @RequestParam(required = false) BigDecimal precioMin,
         @RequestParam(required = false) BigDecimal precioMax
     ) {
@@ -53,7 +54,8 @@ import lombok.RequiredArgsConstructor;
         Page<ProductoDTO> productPage = productService.getAllProducts(
             page, size, id, nombreProducto, true, 
             familia, categoria, subCategoria, tipo,
-            laboratorio, stock, precioMin, precioMax
+            laboratorio, stock, conDescuento,
+            precioMin, precioMax
         );
 
         List<BreadcrumbDTO> crumbs = BreadcrumbUtils.generarBreadcrumbs(

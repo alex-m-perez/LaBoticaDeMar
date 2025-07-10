@@ -8,6 +8,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -72,8 +73,9 @@ public class Producto {
     @Column(name = "DESCUENTO", nullable = true)
     private Float discount;
 
-    @Column(name = "IMAGEN_PATH", nullable = true, length = 255)
-    private String imagenPath;
+    @Lob
+    @Column(name = "IMAGEN_DATA") // Cambia el nombre para evitar confusión
+    private byte[] imagenData;
 
     @Column(name = "RATING", nullable = true)
     private Integer rating;
