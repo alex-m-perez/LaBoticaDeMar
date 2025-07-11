@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       branch:
-        description: 'Elige la rama que quieres construir y desplegar en EC2'
+        description: 'Elige la rama que quieres construir y desplegar en EC2' 
         required: true
         default: 'develop'
 
