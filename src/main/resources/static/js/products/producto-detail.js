@@ -302,6 +302,100 @@ function renderCarouselWishlistStatus(button, productId) {
 }
 
 
+function initializeStarRating() {
+    // 1. VERIFICACIONES INICIALES
+    if (!isAuthenticated) return;
+
+    const starsContainer = document.getElementById('product-rating-stars');
+    const productDetailContainer = document.getElementById('product-detail-container');
+
+    if (!starsContainer || !productDetailContainer) {
+        console.error("No se encontraron los contenedores necesarios para las estrellas.");
+        return;
+    }
+
+    // 2. OBTENCIÓN DE DATOS
+    const productId = productDetailContainer.dataset.productId;
+    // Lee la puntuación actual y si no existe o es inválida, la establece en 0.
+    const currentRating = parseInt(starsContainer.dataset.currentRating, 10) || 0;
+    const stars = Array.from(starsContainer.querySelectorAll('.rating-star'));
+
+
+    // 3. FUNCIÓN AUXILIAR PARA PINTAR LAS ESTRELLAS (sin cambios, es correcta)
+    const paintStars = (ratingValue, isHovering) => {
+        stars.forEach((star, index) => {
+            const filledColor = 'text-yellow-400';
+            const emptyColor = 'text-gray-300';
+            const hoverColor = 'text-yellow-500';
+            const hoverEffectClass = 'rating-star-hover';
+
+            star.classList.remove(filledColor, emptyColor, hoverColor, hoverEffectClass);
+
+            if (index < ratingValue) {
+                star.classList.add(isHovering ? hoverColor : filledColor);
+                star.setAttribute('fill', 'currentColor');
+                if (isHovering) {
+                    star.classList.add(hoverEffectClass);
+                }
+            } else {
+                star.classList.add(isHovering ? hoverColor : emptyColor);
+                star.setAttribute('fill', 'gray');
+            }
+        });
+    };
+
+    // 4. ASIGNACIÓN DE EVENTOS
+    stars.forEach((star, index) => {
+        // La puntuación correspondiente a esta estrella (1-5)
+        const score = index + 1;
+
+        // --- Evento HOVER (mouseenter) ---
+        star.addEventListener('mouseenter', () => {
+            paintStars(score, true);
+        });
+
+        // --- Evento CLICK (Corregido) ---
+        star.addEventListener('click', () => {
+            // CORRECCIÓN: Se usa la variable 'score' que sí está definida en este alcance.
+            const evaluationData = {
+                productId: productId,
+                score: score // Antes había un error aquí
+            };
+
+            starsContainer.style.pointerEvents = 'none';
+
+            // CORRECCIÓN: Lógica para leer el token CSRF desde las etiquetas <meta>
+
+            const headers = {
+                'Content-Type': 'application/json'
+            };
+            fetch(`${contextPath}/api/evaluations/new`, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(evaluationData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error al enviar la evaluación.');
+                }
+                window.location.reload();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('No se pudo registrar tu voto. Inténtalo de nuevo.');
+                starsContainer.style.pointerEvents = 'auto';
+            });
+        });
+    });
+
+    // --- Evento MOUSELEAVE ---
+    // Al quitar el ratón del contenedor, se vuelve a pintar la puntuación real.
+    starsContainer.addEventListener('mouseleave', () => {
+        paintStars(currentRating, false);
+    });
+}
+
+
 // ==========================================================
 // PARTE 4: INICIALIZACIÓN Y SINCRONIZACIÓN (MODIFICADA)
 // ==========================================================
@@ -313,6 +407,7 @@ function syncUI() {
     
     // El resto es la lógica que ya tenías
     initializeMainProductControls();
+    initializeStarRating();
     window.dispatchEvent(new CustomEvent('cartUpdated', { detail: { newState: cartState } }));
 
     document.querySelectorAll('.product-card').forEach(card => {

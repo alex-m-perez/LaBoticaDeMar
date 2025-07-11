@@ -1,5 +1,6 @@
 package es.laboticademar.webstore.services.impl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -18,5 +19,10 @@ public class TipoServiceImpl implements TipoService {
     @Override
     public Optional<TipoProducto> findByNombre(String name) {
         return tipoDAO.findByNombre(name);
+    }
+
+    @Override
+    public List<TipoProducto> findAll() {
+        return tipoDAO.findAll();
     }
 }

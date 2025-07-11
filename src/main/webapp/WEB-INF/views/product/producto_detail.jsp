@@ -31,6 +31,14 @@
             scrollbar-width: none; /* Oculta la barra de scroll */
             -ms-overflow-style: none;  /* Para IE/Edge */
         }
+
+        .rating-star {
+            transition: transform 0.1s ease-in-out, color 0.2s;
+            cursor: pointer;
+        }
+        .rating-star-hover {
+            transform: scale(1.3); /* Hace la estrella más grande */
+        }
     </style>
 
     <%-- El body ya tenía las clases correctas, lo cual es perfecto --%>
@@ -91,9 +99,10 @@
                             <h1 class="text-3xl font-bold text-gray-800 mb-4">${producto.nombre}</h1>
 
                             <div class="flex items-center gap-x-4 mb-4">
-                                <div class="flex items-center space-x-1">
+                                <div id="product-rating-stars" class="flex items-center space-x-1" data-current-rating="${producto.rating}">
                                     <c:forEach var="i" begin="1" end="5">
-                                        <svg class="w-5 h-5 ${i <= producto.rating ? 'text-yellow-400' : 'text-gray-300'}" fill="currentColor" viewBox="0 0 20 20">
+                                        <%-- Clase 'rating-star' añadida a cada estrella --%>
+                                        <svg class="rating-star w-5 h-5 ${i <= producto.rating ? 'text-yellow-400' : 'text-gray-500'}" fill="currentColor" viewBox="0 0 20 20">
                                             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.97a1 1 0 00.95.69h4.178c.969 0 1.371 1.24.588 1.81l-3.385 2.46a1 1 0 00-.364 1.118l1.286 3.97c.3.921-.755 1.688-1.54 1.118l-3.385-2.46a1 1 0 00-1.175 0l-3.385 2.46c-.785.57-1.84-.197-1.54-1.118l1.286-3.97a1 1 0 00-.364-1.118L2.047 9.397c-.783-.57-.38-1.81.588-1.81h4.178a1 1 0 00.95-.69l1.286-3.97z"/>
                                         </svg>
                                     </c:forEach>

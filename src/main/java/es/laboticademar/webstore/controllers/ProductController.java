@@ -19,6 +19,7 @@ import es.laboticademar.webstore.services.interfaces.FamiliaService;
 import es.laboticademar.webstore.services.interfaces.LaboratorioService;
 import es.laboticademar.webstore.services.interfaces.ProductService;
 import es.laboticademar.webstore.services.interfaces.SubcategoriaService;
+import es.laboticademar.webstore.services.interfaces.TipoService;
 import es.laboticademar.webstore.utils.BreadcrumbUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +36,7 @@ public class ProductController {
 	private final CategoriaService categoriaService;
 	private final SubcategoriaService subcategoriaService;
 	private final LaboratorioService laboratorioService;
+    private final TipoService tipoService;
 
     @GetMapping("/{id}")
     public String goProductInfo(@PathVariable("id") BigDecimal id, Model model) {
@@ -88,6 +90,7 @@ public class ProductController {
 
         // — datos sidebar
         model.addAttribute("todosLosLaboratorios",   laboratorioService.findAll());
+        model.addAttribute("tipos",   tipoService.findAll());
 
         // — generamos migas de pan
         List<BreadcrumbDTO> crumbs = BreadcrumbUtils.generarBreadcrumbs(

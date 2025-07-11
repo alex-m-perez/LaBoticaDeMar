@@ -236,7 +236,7 @@ function renderGrid(items) {
             var row = Math.floor(idx / layout.cols);
             var card = document.createElement('div');
             card.className = [
-                'relative','flex','flex-col','overflow-hidden','p-4',
+                'relative','flex','flex-col','overflow-hidden','p-2',
                 col > 0 && 'border-l', row > 0 && 'border-t', 'border-gray-200'
             ].filter(Boolean).join(' ');
 
@@ -262,7 +262,7 @@ function renderGrid(items) {
 
             if (p.imagenData) {
                 var wrapImg = document.createElement('div');
-                wrapImg.className = 'p-2 cursor-pointer';
+                wrapImg.className = 'cursor-pointer';
                 var img = document.createElement('img');
 
                 // --- LÍNEA CORREGIDA ---

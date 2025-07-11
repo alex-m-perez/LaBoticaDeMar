@@ -133,8 +133,8 @@
                             <h2 class="font-semibold mb-2">Tipo</h2>
                             <select id="tipoSelector" class="w-full border rounded p-2 focus:ring-pistachio focus:outline-none">
                                 <option value="">Añadir un tipo...</option>
-                                <c:if test="${not empty todosLosTipos}">
-                                    <c:forEach var="t" items="${todosLosTipos}">
+                                <c:if test="${not empty tipos}">
+                                    <c:forEach var="t" items="${tipos}">
                                         <option value="${t.id}" data-nombre="${t.nombre}">${t.nombre}</option>
                                     </c:forEach>
                                 </c:if>

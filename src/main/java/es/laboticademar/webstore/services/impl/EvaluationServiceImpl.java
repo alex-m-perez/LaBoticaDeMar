@@ -2,8 +2,10 @@ package es.laboticademar.webstore.services.impl;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import es.laboticademar.webstore.dto.producto.EvaluationRequestDTO;
 import es.laboticademar.webstore.entities.Evaluation;
@@ -14,7 +16,6 @@ import es.laboticademar.webstore.services.interfaces.EvaluationService;
 import es.laboticademar.webstore.services.interfaces.ProductService;
 import es.laboticademar.webstore.services.interfaces.UsuarioService;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -34,22 +35,30 @@ public class EvaluationServiceImpl implements EvaluationService {
             throw new IllegalArgumentException("La puntuación debe estar entre 1 y 5.");
         }
 
-        // Opcional: Impedir que un usuario evalúe el mismo producto dos veces
-        evaluationDAO.findByProductIdAndUserId(request.getProductId(), usuarioService.getIdFromPrincipal(principal))
-            .ifPresent(e -> {
-                throw new IllegalStateException("Este usuario ya ha evaluado el producto.");
-            });
-
-        // 1. Buscar el producto y el usuario
         Producto product = productService.findById(request.getProductId())
                 .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado con id: " + request.getProductId()));
 
         Usuario user = usuarioService.getUserByCorreo(principal.getName())
                 .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado con correo: " + principal.getName()));
 
-        // 2. Guardar la nueva evaluación
-        Evaluation newEvaluation = new Evaluation(request.getScore(), product, user);
-        evaluationDAO.save(newEvaluation);
+
+        // Opcional: Impedir que un usuario evalúe el mismo producto dos veces
+        Optional<Evaluation> existingEvaluationOpt = evaluationDAO.findByProductIdAndUserId(product.getId(), user.getId());
+
+        // 2. Si está presente: actualiza; si no: crea uno nuevo
+        Evaluation evaluation = existingEvaluationOpt
+            .map(eval -> {
+                // YA EXISTE: actualiza la puntuación
+                eval.setScore(request.getScore());
+                return eval;
+            })
+            .orElseGet(() -> {
+                // NO EXISTE: crea una nueva evaluación
+                return new Evaluation(request.getScore(), product, user);
+            });
+
+        // 3. Guarda (tanto actualización como nueva entidad funcionan igual)
+        evaluationDAO.save(evaluation);
 
         // 3. Obtener todas las evaluaciones para ese producto
         List<Evaluation> allEvaluations = evaluationDAO.findByProductId(product.getId());
