@@ -4,7 +4,7 @@ public enum Role {
 
     SUPPORT,
     ADMIN,
-    MOSTRADOR,
+    EMPLEADO,
     USUARIO
 
 }

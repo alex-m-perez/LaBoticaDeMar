@@ -1,6 +1,4 @@
 <div class="bg-white min-h-screen space-y-6">
-
-    <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
     <!-- Filtros de Productos -->
@@ -121,7 +119,7 @@
                 <!-- Botones -->
                 <div class="flex gap-2 self-end">
                     <button type="submit"
-                        class="bg-pistachio text-white font-medium px-4 py-1.5 rounded-md hover:bg-pistachio-dark transition">
+                        class="bg-pistachio text-white font-medium px-4 py-1.5 rounded-md hover:bg-dark-pistachio transition">
                         Buscar
                     </button>
                     <button type="reset"
@@ -159,7 +157,7 @@
             <h2 class="text-lg font-semibold mb-0">Listado de Productos</h2>
             <div class="flex items-center space-x-2">
                 <button id="nuevoBtn"
-                        class="flex items-center bg-pistachio text-white font-medium px-4 py-1.5 rounded-md hover:bg-pistachio-dark transition">
+                        class="flex items-center bg-pistachio text-white font-medium px-4 py-1.5 rounded-md hover:bg-dark-pistachio transition">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" clip-rule="evenodd"
                               d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" />
@@ -167,7 +165,7 @@
                     Nuevo
                 </button>
                 <button id="cargaMasivaBtn"
-                        class="flex items-center bg-pistachio text-white font-medium px-4 py-1.5 rounded-md hover:bg-pistachio-dark transition">
+                        class="flex items-center bg-pistachio text-white font-medium px-4 py-1.5 rounded-md hover:bg-dark-pistachio transition">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" clip-rule="evenodd"
                               d="M4 2a1 1 0 00-1 1v14a1 1 0 001 1h12a1 1 0 001-1V7.414a1 1 0 00-.293-.707l-3.414-3.414A1 1 0 0012.586 2H4zm8 1.414L16.586 8H12a1 1 0 01-1-1V3.414z" />
@@ -195,64 +193,11 @@
 
         <!-- Paginación -->
         <div id="pagination" class="flex justify-between items-center mt-4">
-            <button id="prevBtn"
-                    class="bg-gray-200 text-gray-700 font-medium px-4 py-1.5 rounded-md hover:bg-gray-300 transition"
-                    disabled>
-                Anterior
-            </button>
+            <button id="prevBtn" class="bg-gray-200 text-gray-700 px-3 py-1 rounded-md hover:bg-gray-300 transition-colors">Anterior</button>
             <span>Página <span id="pageNum">1</span> de <span id="totalPages">1</span></span>
-            <button id="nextBtn"
-                    class="bg-gray-200 text-gray-700 font-medium px-4 py-1.5 rounded-md hover:bg-gray-300 transition">
-                Siguiente
-            </button>
+            <button id="nextBtn" class="bg-gray-200 text-gray-700 px-3 py-1 rounded-md hover:bg-gray-300 transition-colors">Siguiente</button>
         </div>
     </div>
-
-	<!-- Inventario Chart Section -->
-	<div class="bg-white p-6 rounded-2xl shadow border">
-		<h2 class="text-lg font-semibold mb-4">Distribución de Inventario</h2>
-		<div id="inventory-bar-chart" class="w-full h-64 bg-gray-100 flex items-center justify-center text-gray-400">
-			[Gráfico de Barras por Categoría]
-		</div>
-	</div>
-
-	<!-- Top Stock & Bajo Stock -->
-	<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-		<div class="bg-white p-6 rounded-2xl shadow border">
-			<h2 class="text-lg font-semibold mb-4">Productos con Más Stock</h2>
-			<ul class="space-y-2">
-				<li class="flex justify-between text-sm">
-					<span>Ibuprofeno 400mg</span>
-					<span class="font-medium">3,200 uds.</span>
-				</li>
-				<li class="flex justify-between text-sm">
-					<span>Vitamina C 1g</span>
-					<span class="font-medium">2,850 uds.</span>
-				</li>
-				<li class="flex justify-between text-sm">
-					<span>Gel Antibacteriano</span>
-					<span class="font-medium">2,400 uds.</span>
-				</li>
-			</ul>
-		</div>
-		<div class="bg-white p-6 rounded-2xl shadow border">
-			<h2 class="text-lg font-semibold mb-4">Productos con Bajo Stock</h2>
-			<ul class="space-y-2">
-				<li class="flex justify-between text-sm">
-					<span>Paracetamol 500mg</span>
-					<span class="font-medium">35 uds.</span>
-				</li>
-				<li class="flex justify-between text-sm">
-					<span>Colirio Ocular</span>
-					<span class="font-medium">20 uds.</span>
-				</li>
-				<li class="flex justify-between text-sm">
-					<span>Cremas para Afeitar</span>
-					<span class="font-medium">15 uds.</span>
-				</li>
-			</ul>
-		</div>
-	</div>
 
 	<!-- Modal Nuevo/Editar producto -->
     <div id="nuevoModal" class="fixed inset-0 flex items-center justify-center hidden z-[10000]">
@@ -273,137 +218,115 @@
 
             <form id="nuevoForm" class="space-y-4 overflow-y-auto max-h-[80vh]">
                 <div class="grid grid-cols-2 gap-4 pr-4">
-                    <!-- Código Nacional -->
                     <div>
                         <label for="newCod" class="block text-sm text-gray-600">Cód. Nacional</label>
                         <input type="text" id="newCod" name="id" required
                             class="w-full border border-gray-300 rounded-md px-2 py-1 focus:ring-pistachio focus:border-pistachio"/>
                     </div>
-                    <!-- Nombre -->
                     <div>
                         <label for="newNombre" class="block text-sm text-gray-600">Nombre</label>
                         <input type="text" id="newNombre" name="nombre" required
                             class="w-full border border-gray-300 rounded-md px-2 py-1 focus:ring-pistachio focus:border-pistachio"/>
                     </div>
-                    <!-- Familia -->
                     <div>
                         <label for="newFamilia" class="block text-sm text-gray-600">Familia</label>
-                        <select id="newFamilia" name="familia" required
+                        <select id="newFamilia" name="familiaId" required
                             class="w-full border border-gray-300 rounded-md px-2 py-1 focus:ring-pistachio focus:border-pistachio">
                             <option value="">Selecciona</option>
-                            <c:forEach var="fam" items="${familias}">
-                                <option value="${fam.id}">${fam.nombre}</option>
-                            </c:forEach>
+                            <c:forEach var="fam" items="${familias}"><option value="${fam.id}">${fam.nombre}</option></c:forEach>
                         </select>
                     </div>
-                    <!-- Categoría -->
                     <div>
                         <label for="newCategoria" class="block text-sm text-gray-600">Categoría</label>
-                        <select id="newCategoria" name="categoria" required
+                        <select id="newCategoria" name="categoriaId" required
                             class="w-full border border-gray-300 rounded-md px-2 py-1 focus:ring-pistachio focus:border-pistachio">
                             <option value="">Selecciona</option>
-                            <c:forEach var="cat" items="${categorias}">
-                                <option value="${cat.id}">${cat.nombre}</option>
-                            </c:forEach>
+                            <c:forEach var="cat" items="${categorias}"><option value="${cat.id}">${cat.nombre}</option></c:forEach>
                         </select>
                     </div>
-                    <!-- Subcategoría -->
                     <div>
                         <label for="newSubcategoria" class="block text-sm text-gray-600">Subcategoría</label>
-                        <select id="newSubcategoria" name="subCategoria"
+                        <select id="newSubcategoria" name="subCategoriaId"
                             class="w-full border border-gray-300 rounded-md px-2 py-1 focus:ring-pistachio focus:border-pistachio">
                             <option value="">Selecciona</option>
-                            <c:forEach var="sub" items="${subcategorias}">
-                                <option value="${sub.id}">${sub.nombre}</option>
-                            </c:forEach>
+                            <c:forEach var="sub" items="${subcategorias}"><option value="${sub.id}">${sub.nombre}</option></c:forEach>
                         </select>
                     </div>
-                    <!-- Laboratorio -->
                     <div>
                         <label for="newLaboratorio" class="block text-sm text-gray-600">Laboratorio</label>
-                        <select id="newLaboratorio" name="laboratorio"
+                        <select id="newLaboratorio" name="laboratorioId"
                             class="w-full border border-gray-300 rounded-md px-2 py-1 focus:ring-pistachio focus:border-pistachio">
                             <option value="">Selecciona</option>
-                            <c:forEach var="lab" items="${laboratorios}">
-                                <option value="${lab.id}">${lab.nombre}</option>
-                            </c:forEach>
+                            <c:forEach var="lab" items="${laboratorios}"><option value="${lab.id}">${lab.nombre}</option></c:forEach>
                         </select>
                     </div>
-                    <!-- Tipo -->
                     <div>
                         <label for="newTipo" class="block text-sm text-gray-600">Tipo</label>
-                        <select id="newTipo" name="tipo"
+                        <select id="newTipo" name="tipoId"
                             class="w-full border border-gray-300 rounded-md px-2 py-1 focus:ring-pistachio focus:border-pistachio">
                             <option value="">Selecciona</option>
-                            <c:forEach var="tip" items="${tipos}">
-                                <option value="${tip.id}">${tip.nombre}</option>
-                            </c:forEach>
+                            <c:forEach var="tip" items="${tipos}"><option value="${tip.id}">${tip.nombre}</option></c:forEach>
                         </select>
                     </div>
-                    <!-- Stock -->
                     <div>
                         <label for="newStock" class="block text-sm text-gray-600">Stock</label>
                         <input type="number" id="newStock" name="stock" required
                             class="w-full border border-gray-300 rounded-md px-2 py-1 focus:ring-pistachio focus:border-pistachio"/>
                     </div>
-                    
-                    
-                    
-                    <!-- Descripción -->
                     <div class="col-span-2">
                         <label for="newDesc" class="block text-sm text-gray-600">Descripción</label>
                         <textarea id="newDesc" name="descripcion" rows="3"
                             class="w-full border border-gray-300 rounded-md px-2 py-1 focus:ring-pistachio focus:border-pistachio"></textarea>
                     </div>
-                    <!-- Precio -->
+                    <div class="col-span-2">
+                        <label for="newUse" class="block text-sm text-gray-600">Uso</label>
+                        <textarea id="newUse" name="use" rows="3"
+                            class="w-full border border-gray-300 rounded-md px-2 py-1 focus:ring-pistachio focus:border-pistachio"></textarea>
+                    </div>
+                    <div class="col-span-2">
+                        <label for="newComp" class="block text-sm text-gray-600">Composición</label>
+                        <textarea id="newComp" name="composition" rows="3"
+                            class="w-full border border-gray-300 rounded-md px-2 py-1 focus:ring-pistachio focus:border-pistachio"></textarea>
+                    </div>
                     <div>
                         <label for="newPrice" class="block text-sm text-gray-600">Precio</label>
                         <input type="number" step="0.01" id="newPrice" name="price" required
                             class="w-full border border-gray-300 rounded-md px-2 py-1 focus:ring-pistachio focus:border-pistachio"/>
                     </div>
-                    <!-- Descuento -->
                     <div>
                         <label for="newDiscount" class="block text-sm text-gray-600">Descuento (%)</label>
                         <input type="number" step="0.01" id="newDiscount" name="discount"
                             class="w-full border border-gray-300 rounded-md px-2 py-1 focus:ring-pistachio focus:border-pistachio"/>
                     </div>
-                    <!--Activo-->
                     <div>
                         <label for="newActivo" class="block text-sm text-gray-600">Activo</label>
-                        <select id="newActivo" name="activo"
-                            class="w-full border border-gray-300 rounded-md px-2 py-1 focus:ring-pistachio focus:border-pistachio">
-                            <option value="">Selecciona</option>
+                        <select id="newActivo" name="activo" class="w-full border border-gray-300 rounded-md px-2 py-1 focus:ring-pistachio focus:border-pistachio">
                             <option value="true">Si</option>
                             <option value="false">No</option>
                         </select>
                     </div>
-                    <!--Destacado-->
                     <div>
                         <label for="newDestacado" class="block text-sm text-gray-600">Destacado</label>
-                        <select id="newDestacado" name="destacado"
-                            class="w-full border border-gray-300 rounded-md px-2 py-1 focus:ring-pistachio focus:border-pistachio">
-                            <option value="">Selecciona</option>
-                            <option value="true">Si</option>
+                        <select id="newDestacado" name="destacado" class="w-full border border-gray-300 rounded-md px-2 py-1 focus:ring-pistachio focus:border-pistachio">
                             <option value="false">No</option>
+                            <option value="true">Si</option>
                         </select>
                     </div>
 
-                    
-                    <!-- Imagen -->
                     <div class="col-span-2">
                         <label class="block text-sm text-gray-600 mb-1">Imagen</label>
-                        <input type="file" id="imagenInput" name="imagen" accept=".png,.jpg" class="hidden"/>
+                        <input type="file" id="imagenInput" name="imagenFile" accept=".png,.jpg,.jpeg" class="hidden"/>
                         <label for="imagenInput"
-                            class="w-full h-32 border-2 border-dashed border-gray-300 rounded-md flex items-center justify-center text-gray-500 hover:border-pistachio hover:text-pistachio cursor-pointer">
-                            Añadir imagen
+                            class="w-full h-32 border-2 border-dashed border-gray-300 rounded-md flex items-center justify-center text-gray-500 hover:border-pistachio hover:text-pistachio cursor-pointer relative overflow-hidden">
+                            <img id="imagePreview" src="" alt="Previsualización" 
+                                 class="absolute top-0 left-0 w-full h-full object-cover hidden">
+                            <span id="imagePlaceholder">Añadir imagen</span>
                         </label>
                     </div>
                 </div>
 
-                <!-- Botón Guardar -->
                 <div class="mt-6 text-center">
-                    <button type="submit"
-                        class="bg-pistachio text-white font-medium px-6 py-2 rounded-md hover:bg-pistachio-dark transition">
+                    <button type="submit" class="bg-pistachio text-white font-medium px-6 py-2 rounded-md hover:bg-dark-pistachio transition">
                         Guardar
                     </button>
                 </div>
@@ -438,7 +361,7 @@
                 <div class="mt-6 text-center">
                     <button type="submit"
                             class="bg-pistachio text-white font-medium px-6 py-2 rounded-md
-                                   hover:bg-pistachio-dark transition">
+                                   hover:bg-dark-pistachio transition">
                         Subir
                     </button>
                 </div>

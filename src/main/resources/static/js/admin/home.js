@@ -31,18 +31,19 @@
             }
 
             // 4) Cargar dinámicamente el JS de la sección:
+            
             const section = url.split('/').pop();          // e.g. "products"
             const scriptId = 'section-script';
             // eliminar posible script anterior
             document.getElementById(scriptId)?.remove();
             // crear nuevo <script>
             const script = document.createElement('script');
-            script.src = `${window.contextPath}/js/admin/${section}.js`;
+            script.src = `${window.contextPath}/js/admin/${section}_dashboard.js`;
             script.id  = scriptId;
             script.defer = true;
             // cuando cargue, ejecutar el inicializador si existe
             script.onload = () => {
-                const initFn = window[`init${section[0].toUpperCase()}${section.slice(1)}Page`];
+                const initFn = window[`initializePage`];
                 if (typeof initFn === 'function') initFn();
             };
             document.body.appendChild(script);

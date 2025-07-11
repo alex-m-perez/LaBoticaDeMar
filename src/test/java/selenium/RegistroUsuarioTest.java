@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.time.Duration;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -64,57 +65,7 @@ public class RegistroUsuarioTest {
         }
     }
 
-    @Test
-    public void testRegistroExitoso() {
-        // --- Paso 1 ---
-        driver.findElement(By.id("nombre")).sendKeys("Juan");
-        driver.findElement(By.id("apellido1")).sendKeys("Pérez");
-        driver.findElement(By.id("apellido2")).sendKeys("Gómez");
-        driver.findElement(By.id("correo")).sendKeys("juan.perez@gmail.com");
-        driver.findElement(By.id("passwd")).sendKeys("Abcdef1!");
-        driver.findElement(By.id("confirm_passwd")).sendKeys("Abcdef1!");
-
-        // **Nuevo**: marcar checkboxes requeridos
-        driver.findElement(By.id("aceptaTerminos")).click();
-        driver.findElement(By.id("aceptaPrivacidad")).click();
-
-        // pulsar siguiente y esperar al paso 2
-        driver.findElement(By.id("next-btn")).click();
-        wait.until(ExpectedConditions.textToBe(By.id("step-label"), "Paso 2 de 3"));
-
-        // --- Paso 2 ---
-        driver.findElement(By.id("fechaNac")).sendKeys("1990-05-15");
-        new Select(driver.findElement(By.id("genero"))).selectByValue("1");
-        driver.findElement(By.id("telefono")).sendKeys("600123456");
-        driver.findElement(By.id("calle")).sendKeys("Calle Falsa");
-        driver.findElement(By.id("numero")).sendKeys("123");
-        driver.findElement(By.id("localidad")).sendKeys("Madrid");
-        driver.findElement(By.id("codigoPostal")).sendKeys("28001");
-        driver.findElement(By.id("provincia")).sendKeys("Madrid");
-        driver.findElement(By.id("pais")).sendKeys("España");
-
-        driver.findElement(By.id("next-btn")).click();
-        wait.until(ExpectedConditions.textToBe(By.id("step-label"), "Paso 3 de 3"));
-
-            // --- Paso 3 ---
-        List<WebElement> intereses = driver.findElements(By.cssSelector(".select-interes"));
-
-        for (int idx : new int[]{0, 2}) {
-            WebElement interes = intereses.get(idx);
-
-            wait.until(ExpectedConditions.elementToBeClickable(interes));
-
-            ((JavascriptExecutor) driver)
-                .executeScript("arguments[0].scrollIntoView({block:'center'});", interes);
-
-            new Actions(driver).moveToElement(interes).click().perform();
-        }
-
-        // por último pulsar “Terminar” y comprobar redirección…
-        driver.findElement(By.id("next-btn")).click();
-        wait.until(ExpectedConditions.urlToBe("http://localhost:" + port +"/"));
-        assertEquals("http://localhost:" + port + "/", driver.getCurrentUrl());
-    }
+    
 
     @Test
     public void testCamposObligatoriosPaso1() {

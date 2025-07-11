@@ -1,3 +1,4 @@
+//registro_nuevo.js
 document.addEventListener('DOMContentLoaded', () => {
     const form        = document.getElementById('register-form');
     const prevBtn     = document.getElementById('prev-btn');

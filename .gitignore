@@ -1,22 +1,45 @@
-# Build outputs
-target/
-build/
+# ───────────────────────────────────────────────
+# Build directories
+# ───────────────────────────────────────────────
+/target/
+/build/
 
+# ───────────────────────────────────────────────
+# IDE / Editor
+# ───────────────────────────────────────────────
 # Eclipse / STS
 .classpath
 .project
 .settings/
 
-# IntelliJ
+# IntelliJ IDEA
 *.iml
 .idea/
 
-# VSCode
+# VS Code
 .vscode/
 
-# Sistema
+# ───────────────────────────────────────────────
+# OS files
+# ───────────────────────────────────────────────
 .DS_Store
 Thumbs.db
 
+# ───────────────────────────────────────────────
 # Node
-node_modules/
+# ───────────────────────────────────────────────
+/node_modules/
+
+# ───────────────────────────────────────────────
+# Environment files
+# ───────────────────────────────────────────────
+# Ignore real .env, but keep the template
+.env
+!.env.example
+
+# ───────────────────────────────────────────────
+# Spring Boot properties
+# ───────────────────────────────────────────────
+# Ignore real properties, but keep the .example files
+/src/main/resources/*.properties
+!/src/main/resources/*.properties.example

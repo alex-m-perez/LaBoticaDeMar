@@ -94,6 +94,7 @@ class AuthenticationServiceTest {
         user.setCorreo("juan@example.com");
         user.setPasswd("codificada");
         user.setRoles(Set.of("ROLE_USUARIO"));
+        user.setActivo(true);
 
         when(usuarioDAO.getByCorreo("juan@example.com")).thenReturn(Optional.of(user));
         when(jwtService.generateToken(any(UsuarioPrincipal.class))).thenReturn("jwt-token");

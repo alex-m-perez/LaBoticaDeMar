@@ -5,27 +5,22 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>LBDM - Registro</title>
-	<link rel="icon" href="${pageContext.request.contextPath}/images/icono_tab2.png" type="image/png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrarse</title>
+    <link rel="icon" href="${pageContext.request.contextPath}/images/icono_tab2.png" type="image/png">
 
-	<!-- Tailwind CSS -->
-	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/output.css">
-	<!-- Fuentes -->
-	<link href="https://fonts.googleapis.com/css2?family=Satisfy&display=swap" rel="stylesheet">
-	<!-- AJAX -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <!-- Funcionalidad -->
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/output.css">
+    <link href="https://fonts.googleapis.com/css2?family=Satisfy&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script>window.contextPath = '<%= request.getContextPath() %>';</script>
     <script src="${pageContext.request.contextPath}/js/auth/registroNuevoUser.js" defer></script>
 </head>
 
+<%-- El body ya estaba correcto, se mantiene --%>
 <body class="bg-gray-100 flex flex-col min-h-screen">
 
-    <!-- Contenedor único sticky -->
-    <div class="sticky top-0 z-50">
-        <!-- Navbar simplificado -->
+    <header class="sticky top-0 z-50">
         <nav class="bg-white shadow-md w-full transition-all duration-300 ease-in-out">
             <div class="container mx-auto p-4 flex items-center justify-between">
                 <div class="flex items-center">
@@ -41,7 +36,6 @@
             </div>
         </nav>
 
-        <!-- Banner promocional integrado -->
         <div class="bg-pistachio">
             <div class="container mx-auto py-3 text-center">
                 <span class="font-medium text-white">
@@ -49,127 +43,115 @@
                 </span>
             </div>
         </div>
-    </div>
+    </header>
 
-	<!-- Wizard: tarjeta central -->
-	<div class="flex-grow py-8 flex items-center justify-center">
-		<div class="relative bg-white p-8 rounded-xl shadow-lg w-full max-w-2xl mx-4">
-            <!-- Título del paso -->
+    <main class="flex-grow py-8 flex items-center justify-center">
+        <div class="relative bg-white p-8 rounded-xl shadow-lg w-full max-w-2xl mx-4">
             <h3 id="step-title"
                 class="text-3xl font-bold text-gray-800 text-center mb-4">
                 Consigue tu cuenta ahora
             </h3>
-			<!-- Barra de progreso -->
-			<div class="mb-6">
-				<div class="flex justify-between items-center mb-1">
-					<span id="step-label" class="text-gray-700 font-medium">Paso 1 de 3</span>
-				</div>
-				<div class="w-full bg-gray-200 rounded-full h-2">
-					<div id="progress-bar" class="bg-pistachio h-2 rounded-full w-1/3 transition-width duration-300"></div>
-				</div>
-			</div>
+            <div class="mb-6">
+                <div class="flex justify-between items-center mb-1">
+                    <span id="step-label" class="text-gray-700 font-medium">Paso 1 de 3</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                    <div id="progress-bar" class="bg-pistachio h-2 rounded-full w-1/3 transition-width duration-300"></div>
+                </div>
+            </div>
 
-			<form id="register-form"
-			      action="${pageContext.request.contextPath}/auth/register"
-			      method="post"
-			      data-success-redirect="/auth/login"
-			      class="space-y-8 pb-20">
+            <form id="register-form"
+                  action="${pageContext.request.contextPath}/auth/register"
+                  method="post"
+                  data-success-redirect="/auth/login"
+                  class="space-y-8 pb-20">
 
-				<!-- STEP 1 -->
-				<div id="step-1">
-					<div class="space-y-6">
-						<!-- Nombre -->
-						<div>
-							<label for="nombre" class="block text-sm font-medium text-gray-700">Nombre *</label>
-							<input name="nombre" id="nombre" required
-							       placeholder="Nombre"
-							       class="mt-1 w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-pistachio focus:border-pistachio"/>
-						</div>
-						<!-- Apellidos -->
-						<div>
-							<label for="apellido1" class="block text-sm font-medium text-gray-700">Apellido 1 *</label>
-							<input name="apellido1" id="apellido1" required
-							       placeholder="Apellido 1"
-							       class="mt-1 w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-pistachio focus:border-pistachio"/>
-						</div>
-						<div>
-							<label for="apellido2" class="block text-sm font-medium text-gray-700">Apellido 2</label>
-							<input name="apellido2" id="apellido2"
-							       placeholder="Apellido 2"
-							       class="mt-1 w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-pistachio focus:border-pistachio"/>
-						</div>
-						<!-- Email -->
-						<div>
-							<label for="correo" class="block text-sm font-medium text-gray-700">Email *</label>
-							<input name="correo" id="correo" type="email" required
-							       placeholder="Su correo"
-							       class="mt-1 w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-pistachio focus:border-pistachio"/>
-						</div>
-						<!-- Contraseña -->
-						<div>
-							<label for="passwd" class="block text-sm font-medium text-gray-700">Contraseña *</label>
-							<div class="relative">
-								<input name="password" id="passwd" type="password" required
-								       placeholder="••••••••"
-								       class="mt-1 w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-pistachio focus:border-pistachio pr-12"/>
-								<button type="button" id="toggle-password"
-								        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">
-									<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
-									     viewBox="0 0 24 24" stroke="currentColor">
-										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-										      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-										      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 
-											 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 
-											 0-8.268-2.943-9.542-7z"/>
-									</svg>
-								</button>
-							</div>
-						</div>
-                        <!-- Confirmar Contraseña -->
+                <div id="step-1">
+                    <div class="space-y-6">
                         <div>
-                            <label for="passwd" class="block text-sm font-medium text-gray-700">Confirmar contraseña *</label>
+                            <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre *</label>
+                            <input name="nombre" id="nombre" required
+                                   placeholder="Nombre"
+                                   class="mt-1 w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-pistachio focus:border-pistachio"/>
+                        </div>
+                        <div>
+                            <label for="apellido1" class="block text-sm font-medium text-gray-700">Apellido 1 *</label>
+                            <input name="apellido1" id="apellido1" required
+                                   placeholder="Apellido 1"
+                                   class="mt-1 w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-pistachio focus:border-pistachio"/>
+                        </div>
+                        <div>
+                            <label for="apellido2" class="block text-sm font-medium text-gray-700">Apellido 2</label>
+                            <input name="apellido2" id="apellido2"
+                                   placeholder="Apellido 2"
+                                   class="mt-1 w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-pistachio focus:border-pistachio"/>
+                        </div>
+                        <div>
+                            <label for="correo" class="block text-sm font-medium text-gray-700">Email *</label>
+                            <input name="correo" id="correo" type="email" required
+                                   placeholder="Su correo"
+                                   class="mt-1 w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-pistachio focus:border-pistachio"/>
+                        </div>
+                        <div>
+                            <label for="passwd" class="block text-sm font-medium text-gray-700">Contraseña *</label>
                             <div class="relative">
-                                <input name="confirm_passwd" id="confirm_passwd" type="password" required
+                                <input name="password" id="passwd" type="password" required
+                                       placeholder="••••••••"
+                                       class="mt-1 w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-pistachio focus:border-pistachio pr-12"/>
+                                <button type="button" id="toggle-password"
+                                        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                         viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="confirm_passwd" class="block text-sm font-medium text-gray-700">Confirmar contraseña *</label>
+                            <div class="relative">
+                                <input id="confirm_passwd" type="password" required
                                        placeholder="••••••••"
                                        class="mt-1 w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-pistachio focus:border-pistachio pr-12"/>
                             </div>
                         </div>
 
-						<!-- Consentimientos -->
-						<div class="space-y-4">
-							<div class="flex items-center">
-								<input type="checkbox" id="aceptaPromociones" name="aceptaPromociones" class="mr-2"/>
-								<label for="aceptaPromociones" class="flex-1 text-gray-700">
-									Quiero recibir promociones
-								</label>
-								<a href="/docs/promociones.pdf" target="_blank" class="text-pistachio hover:underline ml-2">
-									Consulte aquí
-								</a>
-							</div>
-							<div class="flex items-center">
-								<input type="checkbox" id="aceptaTerminos" name="aceptaTerminos" required class="mr-2"/ required>
-								<label for="aceptaTerminos" class="flex-1 text-gray-700">
-									Acepto los términos y condiciones *
-								</label>
-								<a href="/docs/terminos.pdf" target="_blank" class="text-pistachio hover:underline ml-2">
-									Consulte aquí
-								</a>
-							</div>
-							<div class="flex items-center">
-								<input type="checkbox" id="aceptaPrivacidad" name="aceptaPrivacidad" required class="mr-2"/ required>
-								<label for="aceptaPrivacidad" class="flex-1 text-gray-700">
-									He leído la política de privacidad *
-								</label>
-								<a href="/docs/privacidad.pdf" target="_blank" class="text-pistachio hover:underline ml-2">
-									Consulte aquí
-								</a>
-							</div>
-						</div>
-					</div>
-				</div>
+                        <div class="space-y-4">
+                            <div class="flex items-center">
+                                <input type="checkbox" id="aceptaPromociones" name="aceptaPromociones" class="mr-2"/>
+                                <label for="aceptaPromociones" class="flex-1 text-gray-700">
+                                    Quiero recibir promociones
+                                </label>
+                                <a href="/docs/promociones.pdf" target="_blank" class="text-pistachio hover:underline ml-2">
+                                    Consulte aquí
+                                </a>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="aceptaTerminos" name="aceptaTerminos" required class="mr-2"/>
+                                <label for="aceptaTerminos" class="flex-1 text-gray-700">
+                                    Acepto los términos y condiciones *
+                                </label>
+                                <a href="/docs/terminos.pdf" target="_blank" class="text-pistachio hover:underline ml-2">
+                                    Consulte aquí
+                                </a>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="aceptaPrivacidad" name="aceptaPrivacidad" required class="mr-2"/>
+                                <label for="aceptaPrivacidad" class="flex-1 text-gray-700">
+                                    He leído la política de privacidad *
+                                </label>
+                                <a href="/docs/privacidad.pdf" target="_blank" class="text-pistachio hover:underline ml-2">
+                                    Consulte aquí
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-				<!-- STEP 2 -->
+                <!-- STEP 2 -->
                 <div id="step-2" class="hidden space-y-6">
                     <!-- Fecha de Nacimiento -->
                     <div>
@@ -248,7 +230,7 @@
                     </div>
                 </div>
 
-				<!-- STEP 3: Preferencias -->
+                <!-- STEP 3: Preferencias -->
                 <div id="step-3" class="hidden space-y-6">
                     <span class="block text-lg font-medium text-gray-700 mb-2">Elige tus intereses:</span>
                     <div class="flex flex-wrap justify-center gap-4">
@@ -268,7 +250,6 @@
                     </div>
                 </div>
 
-				<!-- Botones fijos en la tarjeta -->
                 <div class="absolute bottom-0 left-0 w-full bg-white p-4 flex justify-between rounded-b-xl shadow-inner">
                     <button
                         type="button"
@@ -281,16 +262,20 @@
                     <button
                         type="button"
                         id="next-btn"
-                        class="px-6 py-3 bg-pistachio text-white rounded-lg hover:bg-pistachio-dark"
+                        class="px-6 py-3 bg-pistachio text-white rounded-lg hover:bg-dark-pistachio"
                     >
                         Siguiente
                     </button>
                 </div>
+            </form>
+        </div>
+    </main>
 
-			</form>
-		</div>
-	</div>
+    <footer class="bg-gray-800 text-white py-4">
+        <div class="container mx-auto text-center">
+            <%@ include file="/WEB-INF/views/includes/footer.jsp" %>
+        </div>
+    </footer>
 
-	<%@ include file="/WEB-INF/views/includes/footer.jsp" %>
 </body>
 </html>

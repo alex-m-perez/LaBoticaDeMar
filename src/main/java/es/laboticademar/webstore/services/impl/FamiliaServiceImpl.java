@@ -26,4 +26,9 @@ public class FamiliaServiceImpl implements FamiliaService {
     public Optional<Familia> findByNombre(String name) {
         return familiaDAO.findByNombre(name);
     }
+
+    @Override
+    public Optional<Familia> findById(Long id) {
+        return familiaDAO.findById(id);
+    }
 }

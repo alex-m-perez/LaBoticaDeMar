@@ -1,171 +1,138 @@
-<div class="bg-white min-h-screen space-y-6">
+<%-- Archivo: /WEB-INF/views/admin/sections/ventas.jsp --%>
+<div class="bg-white space-y-6">
+    
+    
 
-    <!-- Filtros de Devolución -->
     <div class="flex justify-center mb-10">
         <div class="p-4 bg-gray-100 border border-gray-200 rounded-xl shadow-sm inline-block">
-            <form class="flex flex-wrap items-end justify-center gap-4 text-sm">
-
-                <!-- Campo: Desde -->
+            <form id="salesFilterForm" class="flex flex-wrap items-end justify-center gap-4 text-sm">
+                <div class="flex flex-col relative">
+                    <label for="nombreUsuario" class="text-gray-600">Nombre Usuario</label>
+                    <input type="text" id="nombreUsuario" placeholder="Buscar por nombre..."
+                        class="w-40 border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-pistachio focus:border-pistachio" autocomplete="off" />
+                    <input type="hidden" id="clienteId" name="clienteId" />
+                    <div id="userSuggestions" class="absolute top-full left-0 w-full bg-white border mt-1 rounded-md shadow-lg z-20 hidden max-h-48 overflow-y-auto"></div>
+                </div>
+                <div class="flex flex-col">
+                    <label for="idUsuario" class="text-gray-600">ID Usuario</label>
+                    <input type="text" id="idUsuario" name="idUsuario" placeholder="Ej: 123"
+                           class="w-28 border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-pistachio focus:border-pistachio" />
+                </div>
                 <div class="flex flex-col">
                     <label for="fechaInicio" class="text-gray-600">Desde</label>
-                    <input type="date" id="fechaInicio" name="fechaInicio"
-                        class="w-36 border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-pistachio focus:border-pistachio" />
+                    <input type="date" id="fechaInicio" name="fechaInicio" class="w-36 border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-pistachio focus:border-pistachio" />
                 </div>
-
-                <!-- Campo: Hasta -->
                 <div class="flex flex-col">
                     <label for="fechaFin" class="text-gray-600">Hasta</label>
-                    <input type="date" id="fechaFin" name="fechaFin"
-                        class="w-36 border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-pistachio focus:border-pistachio" />
+                    <input type="date" id="fechaFin" name="fechaFin" class="w-36 border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-pistachio focus:border-pistachio" />
                 </div>
-
-                <!-- Precio Min -->
                 <div class="flex flex-col">
                     <label for="precioMin" class="text-gray-600">Precio Mín.</label>
-                    <input type="number" id="precioMin" step="0.01" placeholder="Ej: 5.00"
-                        class="w-28 border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-pistachio focus:border-pistachio" />
+                    <input type="number" id="precioMin" name="precioMin" step="0.01" placeholder="Ej: 5.00" class="w-28 border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-pistachio focus:border-pistachio" />
                 </div>
-
-                <!-- Precio Max -->
                 <div class="flex flex-col">
                     <label for="precioMax" class="text-gray-600">Precio Máx.</label>
-                    <input type="number" id="precioMax" step="0.01" placeholder="Ej: 50.00"
-                        class="w-28 border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-pistachio focus:border-pistachio" />
+                    <input type="number" id="precioMax" name="precioMax" step="0.01" placeholder="Ej: 50.00" class="w-28 border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-pistachio focus:border-pistachio" />
                 </div>
-
-                <!-- Producto -->
                 <div class="flex flex-col">
-                    <label for="producto" class="text-gray-600">Producto</label>
-                    <input type="text" id="producto" placeholder="Ej: Ibuprofeno"
-                        class="w-40 border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-pistachio focus:border-pistachio" />
+                    <label for="estadoFiltro" class="text-gray-600">Estado</label>
+                    <select id="estadoFiltro" name="estadoId" class="w-40 border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-pistachio focus:border-pistachio">
+                        </select>
                 </div>
-
-                <!-- Usuario -->
                 <div class="flex flex-col">
-                    <label for="usuario" class="text-gray-600">Usuario</label>
-                    <input type="text" id="usuario" placeholder="Ej: Ana P."
-                        class="w-40 border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-pistachio focus:border-pistachio" />
+                    <label for="numProductos" class="text-gray-600">Nº Productos</label>
+                    <input type="number" id="numProductos" name="numProductos" placeholder="Ej: 3" class="w-28 border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-pistachio focus:border-pistachio" />
                 </div>
-
-                <!-- Motivo -->
-                <div class="flex flex-col">
-                    <label for="motivo" class="text-gray-600">Motivo</label>
-                    <select id="motivo"
-                        class="w-40 border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:ring-pistachio focus:border-pistachio">
-                        <option value="">Todos</option>
-                        <option value="danado">Producto dañado</option>
-                        <option value="error">Error en el pedido</option>
-                        <option value="otros">Otros</option>
-                    </select>
-                </div>
-
-                <!-- Botones -->
                 <div class="flex gap-2 self-end">
-                    <button type="submit"
-                        class="bg-pistachio text-white font-medium px-4 py-1.5 rounded-md hover:bg-pistachio-dark transition">
-                        Buscar
-                    </button>
-                    <button type="reset"
-                        class="bg-gray-200 text-gray-700 font-medium px-4 py-1.5 rounded-md hover:bg-gray-300 transition">
-                        Limpiar
-                    </button>
+                    <button type="submit" class="bg-pistachio text-white font-medium px-4 py-1.5 rounded-md hover:bg-dark-pistachio transition">Buscar</button>
+                    <button type="reset" class="bg-gray-200 text-gray-700 font-medium px-4 py-1.5 rounded-md hover:bg-gray-300 transition">Limpiar</button>
                 </div>
             </form>
         </div>
     </div>
-    
-	<!-- KPIs Section -->
-	<div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-		<div class="p-4 rounded-2xl shadow border">
-			<h2 class="text-sm text-gray-500">Total Ventas (Hoy)</h2>
-			<p class="text-2xl font-bold">1,250.00 €</p>
-		</div>
-		<div class="p-4 rounded-2xl shadow border">
-			<h2 class="text-sm text-gray-500">Ingresos (Mes)</h2>
-			<p class="text-2xl font-bold">28,400.00 €</p>
-		</div>
-		<div class="p-4 rounded-2xl shadow border">
-			<h2 class="text-sm text-gray-500">Ticket Promedio</h2>
-			<p class="text-2xl font-bold">35.45 €</p>
-		</div>
-		<div class="p-4 rounded-2xl shadow border">
-			<h2 class="text-sm text-gray-500">Órdenes Totales</h2>
-			<p class="text-2xl font-bold">800</p>
-		</div>
-	</div>
 
-	<!-- Sales Chart Section -->
-	<div class="bg-white p-6 rounded-2xl shadow border">
-		<h2 class="text-lg font-semibold mb-4">Evolución de Ventas</h2>
-		<div id="sales-line-chart" class="w-full h-64 bg-gray-100 flex items-center justify-center text-gray-400">
-			[Gráfico de Línea de Ventas]
-		</div>
-	</div>
+    <!-- KPIs Section -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="p-4 rounded-2xl shadow border">
+            <h2 class="text-sm text-gray-500">Total Compras (Hoy)</h2>
+            <p id="kpi-ventas-hoy" class="text-2xl font-bold">0</p>
+        </div>
+        <div class="p-4 rounded-2xl shadow border">
+            <h2 class="text-sm text-gray-500">Ingresos totales (Hoy)</h2>
+            <p id="kpi-ingresos-hoy" class="text-2xl font-bold">0,00 €</p>
+        </div>
+        <div class="p-4 rounded-2xl shadow border">
+            <h2 class="text-sm text-gray-500">Total Compras (Rango)</h2>
+            <p id="kpi-ventas-rango" class="text-2xl font-bold">0</p>
+        </div>
+        <div class="p-4 rounded-2xl shadow border">
+            <h2 class="text-sm text-gray-500">Ingresos totales (Rango)</h2>
+            <p id="kpi-ingresos-rango" class="text-2xl font-bold">0,00 €</p>
+        </div>
+    </div>
 
-	<!-- Top Products & Channel Breakdown -->
-	<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-		<div class="bg-white p-6 rounded-2xl shadow border">
-			<h2 class="text-lg font-semibold mb-4">Productos Más Vendidos</h2>
-			<ul class="space-y-2">
-				<li class="flex justify-between text-sm">
-					<span>Paracetamol 500mg</span>
-					<span class="font-medium">120 unidades</span>
-				</li>
-				<li class="flex justify-between text-sm">
-					<span>Ibuprofeno 400mg</span>
-					<span class="font-medium">85 unidades</span>
-				</li>
-				<li class="flex justify-between text-sm">
-					<span>Vitamina C</span>
-					<span class="font-medium">70 unidades</span>
-				</li>
-			</ul>
-		</div>
-		<div class="bg-white p-6 rounded-2xl shadow border">
-			<h2 class="text-lg font-semibold mb-4">Ventas por Canal</h2>
-			<div id="channel-pie-chart" class="w-full h-64 bg-gray-100 flex items-center justify-center text-gray-400">
-				[Gráfico de Pastel por Canal]
-			</div>
-		</div>
-	</div>
+    <div class="bg-white p-6 rounded-2xl shadow border">
+        <h2 class="text-lg font-semibold mb-4">Historial de Ventas</h2>
+        <div class="overflow-auto">
+            <table class="min-w-full text-sm">
+                <thead class="text-gray-500 border-b">
+                    <tr>
+                        <th class="px-4 py-2 text-left">ID Venta</th>
+                        <th class="px-4 py-2 text-left">ID Cliente</th>
+                        <th class="px-4 py-2 text-left">Nombre Cliente</th>
+                        <th class="px-4 py-2 text-left">Fecha</th>
+                        <th class="px-4 py-2 text-center">Estado</th>
+                        <th class="px-4 py-2 text-right">Total</th>
+                        <th class="px-4 py-2 text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="salesTbody" class="text-gray-700 divide-y"></tbody>
+            </table>
+        </div>
+        <div id="pagination-controls" class="flex justify-between items-center mt-4 text-sm">
+            <button id="prevBtn" class="bg-gray-200 text-gray-700 px-3 py-1 rounded-md hover:bg-gray-300 transition-colors">Anterior</button>
+            <span class="px-4 text-gray-600">Página <span id="pageNum" class="font-semibold">1</span> de <span id="totalPages" class="font-semibold">1</span></span>
+            <button id="nextBtn" class="bg-gray-200 text-gray-700 px-3 py-1 rounded-md hover:bg-gray-300 transition-colors">Siguiente</button>
+        </div>
+    </div>
+</div>
 
-	<!-- Sales Table Section -->
-	<div class="bg-white p-6 rounded-2xl shadow border">
-		<h2 class="text-lg font-semibold mb-4">Historial de Ventas</h2>
-		<div class="overflow-auto">
-			<table class="min-w-full text-sm">
-				<thead class="text-gray-500 border-b">
-					<tr>
-						<th class="px-4 py-2 text-left">ID</th>
-						<th class="px-4 py-2 text-left">Fecha</th>
-						<th class="px-4 py-2 text-left">Producto</th>
-						<th class="px-4 py-2 text-left">Cantidad</th>
-						<th class="px-4 py-2 text-left">Total</th>
-						<th class="px-4 py-2 text-left">Canal</th>
-						<th class="px-4 py-2 text-left">Vendedor</th>
-					</tr>
-				</thead>
-				<tbody class="text-gray-700 divide-y">
-					<tr>
-						<td class="px-4 py-2">#00124</td>
-						<td class="px-4 py-2">11/04/2025</td>
-						<td class="px-4 py-2">Paracetamol</td>
-						<td class="px-4 py-2">3</td>
-						<td class="px-4 py-2">6.00 €</td>
-						<td class="px-4 py-2">Online</td>
-						<td class="px-4 py-2">Carlos G.</td>
-					</tr>
-					<tr>
-						<td class="px-4 py-2">#00125</td>
-						<td class="px-4 py-2">11/04/2025</td>
-						<td class="px-4 py-2">Ibuprofeno</td>
-						<td class="px-4 py-2">2</td>
-						<td class="px-4 py-2">4.50€</td>
-						<td class="px-4 py-2">Mostrador</td>
-						<td class="px-4 py-2">Laura M.</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-	</div>
+<div id="saleDetailModal" class="fixed inset-0 z-50 hidden flex items-center justify-center">
+    <div id="modalOverlay" class="fixed inset-0 bg-black opacity-50"></div>
+    <div class="relative bg-white rounded-lg shadow-xl w-11/12 md:w-3/4 lg:w-1/2 max-h-[90vh] overflow-y-auto">
+        <div class="p-6">
+            <div class="flex justify-between items-start">
+                <h3 id="modalTitle" class="text-2xl font-semibold text-gray-900">Detalles del Pedido</h3>
+                <button id="closeModalBtn" type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/></svg>
+                </button>
+            </div>
+            <div id="modalBody" class="mt-4 space-y-4">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="updateStatusModal" class="fixed inset-0 z-[60] hidden flex items-center justify-center">
+    <div id="updateStatusOverlay" class="fixed inset-0 bg-black opacity-60"></div>
+    <div class="relative bg-white rounded-lg shadow-xl w-11/12 md:w-1/3 max-h-[90vh] overflow-y-auto">
+        <div class="p-6">
+            <div class="flex justify-between items-start mb-4">
+                <h3 class="text-xl font-semibold text-gray-900">Actualizar Estado del Pedido</h3>
+                <button id="closeUpdateStatusBtn" type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/></svg>
+                </button>
+            </div>
+            <div class="mt-4 space-y-4">
+                <div>
+                    <label for="statusSelect" class="block mb-2 text-sm font-medium text-gray-900">Nuevo estado:</label>
+                    <select id="statusSelect" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                    </select>
+                </div>
+                <div class="text-right">
+                    <button id="saveStatusBtn" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Guardar Cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

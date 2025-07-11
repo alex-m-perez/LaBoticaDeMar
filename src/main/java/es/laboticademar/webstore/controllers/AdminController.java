@@ -1,12 +1,12 @@
 package es.laboticademar.webstore.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import es.laboticademar.webstore.enumerations.PreferenciaEnum;
 import es.laboticademar.webstore.services.interfaces.CategoriaService;
 import es.laboticademar.webstore.services.interfaces.FamiliaService;
 import es.laboticademar.webstore.services.interfaces.LaboratorioService;
@@ -35,9 +35,9 @@ public class AdminController {
             model.addAttribute("totalActivos",    productService.countByActivo(true));
             model.addAttribute("totalInactivos",  productService.countByActivo(false));
             model.addAttribute("stockTotal",      productService.sumTotalStock());
-
         }
     }
+    
     @GetMapping({"/home", "/ventas", "/devoluciones", "/products", "/ofertas", "/empleados", "/usuarios"})
     public String section(HttpServletRequest request) {
         boolean isAjax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
@@ -70,6 +70,12 @@ public class AdminController {
 
         // petición normal (refresh, url directa) → devolvemos el layout completo
         return "admin/home";
+    }
+
+    @GetMapping("/register")
+    public String goRegisterPage(Model model) {
+        model.addAttribute("preferenciasEnumList", PreferenciaEnum.values());
+        return "admin/registro_empleado";
     }
 
 }

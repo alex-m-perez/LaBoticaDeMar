@@ -8,12 +8,14 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @NoArgsConstructor
@@ -30,8 +32,14 @@ public class Producto {
     @Column(name = "NOMBRE", nullable = false, length = 60)
     private String nombre;
 
-    @Column(name = "DESCRIPCION", nullable = true, length = 1250)
+    @Column(name = "DESCRIPCION", nullable = true)
     private String descripcion;
+
+    @Column(name = "COMPOSICION", nullable = true)
+    private String composition;
+
+    @Column(name = "USO", nullable = true)
+    private String use;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "FAMILIA", nullable = false)
@@ -65,8 +73,9 @@ public class Producto {
     @Column(name = "DESCUENTO", nullable = true)
     private Float discount;
 
-    @Column(name = "IMAGEN_PATH", nullable = true, length = 255)
-    private String imagenPath;
+    @Lob
+    @Column(name = "IMAGEN_DATA", columnDefinition="LONGBLOB") 
+    private byte[] imagenData;
 
     @Column(name = "RATING", nullable = true)
     private Integer rating;
@@ -75,5 +84,6 @@ public class Producto {
     private Integer ratingCount;
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "productos")
+    @ToString.Exclude
     private List<Wishlist> wishlists;
 }

@@ -66,7 +66,7 @@ class InicioControllerTest {
     void getProfile() throws Exception {
         mockMvc.perform(get("/profile"))
             .andExpect(status().isOk())
-            .andExpect(view().name("perfil"));
+            .andExpect(view().name("user/perfil"));
     }
 
     @Test
@@ -107,6 +107,6 @@ class InicioControllerTest {
     void getProductPage() throws Exception {
         mockMvc.perform(get("/product"))
             .andExpect(status().isOk())
-            .andExpect(view().name("product/product"));
+            .andExpect(view().name("product/productos"));
     }
 }
