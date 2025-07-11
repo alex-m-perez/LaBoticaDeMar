@@ -49,6 +49,7 @@ public class AuthenticationService {
             .aceptaPromociones(Boolean.TRUE.equals(request.getAceptaPromociones()))
             .aceptaTerminos(Boolean.TRUE.equals(request.getAceptaTerminos()))
             .aceptaPrivacidad(Boolean.TRUE.equals(request.getAceptaPrivacidad()))
+            .activo(true)
             .preferencias(request.getPreferencias())
             .roles(Set.of("ROLE_USUARIO"))
             .build();
@@ -84,6 +85,7 @@ public class AuthenticationService {
             .aceptaPromociones(false)
             .aceptaTerminos(true)
             .aceptaPrivacidad(true)
+            .activo(true)
             .preferencias(null)
             .roles(Set.of("ROLE_EMPLEADO"))
             .build();

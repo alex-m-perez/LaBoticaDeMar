@@ -113,7 +113,7 @@
                         <div>
                             <label for="confirm_passwd" class="block text-sm font-medium text-gray-700">Confirmar contraseña *</label>
                             <div class="relative">
-                                <input name="confirm_passwd" id="confirm_passwd" type="password" required
+                                <input id="confirm_passwd" type="password" required
                                        placeholder="••••••••"
                                        class="mt-1 w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-pistachio focus:border-pistachio pr-12"/>
                             </div>
