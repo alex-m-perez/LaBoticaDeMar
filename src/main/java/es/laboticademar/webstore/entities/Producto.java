@@ -86,4 +86,16 @@ public class Producto {
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "productos")
     @ToString.Exclude
     private List<Wishlist> wishlists;
+
+    @Override
+    public String toString() {
+        return "Producto{" +
+               "id=" + id +
+               ", nombre='" + nombre + '\'' +
+               ", price='" + price + '\'' +
+               ", activo='" + activo + '\'' +
+               ", stock='" + stock + '\'' +
+               ", laboratorio=" + laboratorio +
+               '}';
+    }
 }

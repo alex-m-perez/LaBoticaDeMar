@@ -246,15 +246,16 @@ document.addEventListener('DOMContentLoaded', () => {
                             return;
                         }
                         navbarBox.innerHTML = list
-                            .map(name => `<li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">${name}</li>`)
+                            .map(product => 
+                                `<li data-id="${product.id}" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">${product.name}</li>`
+                            )
                             .join('');
                         navbarBox.classList.remove('hidden');
 
                         navbarBox.querySelectorAll('li').forEach(li => {
                             li.addEventListener('mousedown', () => {
-                                navbarInput.value = li.textContent;
-                                navbarBox.classList.add('hidden');
-                                li.closest('form').submit(); // Enviamos el formulario al seleccionar
+                                const productId = li.getAttribute('data-id');
+                                window.location.href = `${window.contextPath}/product/${productId}`;
                             });
                         });
                     })

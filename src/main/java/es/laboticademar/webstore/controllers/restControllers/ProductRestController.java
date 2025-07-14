@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import es.laboticademar.webstore.dto.BreadcrumbDTO;
 import es.laboticademar.webstore.dto.producto.ProductPageDTO;
+import es.laboticademar.webstore.dto.producto.ProductSearchDTO;
 import es.laboticademar.webstore.dto.producto.ProductoDTO;
 import es.laboticademar.webstore.services.interfaces.CategoriaService;
 import es.laboticademar.webstore.services.interfaces.FamiliaService;
@@ -70,7 +71,7 @@ import lombok.RequiredArgsConstructor;
     }
 
     @GetMapping(path = "/search_names", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<String> searchNames(
+    public List<ProductSearchDTO> searchNames(
         @RequestParam("q") String q,
         @RequestParam(value = "active", defaultValue = "false") boolean active
     ) {

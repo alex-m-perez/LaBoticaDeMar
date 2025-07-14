@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
+import es.laboticademar.webstore.dto.producto.ProductSearchDTO;
 import es.laboticademar.webstore.dto.producto.ProductoDTO;
 import es.laboticademar.webstore.entities.Producto;
 
@@ -34,7 +35,7 @@ public interface ProductService {
     );
     public List<Producto> bulkUpload(MultipartFile file) throws Exception;
     public List<String> findNamesContaining(String q);
-    public List<String> findNamesContainingActive(String q);
+    public List<ProductSearchDTO> findNamesContainingActive(String q);
     public Long countAllProducts();
     public Long countByActivo(Boolean activo);
     public Integer sumTotalStock();

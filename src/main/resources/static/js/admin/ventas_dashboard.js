@@ -153,30 +153,59 @@
             fetch(`${window.contextPath}/admin/api/ventas/${saleId}`)
                 .then(res => res.ok ? res.json() : Promise.reject('Error al cargar detalles'))
                 .then(details => {
+                    // Título del modal
                     modalTitle.textContent = `Detalles del Pedido #${String(details.id).padStart(6, '0')}`;
-                    const productRows = details.productos.map(p => `
-                        <tr class="border-b last:border-b-0">
-                            <td class="py-2 px-4 flex items-center gap-3">
-                                <img src="${p.imagenData || `${window.contextPath}/images/placeholder.png`}" alt="${p.nombre}" class="w-12 h-12 object-cover rounded">
-                                <div>
-                                    <p class="font-semibold">${p.nombre}</p>
-                                    <p class="text-xs text-gray-500">${p.laboratorioNombre || ''}</p>
+
+                    // 1. Generar filas de productos con lógica de imagen
+                    const productRows = details.productos.map(p => {
+                        let imgHTML;
+
+                        if (p.imagenData) {
+                            // Imagen real clicable a la ficha de producto
+                            imgHTML = `
+                                <div class="cursor-pointer" onclick="window.location.href='${window.contextPath || ''}/product/${p.id}'">
+                                    <img
+                                        src="${window.contextPath || ''}/api/images/${p.id}"
+                                        alt="${p.nombre}"
+                                        class="w-12 h-12 object-cover rounded"
+                                    />
                                 </div>
-                            </td>
-                            <td class="py-2 px-4 text-center">${p.cantidad}</td>
-                            <td class="py-2 px-4 text-right">${formatCurrency(p.precioUnitario)}</td>
-                        </tr>`).join('');
+                            `;
+                        } else {
+                            // Placeholder SVG
+                            imgHTML = `
+                                <div class="h-12 w-12 bg-gray-200 flex items-center justify-center rounded p-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h4l2-3h6l2 3h4v13H3V7z"/>
+                                        <circle cx="12" cy="13" r="4" stroke="currentColor" stroke-width="2"/>
+                                    </svg>
+                                </div>
+                            `;
+                        }
 
-                    // --- 1. Lógica para deshabilitar el botón ---
+                        return `
+                            <tr class="border-b last:border-b-0">
+                                <td class="py-2 px-4 flex items-center gap-3">
+                                    ${imgHTML}
+                                    <div>
+                                        <p class="font-semibold">${p.nombre}</p>
+                                        <p class="text-xs text-gray-500">${p.laboratorioNombre || ''}</p>
+                                    </div>
+                                </td>
+                                <td class="py-2 px-4 text-center">${p.cantidad}</td>
+                                <td class="py-2 px-4 text-right">${formatCurrency(p.precioUnitario)}</td>
+                            </tr>
+                        `;
+                    }).join('');
+
+                    // 2. Determinar si el pedido está en estado devolución
                     const esDevolucion = details.estadoId === 5;
-
-                    const clasesBoton = esDevolucion 
+                    const clasesBoton = esDevolucion
                         ? 'bg-gray-400 text-white font-medium px-4 py-2 rounded-md opacity-50 cursor-not-allowed'
                         : 'bg-blue-600 text-white font-medium px-4 py-2 rounded-md hover:bg-blue-700';
-
                     const atributoDisabled = esDevolucion ? 'disabled' : '';
 
-                    // --- 2. Construcción del HTML del modal ---
+                    // 3. Montar el contenido del modal
                     modalBody.innerHTML = `
                         <div class="grid grid-cols-3 gap-4 mb-4 text-sm">
                             <div><strong>Fecha:</strong> ${formatDateTime(details.fechaVenta)}</div>
@@ -184,24 +213,44 @@
                             <div class="text-right"><strong>Puntos utilizados:</strong> ${details.puntosUtilizados || 0}</div>
                         </div>
                         <table class="w-full text-sm mt-4">
-                            <thead class="bg-gray-100"><tr><th class="py-2 px-4 text-left">Producto</th><th class="py-2 px-4 text-center">Cantidad</th><th class="py-2 px-4 text-right">Precio Unit.</th></tr></thead>
-                            <tbody>${productRows}</tbody>
+                            <thead class="bg-gray-100">
+                                <tr>
+                                    <th class="py-2 px-4 text-left">Producto</th>
+                                    <th class="py-2 px-4 text-center">Cantidad</th>
+                                    <th class="py-2 px-4 text-right">Precio Unit.</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${productRows}
+                            </tbody>
                         </table>
                         <div class="flex justify-between items-center mt-6">
-                            <button id="open-update-status-btn" class="${clasesBoton}" ${atributoDisabled}>Actualizar Estado</button>
-                            <div class="text-right"><p class="text-lg font-bold">Total: ${formatCurrency(details.montoTotal)}</p></div>
+                            <button
+                                id="open-update-status-btn"
+                                class="${clasesBoton}"
+                                ${atributoDisabled}
+                            >
+                                Actualizar Estado
+                            </button>
+                            <div class="text-right">
+                                <p class="text-lg font-bold">Total: ${formatCurrency(details.montoTotal)}</p>
+                            </div>
                         </div>
                     `;
 
-                    // --- 3. Añadir el listener solo si el botón NO está deshabilitado ---
+                    // 4. Añadir listener al botón sólo si no está deshabilitado
                     if (!esDevolucion) {
-                        document.getElementById('open-update-status-btn').addEventListener('click', () => showUpdateStatusModal(details.estadoId));
+                        document
+                            .getElementById('open-update-status-btn')
+                            .addEventListener('click', () => showUpdateStatusModal(details.estadoId));
                     }
 
+                    // 5. Mostrar el modal
                     showModal();
                 })
                 .catch(err => alert('No se pudieron cargar los detalles del pedido.'));
         }
+
 
         function showModal() { modal.classList.remove('hidden'); document.body.classList.add('overflow-hidden'); }
         function hideModal() { modal.classList.add('hidden'); document.body.classList.remove('overflow-hidden'); }

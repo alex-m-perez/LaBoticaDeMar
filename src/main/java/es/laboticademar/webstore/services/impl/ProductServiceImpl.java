@@ -11,7 +11,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +19,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import es.laboticademar.webstore.dto.producto.ProductSearchDTO;
 import es.laboticademar.webstore.dto.producto.ProductoDTO;
 import es.laboticademar.webstore.entities.Categoria;
 import es.laboticademar.webstore.entities.Familia;
@@ -298,11 +298,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<String> findNamesContainingActive(String q) {
+    public List<ProductSearchDTO> findNamesContainingActive(String q) {
+        // El DAO ya te da la lista de productos completos
         return productDAO.findTop10ByNombreContainingIgnoreCaseAndActivoTrue(q)
-                          .stream()
-                          .map(Producto::getNombre)
-                          .toList();
+                .stream()
+                // 1. Transforma cada objeto Producto en un ProductSearchDTO
+                .map(producto -> new ProductSearchDTO(producto.getId(), producto.getNombre()))
+                // 2. Recopila los DTOs en una lista
+                .toList();
     }
 
     @Override
