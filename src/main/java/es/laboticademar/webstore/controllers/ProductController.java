@@ -74,6 +74,7 @@ public class ProductController {
         @RequestParam(required=false)        Boolean stock,
         @RequestParam(required=false)        BigDecimal precioMin,
         @RequestParam(required=false)        BigDecimal precioMax,
+        @RequestParam(required=false)        Boolean conDescuento, 
         Model model
     ) {
         // — filtros producto
@@ -87,6 +88,7 @@ public class ProductController {
         model.addAttribute("filtroStock",        stock);
         model.addAttribute("filtroPrecioMin",    precioMin);
         model.addAttribute("filtroPrecioMax",    precioMax);
+        model.addAttribute("filtroConDescuento", conDescuento);
 
         // — datos sidebar
         model.addAttribute("todosLosLaboratorios",   laboratorioService.findAll());

@@ -42,7 +42,7 @@ import lombok.RequiredArgsConstructor;
         @RequestParam(required = false) String nombreProducto,
         @RequestParam(required = false) List<Long> familia,
         @RequestParam(required = false) List<Long> categoria,
-        @RequestParam(required = false) List<Long> subCategoria,
+        @RequestParam(required = false) List<Long> subcategoria,
         @RequestParam(required = false) List<Long> tipo,
         @RequestParam(required = false) List<Long> laboratorio,
         @RequestParam(required = false) Boolean activo,
@@ -54,14 +54,14 @@ import lombok.RequiredArgsConstructor;
 
         Page<ProductoDTO> productPage = productService.getAllProducts(
             page, size, id, nombreProducto, true, 
-            familia, categoria, subCategoria, tipo,
+            familia, categoria, subcategoria, tipo,
             laboratorio, stock, conDescuento,
             precioMin, precioMax
         );
 
         List<BreadcrumbDTO> crumbs = BreadcrumbUtils.generarBreadcrumbs(
             request, page, size,
-            familia, categoria, subCategoria,
+            familia, categoria, subcategoria,
             familiaService, categoriaService, subcategoriaService
         );
 

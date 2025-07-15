@@ -208,6 +208,14 @@ const FilterUI = {
     },
     
     applyInitialFiltersFromUrl: function() {
+        const conDescuentoParam = urlParams.get('conDescuento');
+        if (conDescuentoParam === 'true') {
+            const descuentoCheckbox = document.querySelector('input[name="conDescuento"]');
+            if (descuentoCheckbox) {
+                descuentoCheckbox.checked = true;
+            }
+        }
+
         Object.keys(this.containers).forEach(type => {
             const idsFromUrl = urlParams.getAll(type);
             if (idsFromUrl.length === 0) return;
@@ -221,14 +229,12 @@ const FilterUI = {
                 } else if (type === 'subcategoria') {
                     item = this.data.todasSubcategorias.find(i => i.id == id);
                 } else if (this.containers[type]?.selector) {
-                    // Para selects no jerárquicos como laboratorio o tipo
                     const option = this.containers[type].selector.querySelector(`option[value="${id}"]`);
-                    if(option) {
+                    if (option) {
                         item = { id: id, nombre: option.textContent };
                     }
                 }
-                
-                if(item) {
+                if (item) {
                     this.addFilterPill(type, item.id, item.nombre);
                 }
             });

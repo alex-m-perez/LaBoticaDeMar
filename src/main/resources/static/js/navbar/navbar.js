@@ -236,41 +236,22 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             navbarTimer = setTimeout(() => {
                 fetch(`${window.contextPath}/api/product/search_names?q=${encodeURIComponent(q)}`)
-                    .then(res => {
-                        if (!res.ok) throw new Error(`Status ${res.status}`);
-                        return res.json();
-                    })
+                    .then(res => res.ok ? res.json() : Promise.reject(res.status))
                     .then(list => {
                         if (list.length === 0) {
                             navbarBox.classList.add('hidden');
                             return;
                         }
-                        navbarBox.innerHTML = list
-                            .map(product => 
-                                `<li data-id="${product.id}" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">${product.name}</li>`
-                            )
-                            .join('');
+                        navbarBox.innerHTML = list.map(product => `<li data-id="${product.id}" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">${product.name}</li>`).join('');
                         navbarBox.classList.remove('hidden');
-
                         navbarBox.querySelectorAll('li').forEach(li => {
-                            li.addEventListener('mousedown', () => {
-                                const productId = li.getAttribute('data-id');
-                                window.location.href = `${window.contextPath}/product/${productId}`;
-                            });
+                            li.addEventListener('mousedown', () => { window.location.href = `${window.contextPath}/product/${li.getAttribute('data-id')}`; });
                         });
                     })
-                    .catch(err => {
-                        console.error('Error autocomplete navbar:', err);
-                        navbarBox.classList.add('hidden');
-                    });
+                    .catch(err => { console.error('Error autocomplete navbar:', err); navbarBox.classList.add('hidden'); });
             }, 300);
         });
-
-        navbarInput.addEventListener('blur', () => {
-            setTimeout(() => {
-                if(navbarBox) navbarBox.classList.add('hidden');
-            }, 200);
-        });
+        navbarInput.addEventListener('blur', () => { setTimeout(() => { if (navbarBox) navbarBox.classList.add('hidden'); }, 200); });
     }
 
     // ——————————————————————————————

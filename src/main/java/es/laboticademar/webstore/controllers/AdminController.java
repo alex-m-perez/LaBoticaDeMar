@@ -11,6 +11,8 @@ import es.laboticademar.webstore.services.interfaces.CategoriaService;
 import es.laboticademar.webstore.services.interfaces.FamiliaService;
 import es.laboticademar.webstore.services.interfaces.LaboratorioService;
 import es.laboticademar.webstore.services.interfaces.ProductService;
+import es.laboticademar.webstore.services.interfaces.SubcategoriaService;
+import es.laboticademar.webstore.services.interfaces.TipoService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
@@ -23,13 +25,17 @@ public class AdminController {
     private final FamiliaService familiaService;
     private final LaboratorioService laboratorioService;
     private final ProductService productService;
+    private final SubcategoriaService subcategoriaService;
+    private final TipoService tipoService;
 
     @ModelAttribute
     public void populateProductsSelects(Model model, HttpServletRequest req) {
         String section = req.getRequestURI().substring(req.getRequestURI().lastIndexOf('/')+1);
         if ("products".equals(section)) {
-            model.addAttribute("categorias",      categoriaService.findAll());
             model.addAttribute("familias",        familiaService.findAll());
+            model.addAttribute("categorias",      categoriaService.findAll());
+            model.addAttribute("subcategorias",   subcategoriaService.findAll());
+            model.addAttribute("tipos",           tipoService.findAll());
             model.addAttribute("laboratorios",    laboratorioService.findAll());
             model.addAttribute("totalProductos",  productService.countAllProducts());
             model.addAttribute("totalActivos",    productService.countByActivo(true));
